@@ -1,0 +1,1211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Spacetime</title>
+  <subtitle>Blogs from campusapp.cn&#39;s crazy developers</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://campusappcn.github.io/"/>
+  <updated>2016-02-29T14:50:56.000Z</updated>
+  <id>http://campusappcn.github.io/</id>
+  
+  <author>
+    <name>developers from campusapp.cn</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于xcode的buildSettings</title>
+    <link href="http://campusappcn.github.io/2016/02/29/xcode%E7%9A%84BuildSettings/"/>
+    <id>http://campusappcn.github.io/2016/02/29/xcode的BuildSettings/</id>
+    <published>2016-02-28T16:00:00.000Z</published>
+    <updated>2016-02-29T14:50:56.000Z</updated>
+    
+    <content type="html">&lt;p&gt;之前在新项目的自动化打包中碰到的问题，发现在A电脑上可以使用，而在B电脑上总是报“error: Specified application doesn’t exist or isn’t a bundle directory : ‘build/Products/Release-iphoneos/xxx.app”这样的error。很明显这个原因是因为在项目目录下的build文件下找不到相应的.app文件。&lt;br&gt;但是当时还是有点摸不着头脑的。因为两边的代码一样,打包脚本都是一样的，而且因为用的是cocoapod做的第三方托管，所以相对来说工程文件的差异我当时觉得也是没有的。但是不得不承认问题是出在工程文件上。之后用&lt;br&gt;&lt;code&gt;xcodebuild -showBuildSettings&lt;/code&gt;分别查看了下当前项目下的build setting的配置。发现&lt;code&gt;BUILD_DIR&lt;/code&gt;和 &lt;code&gt;BUILD_ROOT&lt;/code&gt;这两项在两台电脑是不一样的，一个是在项目下而另一个是在  &lt;code&gt;/Users/xxx/Library/Developer/Xcode/DerivedData&lt;/code&gt;下。&lt;br&gt;当时就郁闷了，不知道什么时候设置了这个路径。&lt;br&gt;看了关于BuildSetting的设置之后发现，在xcode-&amp;gt;preference-&amp;gt;locations里面有个advanced的设置build location 里面的说明也很明了，选择自定义custom 里面的 “relative to workspace”就可以了。其中下面还可以自定义文件路径。&lt;br&gt;具体如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog1.png?imageView2/2/w/800/q/75&quot; alt=&quot;locations截图&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog2.png?imageView2/2/w/800/q/75&quot; alt=&quot;advanced截图&quot;&gt;&lt;/p&gt;
+&lt;p&gt;而其中的custom中有三类分别是:Relative to Derived Data、Relative to Workspace和Absolute。&lt;br&gt;其实光从字面意思上也不难理解，最后一个absolute的本身意思就是“不受任何限制[约束]的; 无条件的”。那个就是说是完全可以自定义的。而前两者Derived Data和Workspace我截了下面两张图来做说明，主要的区别在于红色框内，由于本身我就是在这两处地方的路径不能出现了打包的错误。所以这里会具体说明下。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog3.png?imageView2/2/w/800/q/75&quot; alt=&quot;Relative to Derived Data截图&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog4.png?imageView2/2/w/800/q/75&quot; alt=&quot;Relative to Workspace截图&quot;&gt;&lt;br&gt;看了图片之后其实已经是一目了然了。当选择Relative to Derived Data的时候，打包的build文件会在xcode应用的derivedData下，而选择Relative to Workspace的时候build的文件是在项目目录下的build下。&lt;br&gt;而之前我所使用的打包脚本，所取的文件地址就是项目目录下的。看完之后才恍然大悟，但是我现在还是没有想起来当时是什么时候修改的这个参数。这个东西平常的时候也不会去关注。&lt;br&gt;那么既然说到了这个打包时候的build文件，就顺带介绍一下build文件夹下到底有哪些东西。&lt;br&gt;一般情况下build下面主要的是下面两个文件夹&lt;br&gt;Intermediates ————主要是编译中产生的一些文件&lt;br&gt;Products ————编译最终产品的文件（如果是debug下的编译 那么是Debug-xxx，相对的如果是release下的是Release-xxx）。&lt;/p&gt;
+&lt;p&gt;关于xcode的buildSetting的东西还有很多。&lt;br&gt;大家可以进到项目文件下 用 &lt;code&gt;xcodebuild -showBuildSettings&lt;/code&gt; 自己去看看 &lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      一个关于BuildSetting的点~
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="xcode" scheme="http://campusappcn.github.io/tags/xcode/"/>
+    
+      <category term="buildSetting" scheme="http://campusappcn.github.io/tags/buildSetting/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓自定义控件状态保存</title>
+    <link href="http://campusappcn.github.io/2016/02/28/%E5%AE%89%E5%8D%93%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A7%E4%BB%B6%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98/"/>
+    <id>http://campusappcn.github.io/2016/02/28/安卓自定义控件状态保存/</id>
+    <published>2016-02-28T11:39:25.000Z</published>
+    <updated>2016-02-29T11:15:52.000Z</updated>
+    
+    <content type="html">&lt;p&gt;因为业务原因, 我在安卓端实现了一个简单的富文本编辑器. 在初步实现后, 我将这个自定义的 RichEditor 放到了我们 App 的发帖界面中, 而发帖界面的复杂逻辑也引发了后续的问题.&lt;/p&gt;
+&lt;h2 id=&quot;界面回收与状态保持&quot;&gt;&lt;a href=&quot;#界面回收与状态保持&quot; class=&quot;headerlink&quot; title=&quot;界面回收与状态保持&quot;&gt;&lt;/a&gt;界面回收与状态保持&lt;/h2&gt;&lt;p&gt;我们的发帖界面可能唤起选图界面, 而图片处理往往需要消耗可观的内存. 在部分内存紧缺的机型上, 安卓系统为了保证选图界面的内存, 会将发帖界面回收并保存其状态, 在返回到发帖界面时又会将界面重建并恢复其控件状态.&lt;/p&gt;
+&lt;p&gt;安卓官方控件, 如 TextView, EditText 等控件在界面重建后, 其中的文本内容和光标位置都会被还原到重建前的状态, 而我的 RichEditor 却一片空白, 为啥?&lt;/p&gt;
+&lt;h2 id=&quot;关键方法&quot;&gt;&lt;a href=&quot;#关键方法&quot; class=&quot;headerlink&quot; title=&quot;关键方法&quot;&gt;&lt;/a&gt;关键方法&lt;/h2&gt;&lt;p&gt;Activity/Fragment 的销毁和重建涉及到了两个重要的方法: &lt;code&gt;onSaveInstanceState(Bundle)&lt;/code&gt;和&lt;code&gt;onRestoreInstanceState(Bundle)&lt;/code&gt;, 在这两个方法中, 开发者可以自行存入当前界面的关键信息以便恢复界面状态(当然, Fragment + ViewPager 配套使用时会有一些问题, 相关资料大家可以上网查查).&lt;/p&gt;
+&lt;p&gt;View 的状态保存与重建与 Activity 类似, 但是实现过程稍有不同:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Activity 通过 Bundle 对象保存关键值, 其存取采用 key-value 一一对应方式&lt;/li&gt;
+&lt;li&gt;View 通过自定义的 SavedState 类型保存关键值, 其存取基于 Parcelable 实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;了解了两者的差别后, 我们来看看具体实践:&lt;/p&gt;
+&lt;h2 id=&quot;实践&quot;&gt;&lt;a href=&quot;#实践&quot; class=&quot;headerlink&quot; title=&quot;实践&quot;&gt;&lt;/a&gt;实践&lt;/h2&gt;&lt;p&gt;一个简单的例子&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;52&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;53&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;54&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;55&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;56&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;57&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;58&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;59&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;60&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;61&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;62&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;63&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;64&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;65&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;66&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;67&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;68&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;69&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;70&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;71&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;72&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;73&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;74&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;75&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;76&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;StateSavedView&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;View&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/* 省略若干无关代码 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; mClickCount; &lt;span class=&quot;comment&quot;&gt;// 这个 View 被点击的次数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; mHasClicked; &lt;span class=&quot;comment&quot;&gt;// 是否被点击过&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 存储当前状态&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;protected&lt;/span&gt; Parcelable &lt;span class=&quot;title&quot;&gt;onSaveInstanceState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;comment&quot;&gt;// 一定要将父类状态保存起来&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		Parcelable superState = &lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onSaveInstanceState();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		SavedState state = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState(superState);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		state.clickCount = mClickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		state.hasClicked = mHasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; state;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 恢复当前状态&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;onRestoreInstanceState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcelable state)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;comment&quot;&gt;// 检查一下传入的对象是不是自定义的状态类型, 不是的话就要交由父类处理&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (!(state &lt;span class=&quot;keyword&quot;&gt;instanceof&lt;/span&gt; SavedState)) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onRestoreInstanceState(state);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		SavedState ss = (SavedState) state;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onRestoreInstanceState(state);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		mClickCount = ss.clickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		mHasClicked = ss.hasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 自定义状态存储, 需要遵守 Parcelable 规约&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;BaseSavedState&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;final&lt;/span&gt; Parcelable.Creator&amp;lt;SavedState&amp;gt; CREATOR = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Parcelable.Creator&amp;lt;SavedState&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; SavedState &lt;span class=&quot;title&quot;&gt;createFromParcel&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel in)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;				&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState(in);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; SavedState[] newArray(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; size) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;				&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState[size];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; clickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; hasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcelable superState)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;(superState);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel source)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;(source);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			clickCount = source.reandInt();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			hasClicked = source.readByte() != &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;writeToParcel&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel out, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; flags)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.writeToParcel(out, flags);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			out.writeInt(clickCount);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			out.writeByte(hasClicked ? (&lt;span class=&quot;keyword&quot;&gt;byte&lt;/span&gt;)&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : (&lt;span class=&quot;keyword&quot;&gt;byte&lt;/span&gt;) &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;describeContents&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;有以下几点需要注意:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;状态的存取由 Parcelable 实现, 因此字段的存取顺序一定要保持一一对应&lt;/li&gt;
+&lt;li&gt;不要忘记调用父类方法, 否则会出错&lt;/li&gt;
+&lt;li&gt;这里保存的都是 UI 层的状态, 业务逻辑相关的状态千万不要放在这里, 否则很有可能引发一些隐蔽的 bug&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      在 onSaveInstanceState 和 onRestoreInstanceState 时, 如何保存自定义控件的状态
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="安卓" scheme="http://campusappcn.github.io/tags/%E5%AE%89%E5%8D%93/"/>
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+      <category term="自定义" scheme="http://campusappcn.github.io/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/"/>
+    
+      <category term="View" scheme="http://campusappcn.github.io/tags/View/"/>
+    
+      <category term="状态保存" scheme="http://campusappcn.github.io/tags/%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ReactiveCocoa2.5修炼 (一)</title>
+    <link href="http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5%E4%BF%AE%E7%82%BC-%E4%B8%80/"/>
+    <id>http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5修炼-一/</id>
+    <published>2016-02-28T07:26:02.000Z</published>
+    <updated>2016-02-29T15:03:49.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,以及花式操作数据…自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.&lt;/p&gt;
+&lt;p&gt;本文主要内容:&lt;br&gt;1.RACSignal类的简单使用&lt;br&gt;2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的&lt;/p&gt;
+&lt;h2 id=&quot;RACSignal&quot;&gt;&lt;a href=&quot;#RACSignal&quot; class=&quot;headerlink&quot; title=&quot;RACSignal&quot;&gt;&lt;/a&gt;RACSignal&lt;/h2&gt;&lt;p&gt;RAC的核心,如果用RAC写项目,这个家伙应该是项目中使用次数最多的类.&lt;/p&gt;
+&lt;p&gt;简单使用:&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//创建一个信号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	[subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//然后订阅&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;可以看到createSignal:的参数就是一个block(一个返回RACDisposable,参数的是实现了RACSubscriber协议的subscriber的block)&lt;br&gt;subscribeNext:参数也是一个block(一个返回void ,参数是随意对象的block)&lt;/p&gt;
+&lt;p&gt;为了看的清楚些,可以这样写&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回RACDisposable的block叫didSubscribe,作为createSignal参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回void的block叫nextBlock,作为subscribeNext的参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)=^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:nextBlock];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;看看源码是怎么写的&quot;&gt;&lt;a href=&quot;#看看源码是怎么写的&quot; class=&quot;headerlink&quot; title=&quot;看看源码是怎么写的&quot;&gt;&lt;/a&gt;看看源码是怎么写的&lt;/h2&gt;&lt;h3 id=&quot;1-RACSignal-createSignal-返回Signal&quot;&gt;&lt;a href=&quot;#1-RACSignal-createSignal-返回Signal&quot; class=&quot;headerlink&quot; title=&quot;1.[RACSignal createSignal:]返回Signal&quot;&gt;&lt;/a&gt;1.[RACSignal createSignal:]返回Signal&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [RACDynamicSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACDynamicSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;RACDynamicSignal&lt;/span&gt; ()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;readonly&lt;/span&gt;) RACDisposable * (^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACDynamicSignal *signal = [[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; alloc] init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	signal-&amp;gt;_didSubscribe = [didSubscribe &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [signal setNameWithFormat:&lt;span class=&quot;string&quot;&gt;@&quot;+createSignal:&quot;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;可以看到RACSignal实际是调用了子类RACDynamicSignal来创建Signal&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;子类RACDynamicSignal中有一个didSubscribe的block属性,RACDynamicSignal保存了didSubscribe(这段代码并没有起效)&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;所以返回的Signal内部携带了didSubscribe&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;2-signal-subscribeNext-做了什么&quot;&gt;&lt;a href=&quot;#2-signal-subscribeNext-做了什么&quot; class=&quot;headerlink&quot; title=&quot;2.[signal subscribeNext:]做了什么&quot;&gt;&lt;/a&gt;2.[signal subscribeNext:]做了什么&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribeNext:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x))nextBlock &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCParameterAssert&lt;/span&gt;(nextBlock != &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACSubscriber *o = [RACSubscriber subscriberWithNext:nextBlock error:&lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt; completed:&lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; subscribe:o];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSubscriber.m中,(RACSubscriber.h就是id&amp;lt;RACSubscriber&amp;gt; subscriber中RACSubscriber协议的定义者)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;RACSubscriber&lt;/span&gt; ()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^next)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; value);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^error)(&lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; *error);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^completed)(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;strong&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;readonly&lt;/span&gt;) RACCompoundDisposable *disposable;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (instancetype)subscriberWithNext:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x))next error:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; *error))error completed:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;))completed &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACSubscriber *subscriber = [[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; alloc] init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_next = [next &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_error = [error &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_completed = [completed &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; subscriber;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//[self subscribe:o]在RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribe:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt;)subscriber &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCAssert&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;NO&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;@&quot;This method must be overridden by subclasses&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//所以在RACDynamicSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribe:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt;)subscriber &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCParameterAssert&lt;/span&gt;(subscriber != &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACCompoundDisposable *disposable = [RACCompoundDisposable compoundDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber = [[RACPassthroughSubscriber alloc] initWithSubscriber:subscriber signal:&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; disposable:disposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.didSubscribe != &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		RACDisposable *schedulingDisposable = [RACScheduler.subscriptionScheduler schedule:^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			RACDisposable *innerDisposable = &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.didSubscribe(subscriber);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			[disposable addDisposable:innerDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		[disposable addDisposable:schedulingDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; disposable;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;可以看到subscribeNext方法内部,产生了一个新的对象RACSubscriber &lt;em&gt;o,&lt;/em&gt;o的创建方法中,又将nextBlock调用subscriber-&amp;gt;_next,保存在o的next属性中&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;目前为止createSignal在做准备工作,subscribeNext内部的第一步创建了RACSubscriber的实例也是准备工作&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;接来下就是[self subscribe:o]&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RACSignal的[self subscribe:o]由子类RACDynamicSignal实现,在RACDynamicSignal.m中[self subscribe:o]方法可以看到这一行代码RACDisposable  *innerDisposable = self.didSubscribe(subscriber)–开始执行block了&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;3-self-didSubscribe-subscriber&quot;&gt;&lt;a href=&quot;#3-self-didSubscribe-subscriber&quot; class=&quot;headerlink&quot; title=&quot;3.self.didSubscribe(subscriber)&quot;&gt;&lt;/a&gt;3.self.didSubscribe(subscriber)&lt;/h3&gt;&lt;p&gt;这个didSubscribe被调用了,并且传入了一个subscriber,(这个subscriber内部有一个nextBlock)&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//didSubscribe被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//上文的中didSubscribe定义:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSubscriber.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;)sendNext:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;)value &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;@synchronized&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;) = [&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.next &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (nextBlock == &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		nextBlock(value);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//nextBlock被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//上文中的nextBlock被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)=^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;didSubscribe被调用,会执行到[subscriber sendNext:]方法&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;在RACSubscriber.m的sendNext:方法将保存在自己身上的nextBlock取出(void (^nextBlock)(id) = [self.next copy]),然后执行nextBlock(value);&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;就是这样Signal可以被订阅产生数据&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;senderr和sendcomplete的执行过程和sendNext类似&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;整理下过程&quot;&gt;&lt;a href=&quot;#整理下过程&quot; class=&quot;headerlink&quot; title=&quot;整理下过程&quot;&gt;&lt;/a&gt;整理下过程&lt;/h2&gt;&lt;p&gt;1.[RACSignal createSignal:didSubscribe]创建信号,signal内保存didSubscribe&lt;/p&gt;
+&lt;p&gt;2.[signal subscribeNext:nextBlock]信号被订阅,此方法内部产生一个RACSubscriber的实例subscriber,将nextBlock保存在subscriber中&lt;/p&gt;
+&lt;p&gt;3.[signal subscribeNext:nextBlock]方法内接着调用[self subscribe:subscriber]方法,将保存了nextBlock的subscriber传递,&lt;/p&gt;
+&lt;p&gt;4.[self subscribe:subscriber]方法内部取出保存在signal中的self.didSubscribe,执行,&lt;/p&gt;
+&lt;p&gt;5.进入didSubscribe的block回调,即[subscriber sendNext:@(1)];return nil;&lt;/p&gt;
+&lt;p&gt;6.[subscriber sendNext]将subscriber中保存的nextBlock取出,执行,&lt;/p&gt;
+&lt;p&gt;7,进入nextBlock的block回调,即NSLog(@”x–%@”,x);&lt;/p&gt;
+&lt;h2 id=&quot;从阅读源码过程中-我们可以知道的&quot;&gt;&lt;a href=&quot;#从阅读源码过程中-我们可以知道的&quot; class=&quot;headerlink&quot; title=&quot;从阅读源码过程中,我们可以知道的&quot;&gt;&lt;/a&gt;从阅读源码过程中,我们可以知道的&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;1.如果没有被订阅,那么didSubscribe是不会执行的,&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.didSubscribe如果不调用send的一系列方法,那么订阅也是没有用的&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;做一些测试&quot;&gt;&lt;a href=&quot;#做一些测试&quot; class=&quot;headerlink&quot; title=&quot;做一些测试&quot;&gt;&lt;/a&gt;做一些测试&lt;/h2&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;__block &lt;span class=&quot;keyword&quot;&gt;unsigned&lt;/span&gt; subscriptions=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    subscriptions++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(subscriptions)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;输出:&lt;br&gt;2016-02-29 15:53:59.239 RACFunTest[11936:604366] x–1&lt;br&gt;2016-02-29 15:53:59.240 RACFunTest[11936:604366] x–2&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;下次作文内容:信号map,merge,concat,then操作的源码阅读&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
+    
+      <category term="ReactiveCocoa" scheme="http://campusappcn.github.io/tags/ReactiveCocoa/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>浅谈Android开发中多进程共享数据</title>
+    <link href="http://campusappcn.github.io/2016/02/28/2016-02-28-%E6%B5%85%E8%B0%88Android%E5%BC%80%E5%8F%91%E4%B8%AD%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/"/>
+    <id>http://campusappcn.github.io/2016/02/28/2016-02-28-浅谈Android开发中多进程共享数据/</id>
+    <published>2016-02-27T16:00:00.000Z</published>
+    <updated>2016-02-29T11:15:52.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;最近在工作中遇到一个需求，需要在接收到推送的时候将推送获得的数据存起来，以供app启动时使用。我们会认为这不是So easy吗？只要把数据存到SharedPreferences中，然后让app打开同一个SharedPreferences读取数据就可以了。但是在实际的测试中，我们发现推送进程存入的数据，并不能在app进程中获得。所以这是为什么呢，也许聪明的读者从我们上面的陈述中已经发现了原因，因为我们有两个进程，推送进程负责将推送数据存入，而app进程负责读取，但是正是由于是两个进程，如果它们同时存在，它们各自在内存中保持了自己的SP对象和数据，在推送进程中的存入并不能在app进程体现出来，并且可能会被app进程刷掉更改的数据。那么我们怎么做才能让这两边共享数据呢？请看下面陈述。&lt;/p&gt;
+&lt;h1 id=&quot;多进程支持的SharedPreferences（不推荐）&quot;&gt;&lt;a href=&quot;#多进程支持的SharedPreferences（不推荐）&quot; class=&quot;headerlink&quot; title=&quot;多进程支持的SharedPreferences（不推荐）&quot;&gt;&lt;/a&gt;多进程支持的SharedPreferences（不推荐）&lt;/h1&gt;&lt;p&gt;我们原来的做法是使用SharedPreferences, 自然而然想到，SharedPreferences 在MODE_PRIVATE MODE_PUBLIC 之外其实还可以设置多进程的Flag ———— MODE_MULTI_PROCESS&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SharedPreferences myPrefs = context.getSharedPreferences(MY_FILE_NAME, Context.MODE_MULTI_PROCESS | Context.MODE_PRIVATE);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一旦我们设置了这个Flag，每次调用Context.getSharedPreferences 的时候系统会重新从SP文件中读入数据，因此我们在使用的时候每次读取和存入都要使用Context.getSharedPreferences 重新获取SP实例。即使是这样，由于SP本质上并不是多进程安全的，所以还是无法保证数据的同步，因此该方法我们并没有使用，我们也不推荐使用。&lt;/p&gt;
+&lt;h1 id=&quot;Tray&quot;&gt;&lt;a href=&quot;#Tray&quot; class=&quot;headerlink&quot; title=&quot;Tray&quot;&gt;&lt;/a&gt;Tray&lt;/h1&gt;&lt;p&gt;如果SP不是多进程安全的，那么是否有多进程安全的，又有SP功能的第三方项目呢。答案是有的，Tray——一个多进程安全的SharedPreferences，我们可以在Github上找到它，如果是AndroidStudio,可以直接使用Gradle引入，可谓是十分方便，如下是使用的代码，十分简单，没有apply commit，看起来比SP还要简单。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; // create a preference accessor. This is for global app preferences.
+final AppPreferences appPreferences = new AppPreferences(getContext()); // this Preference comes for free from the library
+// save a key value pair
+appPreferences.put(&amp;quot;key&amp;quot;, &amp;quot;lorem ipsum&amp;quot;);
+
+// read the value for your key. the second parameter is a fallback (optional otherwise throws)
+final String value = appPreferences.getString(&amp;quot;key&amp;quot;, &amp;quot;default&amp;quot;);
+Log.v(TAG, &amp;quot;value: &amp;quot; + value); // value: lorem ipsum
+
+// read a key that isn&amp;apos;t saved. returns the default (or throws without default)
+final String defaultValue = appPreferences.getString(&amp;quot;key2&amp;quot;, &amp;quot;default&amp;quot;);
+Log.v(TAG, &amp;quot;value: &amp;quot; + defaultValue); // value: default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是最终我们并没有选择使用它，主要的原因是它需要minSdk 为15，而我们是支持sdk14的，所以只能果断放弃了。&lt;/p&gt;
+&lt;h1 id=&quot;ContentProvider&quot;&gt;&lt;a href=&quot;#ContentProvider&quot; class=&quot;headerlink&quot; title=&quot;ContentProvider&quot;&gt;&lt;/a&gt;ContentProvider&lt;/h1&gt;&lt;p&gt;既然Tray不支持sdk15以下的，那么我们是否可以使用Tray的原理自己实现一个呢？在阅读Tray的源码时我们发现其实它是在ContentProvider的基础上做的，而ContentProvider是Android官方支持的多进程安全的。以下是使用ContentProvider的一个例子。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class ArticlesProvider extends ContentProvider {  
+    private static final String LOG_TAG = &amp;quot;shy.luo.providers.articles.ArticlesProvider&amp;quot;;  
+
+    private static final String DB_NAME = &amp;quot;Articles.db&amp;quot;;  
+    private static final String DB_TABLE = &amp;quot;ArticlesTable&amp;quot;;  
+    private static final int DB_VERSION = 1;  
+
+    private static final String DB_CREATE = &amp;quot;create table &amp;quot; + DB_TABLE +  
+                            &amp;quot; (&amp;quot; + Articles.ID + &amp;quot; integer primary key autoincrement, &amp;quot; +  
+                            Articles.TITLE + &amp;quot; text not null, &amp;quot; +  
+                            Articles.ABSTRACT + &amp;quot; text not null, &amp;quot; +  
+                            Articles.URL + &amp;quot; text not null);&amp;quot;;  
+
+    private static final UriMatcher uriMatcher;  
+    static {  
+            uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);  
+            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;item&amp;quot;, Articles.ITEM);  
+            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;item/#&amp;quot;, Articles.ITEM_ID);  
+            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;pos/#&amp;quot;, Articles.ITEM_POS);  
+    }  
+
+    private static final HashMap&amp;lt;String, String&amp;gt; articleProjectionMap;  
+    static {  
+            articleProjectionMap = new HashMap&amp;lt;String, String&amp;gt;();  
+            articleProjectionMap.put(Articles.ID, Articles.ID);  
+            articleProjectionMap.put(Articles.TITLE, Articles.TITLE);  
+            articleProjectionMap.put(Articles.ABSTRACT, Articles.ABSTRACT);  
+            articleProjectionMap.put(Articles.URL, Articles.URL);  
+    }  
+
+    private DBHelper dbHelper = null;  
+    private ContentResolver resolver = null;  
+
+    @Override  
+    public boolean onCreate() {  
+            Context context = getContext();  
+            resolver = context.getContentResolver();  
+            dbHelper = new DBHelper(context, DB_NAME, null, DB_VERSION);  
+
+            Log.i(LOG_TAG, &amp;quot;Articles Provider Create&amp;quot;);  
+
+            return true;  
+    }  
+
+    @Override  
+    public String getType(Uri uri) {  
+            switch (uriMatcher.match(uri)) {  
+            case Articles.ITEM:  
+                    return Articles.CONTENT_TYPE;  
+            case Articles.ITEM_ID:  
+            case Articles.ITEM_POS:  
+                    return Articles.CONTENT_ITEM_TYPE;  
+            default:  
+                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
+            }  
+    }  
+
+    @Override  
+    public Uri insert(Uri uri, ContentValues values) {  
+            if(uriMatcher.match(uri) != Articles.ITEM) {  
+                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
+            }  
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+
+            long id = db.insert(DB_TABLE, Articles.ID, values);  
+            if(id &amp;lt; 0) {  
+                    throw new SQLiteException(&amp;quot;Unable to insert &amp;quot; + values + &amp;quot; for &amp;quot; + uri);  
+            }  
+
+            Uri newUri = ContentUris.withAppendedId(uri, id);  
+            resolver.notifyChange(newUri, null);  
+
+            return newUri;  
+    }  
+
+    @Override  
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {  
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+            int count = 0;  
+
+            switch(uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    count = db.update(DB_TABLE, values, selection, selectionArgs);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    count = db.update(DB_TABLE, values, Articles.ID + &amp;quot;=&amp;quot; + id  
+                                    + (!TextUtils.isEmpty(selection) ? &amp;quot; and (&amp;quot; + selection + &amp;apos;)&amp;apos; : &amp;quot;&amp;quot;), selectionArgs);  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
+            }  
+
+            resolver.notifyChange(uri, null);  
+
+            return count;  
+    }  
+
+    @Override  
+    public int delete(Uri uri, String selection, String[] selectionArgs) {  
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+            int count = 0;  
+
+            switch(uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    count = db.delete(DB_TABLE, selection, selectionArgs);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    count = db.delete(DB_TABLE, Articles.ID + &amp;quot;=&amp;quot; + id  
+                                    + (!TextUtils.isEmpty(selection) ? &amp;quot; and (&amp;quot; + selection + &amp;apos;)&amp;apos; : &amp;quot;&amp;quot;), selectionArgs);  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
+            }  
+
+            resolver.notifyChange(uri, null);  
+
+            return count;  
+    }  
+
+    @Override  
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {  
+            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.query: &amp;quot; + uri);  
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();  
+
+            SQLiteQueryBuilder sqlBuilder = new SQLiteQueryBuilder();  
+            String limit = null;  
+
+            switch (uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    sqlBuilder.appendWhere(Articles.ID + &amp;quot;=&amp;quot; + id);  
+                    break;  
+            }  
+            case Articles.ITEM_POS: {  
+                    String pos = uri.getPathSegments().get(1);  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    limit = pos + &amp;quot;, 1&amp;quot;;  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
+            }  
+
+            Cursor cursor = sqlBuilder.query(db, projection, selection, selectionArgs, null, null, TextUtils.isEmpty(sortOrder) ? Articles.DEFAULT_SORT_ORDER : sortOrder, limit);  
+            cursor.setNotificationUri(resolver, uri);  
+
+            return cursor;  
+    }  
+
+    @Override  
+    public Bundle call(String method, String request, Bundle args) {  
+            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.call: &amp;quot; + method);  
+
+            if(method.equals(Articles.METHOD_GET_ITEM_COUNT)) {  
+                    return getItemCount();  
+            }  
+
+            throw new IllegalArgumentException(&amp;quot;Error method call: &amp;quot; + method);  
+    }  
+
+    private Bundle getItemCount() {  
+            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.getItemCount&amp;quot;);  
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();  
+            Cursor cursor = db.rawQuery(&amp;quot;select count(*) from &amp;quot; + DB_TABLE, null);  
+
+            int count = 0;  
+            if (cursor.moveToFirst()) {  
+                    count = cursor.getInt(0);  
+            }  
+
+            Bundle bundle = new Bundle();  
+            bundle.putInt(Articles.KEY_ITEM_COUNT, count);  
+
+            cursor.close();  
+            db.close();  
+
+            return bundle;  
+    }  
+
+    private static class DBHelper extends SQLiteOpenHelper {  
+            public DBHelper(Context context, String name, CursorFactory factory, int version) {  
+                    super(context, name, factory, version);  
+            }  
+
+            @Override  
+            public void onCreate(SQLiteDatabase db) {  
+                    db.execSQL(DB_CREATE);  
+            }  
+
+            @Override  
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {  
+                    db.execSQL(&amp;quot;DROP TABLE IF EXISTS &amp;quot; + DB_TABLE);  
+                    onCreate(db);  
+            }  
+    }  
+}  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;我们需要创建一个类继承自ContentProvider，并重载以下方法。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;onCreate()，用来执行一些初始化的工作。&lt;/li&gt;
+&lt;li&gt;query(Uri, String[], String, String[], String)，用来返回数据给调用者。&lt;/li&gt;
+&lt;li&gt;insert(Uri, ContentValues)，用来插入新的数据。&lt;/li&gt;
+&lt;li&gt;update(Uri, ContentValues, String, String[])，用来更新已有的数据。&lt;/li&gt;
+&lt;li&gt;delete(Uri, String, String[])，用来删除数据。&lt;/li&gt;
+&lt;li&gt;getType(Uri)，用来返回数据的MIME类型。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;具体使用参考  &lt;a href=&quot;http://blog.csdn.net/luoshengyang/article/details/6950440&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; Android应用程序组件Content Provider应用实例&lt;/a&gt;这篇博客，这里不再赘述。&lt;br&gt;在以上对ContentProvider的使用过程中，我们发现过程比较繁琐，如果对于比较复杂的需求可能还比较使用，但是我们这里的需求其实很简单，完全不需要搞得那么复杂，所以最后我们也没有使用这个方法（你可以理解为本博主比较Lazy）。&lt;/p&gt;
+&lt;p&gt;#Broadcast&lt;br&gt;那么是否有更简单的方法呢？由于想到了ContentProvider，我们不由地想到另一个android组件，BroadcastReceiver。那么我们是否可以使用Broadcast 将我们收到的推送数据发送给app进程呢。bingo，这似乎正是我们寻找的又简单又能解决问题的方法。我们来看下代码。&lt;/p&gt;
+&lt;p&gt;首先在推送进程收到推送消息时，我们将推送数据存入SP，如果这时候没有app进程，那么下次app进程启动的时候该存入的数据就会被app进程读取到。而如果这时候app进程存在，那么之后的代码就会生效，它使用LocalBroadcastManager 发送一个广播。LocalBroadcastManager发送的广播不会被app之外接收到，通过它注册的Receiver也不会接收到app之外的广播，因此拥有更高的效率。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pushPref.add(push);
+
+Intent intent = new Intent(PushHandler.KEY_GET_PUSH);
+intent.putExtra(PushHandler.KEY_PUSH_CONTENT, d);
+LocalBroadcastManager.getInstance(context).sendBroadcastSync(intent);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而我们在app进程则注册了一个BroadReceiver来接收上面发出的广播。在收到广播之后将推送数据存入SP。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class PushHandler {
+
+public static String KEY_GET_PUSH = &amp;quot;PUSH_RECEIVED&amp;quot;;
+public static String KEY_PUSH_CONTENT = &amp;quot;PUSH_CONTENT&amp;quot;;
+
+// region 推送处理push
+/**
+ * 当有推送时，发一次请求mPushReceiver
+ */
+private static BroadcastReceiver mPushReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Timber.i(&amp;quot;在NoticeAction中收到广播&amp;quot;);
+        PushPref pushPref = App.DI().pushPref();
+        try {
+            String pushContent = intent.getStringExtra(KEY_PUSH_CONTENT);
+            PushEntity pushEntity = App.DI().gson().fromJson(pushContent, PushEntity.class);
+            pushPref.add(pushEntity);
+        } catch (Exception e){
+            Timber.e(e, &amp;quot;存储推送内容出错&amp;quot;);
+        }
+    }
+};
+
+public static  void startListeningToPush(){
+    try {
+        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mPushReceiver, new IntentFilter(KEY_GET_PUSH));
+    } catch (Exception e) {
+        Timber.e(e, &amp;quot;wtf&amp;quot;);
+    }
+}
+public static void stopListeningToPush(){
+    try {
+        LocalBroadcastManager.getInstance(App.getContext()).unregisterReceiver(mPushReceiver);
+    } catch (Exception e) {
+        Timber.e(e, &amp;quot;wtf&amp;quot;);
+    }
+}
+// endregion
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;该方法相对于上面的方法使用简单，安全可靠，能够比较好的实现我们的需求。不过，在需求比较复杂的时候还是建议使用ContentProvider，因为毕竟这样的方法不是堂堂正道，有种剑走偏锋的感觉。&lt;/p&gt;
+&lt;h1 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h1&gt;&lt;p&gt;实现一个需求可以有很多方法，而我们需要寻找的是又简单有可靠的方法，在写代码之前不如多找找资料，多听听别人的意见。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要介绍如何在多进程之间同步数据
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring测试替换注入的Bean (Mock)</title>
+    <link href="http://campusappcn.github.io/2016/02/28/2016-02-28-Spring%E6%B5%8B%E8%AF%95%E6%9B%BF%E6%8D%A2Bean%20(Mock)/"/>
+    <id>http://campusappcn.github.io/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/</id>
+    <published>2016-02-27T16:00:00.000Z</published>
+    <updated>2016-02-29T11:15:52.000Z</updated>
+    
+    <content type="html">&lt;p&gt;依赖注入框架在诞生之初的初衷，就是为了方便通过替换Bean，替换对象以是的程序有更好的可扩展性。运行时的Bean是通过Xml配置的，只要符合特定的接口，可以随意配置具体的实现类，让程序可以自由装配、修改、拓展、测试。&lt;/p&gt;
+&lt;p&gt;例如，在测试用例中需要针对一个业务逻辑进行测试，但又不想运行具体的查询，就可以通过替换到对应的查询Bean，某某Repository的实现类，以达到单纯测试业务逻辑的目的。&lt;/p&gt;
+&lt;p&gt;但Xml一致被人诟病，无法通过编译器进行检查、编写复杂，项目大了之后，很难维护。为了测试一个bean，要专门编写一套替换掉这个Bean的Xml，感觉并没有达到预期的方便。时至今日，Spring已经基本摆脱了Xml，通过注解和动态发现，现在项目里的Xml基本上是为了让老代码正常工作。通过注解解决测试中动态替换Bean的问题，也变的没有那么困难。&lt;/p&gt;
+&lt;h2 id=&quot;Configuration，-Bean和-Primary&quot;&gt;&lt;a href=&quot;#Configuration，-Bean和-Primary&quot; class=&quot;headerlink&quot; title=&quot;@Configuration，@Bean和@Primary&quot;&gt;&lt;/a&gt;@Configuration，@Bean和@Primary&lt;/h2&gt;&lt;p&gt;这两个注解是现代Spring进行对象构建的主要工具，以替代Xml。@Configuration标记在类上，告诉Spring这个类是一个配置类；@Bean方法标记在配置类的方法上，这个方法返回的对象，就是需要进入注入框架的Bean。因此，我们可以在测试用例中，动态的编写一个Mock配置类，以及我们想要Mock的Bean。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过上面的代码，我们已经可以让我们Mock对象进入了注入系统，但是同一个接口有两个Bean，Spring在真正注入时无从选择，就会报错。因此我们可以在Mock的Bean上打上@Primary注解，从而告诉Spring选择这个Bean。&lt;/p&gt;
+&lt;p&gt;但此时还没有真正解决问题，因为Spring启动时自动检测到这个配置文件后，&lt;strong&gt;&lt;em&gt;会对所有的Test都产生影响&lt;/em&gt;&lt;/strong&gt;，可是其他的Test我们不希望使用这个Mock的Bean。&lt;/p&gt;
+&lt;h2 id=&quot;Profile和-ActiveProfiles&quot;&gt;&lt;a href=&quot;#Profile和-ActiveProfiles&quot; class=&quot;headerlink&quot; title=&quot;@Profile和@ActiveProfiles&quot;&gt;&lt;/a&gt;@Profile和@ActiveProfiles&lt;/h2&gt;&lt;p&gt;@Profile就可以解决这个问题，@Profile有点类似于定义配置类的使用场景，只有特定的Profile被启用时，才使用这个@Profile注解的配置类里面提供的Bean。而@ActiveProfiles则是告诉Spring要启动哪些Profile。于是我们可以在测试类中定义特定的profile，例如这个测试类的类名。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Runwith&lt;/span&gt;(SpringJUnit4ClassRunner.class)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@SpringApplicationConfiguration&lt;/span&gt;(...) &lt;span class=&quot;comment&quot;&gt;//或者ContextConfiguration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@ActiveProfiles&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Autowired&lt;/span&gt; UserService mUserServ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Profile&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样，在这个测试里，UserService里面所使用的UserRepository就是我们动态替换的Mock Bean，我们甚至可以在这个bean的具体方法里进行assert，帮助我们更好的测试。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      如何在Spring的测试中，动态的替换自动注入的bean，以方便测试
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
+    
+      <category term="Mock bean" scheme="http://campusappcn.github.io/tags/Mock-bean/"/>
+    
+      <category term="Injection" scheme="http://campusappcn.github.io/tags/Injection/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分享一些iOS方面的小东西1</title>
+    <link href="http://campusappcn.github.io/2016/02/21/2016-02-21-%E5%88%86%E4%BA%AB%E4%B8%80%E4%BA%9BiOS%E6%96%B9%E9%9D%A2%E7%9A%84%E5%B0%8F%E4%B8%9C%E8%A5%BF1/"/>
+    <id>http://campusappcn.github.io/2016/02/21/2016-02-21-分享一些iOS方面的小东西1/</id>
+    <published>2016-02-20T16:00:00.000Z</published>
+    <updated>2016-02-21T08:57:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;大致总结下去年，虽然忙忙忙，但是其中还是有不少的收获。那么我就分享一点收获吧~&lt;br&gt;先说下之前项目中让我印象最深刻的两个坑吧。（虽然是很小的两个点，但是个人认为还是比较难发现的。）&lt;/p&gt;
+&lt;h4 id=&quot;坑1&quot;&gt;&lt;a href=&quot;#坑1&quot; class=&quot;headerlink&quot; title=&quot;坑1:&quot;&gt;&lt;/a&gt;坑1:&lt;/h4&gt;&lt;p&gt;之前碰到过一个问题是关于debug和release环境下不同的问题，看下面的代码&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;BOOL x;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;int  a = 2;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;if (a==1) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    x = YES;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;那么猜测下打印出来的x是值是多少呢&lt;/p&gt;
+&lt;h5 id=&quot;结果是在debug环境下是-0-而在release环境下是1&quot;&gt;&lt;a href=&quot;#结果是在debug环境下是-0-而在release环境下是1&quot; class=&quot;headerlink&quot; title=&quot;结果是在debug环境下是 0 而在release环境下是1&quot;&gt;&lt;/a&gt;结果是在debug环境下是 0 而在release环境下是1&lt;/h5&gt;&lt;p&gt;原因主要是release环境下，会给未复制的变量 按照意愿复制，而以上代码会给x事先复制YES&lt;/p&gt;
+&lt;p&gt;所以在之后的过程中 我会尽量给变量复制初始值，可以避免这类问题的出现，而且这类问题的排查起来也是很麻烦的，因为在debug环境下不会出现，只有在release环境下才会出现&lt;/p&gt;
+&lt;h4 id=&quot;坑2：&quot;&gt;&lt;a href=&quot;#坑2：&quot; class=&quot;headerlink&quot; title=&quot;坑2：&quot;&gt;&lt;/a&gt;坑2：&lt;/h4&gt;&lt;p&gt;app中有时候会使用到coreData作为数据持久化的方式，一般coreData的保存 使用异步保存方法&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[_parentContext performBlock:^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;之前我们在项目中也会在app即将终止的回调中加入数据库的保存，希望能够把数据做保存。&lt;br&gt;然而如果在app即将终止的时候仍旧是用以上的方法，那么就会出现数据保存不了的情况。因为异步调用，app的生命周期会在其环节中的任何时候结束。所以这里要用同步的&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt; [_parentContext performBlockAndWait:^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;对于工作中遇到的坑，以后我会继续福利给大家。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;下面分享一些之前看过的书中 我觉得比较适合的内容&lt;br&gt;前段时间刚看完的《Effective Objective-C 2.0  编写高质量iOS与OS X代码的52个有效方法》这本书。&lt;br&gt;下面把部分觉得有意思的点拿出来分享下。&lt;/p&gt;
+&lt;h4 id=&quot;1、在类的头文件中尽可能少引入其他的头文件&quot;&gt;&lt;a href=&quot;#1、在类的头文件中尽可能少引入其他的头文件&quot; class=&quot;headerlink&quot; title=&quot;1、在类的头文件中尽可能少引入其他的头文件&quot;&gt;&lt;/a&gt;1、在类的头文件中尽可能少引入其他的头文件&lt;/h4&gt;&lt;p&gt;少用#import xxx.h   如果正要用可以使用@class xxx&lt;br&gt;用@class 这种叫做“向前声明”该类&lt;br&gt;如果使用了import来引入 那么会引入.h中所以引入的内容，当然会增加编译时间，也许还会出现两个类相互引用的问题。&lt;/p&gt;
+&lt;p&gt;那么讲到这里 就有#import、@import、#include、@class这几个&lt;br&gt;#include 一般是c和c++的引入一般用&lt;br&gt;其中#import是objective-c中的一般引入类可以理解为include的改良版 确定文件只能被导入一次，不会在递归包含中出现问题&lt;br&gt;而@import 在xcode 5 下，为了更易于开发，增加了modules和 auto-linking 这两个新特性。用@import 来增加框架&lt;/p&gt;
+&lt;h4 id=&quot;2、多用类型常量，少用-define预处理指令&quot;&gt;&lt;a href=&quot;#2、多用类型常量，少用-define预处理指令&quot; class=&quot;headerlink&quot; title=&quot;2、多用类型常量，少用#define预处理指令&quot;&gt;&lt;/a&gt;2、多用类型常量，少用#define预处理指令&lt;/h4&gt;&lt;p&gt;如#define XXX 0.3&lt;br&gt;这个预处理指令会把源代码中的XXX字符串替换为0.3。这样定义出来的常量没有类型信息，并且，预处理过长会把碰到的所有的xxx一律替换成0.3&lt;br&gt;相对来说在类中定义 static const NSTimeInterval xxx = 0.3; 这样更好一些。即定义了类型，同时也令代码的可阅读性加强&lt;br&gt;注：这里的变量xxx一定要同时用static 和 const 来声明。如果试图修改由const修饰符所声明的变量，那么编译器就会报错。而static修饰符则意味着该变量仅在定义此变量的编译单元中可见。因此如果在其他类中声明了同名的变量 也不会报错，&lt;/p&gt;
+&lt;h4 id=&quot;3、少用try-catch&quot;&gt;&lt;a href=&quot;#3、少用try-catch&quot; class=&quot;headerlink&quot; title=&quot;3、少用try catch&quot;&gt;&lt;/a&gt;3、少用try catch&lt;/h4&gt;&lt;p&gt;在arc情况下 更容易造成内存泄露（具体原因如何就不说了），而且在控制包大小的时候，如果把项目中所有try catch去掉 在设置里吧开启trycatch的开关关掉，能缩减包的大小不少，但是由于经常会用到第三方的库，所以这一点很难把控。所以具体能减少多少，我也没有尝试过。&lt;/p&gt;
+&lt;h4 id=&quot;4、用“自动释放池块”降低内存峰值&quot;&gt;&lt;a href=&quot;#4、用“自动释放池块”降低内存峰值&quot; class=&quot;headerlink&quot; title=&quot;4、用“自动释放池块”降低内存峰值&quot;&gt;&lt;/a&gt;4、用“自动释放池块”降低内存峰值&lt;/h4&gt;&lt;p&gt;objective-c对象的生命期取决于其引用计数。在objective-c的引用计数架构中，有一项特性叫做”自动释放池（autorelease pool）“。释放对象有两种方式：一种是调用release方法，十七保留计数立即递减；另一种是调用autorelease方法，将其加入”自动释放池“中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空（drain）自动释放池时，系统会向其中的对象发送release消息。&lt;br&gt;创建自动释放池所用语法：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;@autoreleasepool&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;然而，一般情况下无须担心自动释放池的创建问题。系统会自动创建一些线程，比如主线程或gcd机制中的线程，这些线程默认都有自动释放池，每次执行“事件循环”时，就会将其清空。因此，不需要自己来创建“自动释放池块”，通常只有一个地方需要创建自动释放池，那就是main函数&lt;br&gt;但是下面这种情况&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;for （int i= 0; i &amp;lt; 10000 ; i++）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   [self doSomething:i];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中doSomething: 方法如果要创建临时对象，那么这些对象很可能会放在自动释放池里，如果这些对象是一些临时字符串，那么即便在调用完方法之后就不再使用了，但是他们也依然是处于存活状态，因为目前还在自动释放池里，等待系统稍后将其释放回收。然而自动释放池要等线程执行下一次事件循环时才会情况，这意味着执行for循环时，会持续有新对象创建出来，并加入自动释放池中，所有这种对象都要等for循环执行完才会释放。这样一来，在执行for循环时，应用程序所占内存会持续上涨，而等到所有执行对象都释放后，内存又突然下降。这种情况不堪理想。&lt;br&gt;那么可以增加一个自动释放池来解决这个问题。如果把循环内的代码包裹在“自动释放池”中，那么在循环中自动释放的对象就会在这个池，而非线程的主池里面&lt;br&gt;如：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;for （int i= 0; i &amp;lt; 10000 ; i++）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;@autoreleasepool&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   [self doSomething:i];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;自动释放池机制就像“栈”一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就相当于将其放入栈定的那个池里。&lt;/p&gt;
+&lt;h4 id=&quot;5、用“僵尸对象”内存管理问题&quot;&gt;&lt;a href=&quot;#5、用“僵尸对象”内存管理问题&quot; class=&quot;headerlink&quot; title=&quot;5、用“僵尸对象”内存管理问题&quot;&gt;&lt;/a&gt;5、用“僵尸对象”内存管理问题&lt;/h4&gt;&lt;p&gt;僵尸对象Zombie Object&lt;/p&gt;
+&lt;p&gt;开发过程中经常会不经意间向已经回收的对象发送消息。然而这是不安全的，因为有时候可以，有时候不可以。具体可行与否，完全取决于对象所占内存有没有为其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔奔溃，在没有奔溃的情况下，那块内存可能只复用了其中一部分，所以对象中的某些二进制数据仍然有效。还有一种可能，那就是那块内存恰好为另外一个有效且存活的对象所占用。在这种情况下，运行期系统会把消息发到新内存对象那里，而此对象也许能应答，也许不能。如果能，那程序就不奔溃，如果不能则奔溃。&lt;br&gt;而cocoa提供了“僵尸对象”。启动这项调试功能后，运行期系统会把所有已经回收的实例转化成特殊的“僵尸对象”，而不会真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象受到消息后，会抛出异常，其中准确的说明了发送过来的消息，并描述了回收之前的那个对象。&lt;br&gt;因此“僵尸对象”也是一直debug的好方法，而且可以排查一些比较隐秘的bug。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要分享iOS开发中的坑和一些小tips
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
+    
+      <category term="tips" scheme="http://campusappcn.github.io/tags/tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>吐槽一下阿里云图片服务</title>
+    <link href="http://campusappcn.github.io/2016/02/20/%E5%90%90%E6%A7%BD%E4%B8%80%E4%B8%8B%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1/"/>
+    <id>http://campusappcn.github.io/2016/02/20/吐槽一下阿里云图片服务/</id>
+    <published>2016-02-20T08:19:17.000Z</published>
+    <updated>2016-02-29T11:15:52.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;起因&quot;&gt;&lt;a href=&quot;#起因&quot; class=&quot;headerlink&quot; title=&quot;起因&quot;&gt;&lt;/a&gt;起因&lt;/h2&gt;&lt;p&gt;近期由于 UPYUN 的图片服务频繁出现低级问题(具体啥问题就不列出来了, 反正影响到我们的业务逻辑), 我们决定整体切换到阿里云图片存储服务. 接入阿里云的过程中, 我们又发现一系列让人恼火的问题, 干脆总结一下解决方法, 顺带吐个槽&lt;/p&gt;
+&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;h3 id=&quot;依赖&quot;&gt;&lt;a href=&quot;#依赖&quot; class=&quot;headerlink&quot; title=&quot;依赖&quot;&gt;&lt;/a&gt;依赖&lt;/h3&gt;&lt;p&gt;问题始于我们 App 的网络库与阿里云 &lt;a href=&quot;https://help.aliyun.com/document_detail/oss/sdk/android-sdk/preface.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SDK&lt;/a&gt; 的依赖冲突上:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我们的 App 使用 Retrofit2 实现网络请求层,  而 Retrofit2 依赖于 &lt;strong&gt;&lt;em&gt;okhttp3&lt;/em&gt;&lt;/strong&gt; 以及 okio&lt;/li&gt;
+&lt;li&gt;阿里云 SDK 的网络请求依赖于 &lt;strong&gt;&lt;em&gt;okhttp2&lt;/em&gt;&lt;/strong&gt; + okio, 并且无法替换&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;由于 okhttp2 和 okhttp3 不兼容, 我们必须同时保留对两者的依赖&lt;/p&gt;
+&lt;h3 id=&quot;Proguard&quot;&gt;&lt;a href=&quot;#Proguard&quot; class=&quot;headerlink&quot; title=&quot;Proguard&quot;&gt;&lt;/a&gt;Proguard&lt;/h3&gt;&lt;p&gt;同时保留 okhttp2 和 okhttp3 带来了新的问题: Proguard&lt;br&gt;由于两个库都包含了一些同名类, 在编译时这些同名类会产生冲突导致编译失败&lt;/p&gt;
+&lt;h2 id=&quot;解决&quot;&gt;&lt;a href=&quot;#解决&quot; class=&quot;headerlink&quot; title=&quot;解决&quot;&gt;&lt;/a&gt;解决&lt;/h2&gt;&lt;h3 id=&quot;方案&quot;&gt;&lt;a href=&quot;#方案&quot; class=&quot;headerlink&quot; title=&quot;方案&quot;&gt;&lt;/a&gt;方案&lt;/h3&gt;&lt;p&gt;在狠狠吐槽阿里云 SDK 后, 我们决定将它抛弃, 毕竟不能为了它而强行降级我们的库.&lt;br&gt;但是我们仍然希望使用阿里云图片存储, 怎么办? 自己实现!&lt;/p&gt;
+&lt;h3 id=&quot;实现&quot;&gt;&lt;a href=&quot;#实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h3&gt;&lt;p&gt;对于我们的业务来说, 目前 SDK 最重要的事情就是帮助生成鉴权信息, 其他功能于我们(暂时)都没啥作用.&lt;br&gt;根据阿里云 SDK 的文档以及阅读源码, 我们了解到了阿里云的 STS 鉴权机制. 剩下来的就是自己实现了.&lt;/p&gt;
+&lt;p&gt;具体的代码没有必要贴出来, 毕竟阅读文档 + 参考源码就能实现. 这里列一下去 SDK 的具体过程吧:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;分析业务逻辑依赖的 SDK 接口&lt;/li&gt;
+&lt;li&gt;实现自定义类 AliyunUtils, 代理对 SDK 的依赖&lt;/li&gt;
+&lt;li&gt;将业务逻辑中所有对 SDK 的依赖重定向到 AliyunUtils 中, 这一步解除了业务代码与阿里云 SDK 的耦合&lt;/li&gt;
+&lt;li&gt;修改 AliyunUtils 的实现, 不再代理 SDK 接口, 而是自己实现鉴权等方法&lt;/li&gt;
+&lt;li&gt;删除阿里云 SDK, 至此, 我们的 App 不再依赖阿里云 SDK, 同时也去掉了对 okhttp2 的依赖&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;思考&quot;&gt;&lt;a href=&quot;#思考&quot; class=&quot;headerlink&quot; title=&quot;思考&quot;&gt;&lt;/a&gt;思考&lt;/h2&gt;&lt;p&gt;阿里云 SDK 使用优秀的网络库是一件极好的事情, 毕竟 okhttp 好用, 可以提升 SDK 开发效率. 但是开发者们忽略了几个问题:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;作为一个优秀的网络库, okhttp 可能早已存在于需求方的依赖列表中&lt;/li&gt;
+&lt;li&gt;okhttp 是在不断更新的&lt;/li&gt;
+&lt;li&gt;阿里云 SDK 里并没有提供设置自定义网络库的接口&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;言尽于此, 想必大家心里有数了, 这个 SDK 的问题不在代码质量而在设计思路, 我们以后在工作中务必引以为戒.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      吐槽一下阿里云 SDK 的设计
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="安卓" scheme="http://campusappcn.github.io/tags/%E5%AE%89%E5%8D%93/"/>
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+      <category term="阿里云" scheme="http://campusappcn.github.io/tags/%E9%98%BF%E9%87%8C%E4%BA%91/"/>
+    
+      <category term="图片" scheme="http://campusappcn.github.io/tags/%E5%9B%BE%E7%89%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring MVC HTTP请求参数劫持、修改</title>
+    <link href="http://campusappcn.github.io/2016/02/20/2016-02-20-Sping%20MVC%20HTTP%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%8A%AB%E6%8C%81%E3%80%81%E4%BF%AE%E6%94%B9/"/>
+    <id>http://campusappcn.github.io/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/</id>
+    <published>2016-02-19T16:00:00.000Z</published>
+    <updated>2016-02-21T03:03:44.000Z</updated>
+    
+    <content type="html">&lt;p&gt;由于历史原因，新项目里使用了一个国人写的PageHelper用做Mybatis的查询分页。PageHelper的使用起来是这样的:&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;PageHelper.startPage(page, PAGE_SIZE, ORDER_BY)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//后续查询会自动带上skip,limit等&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;乍一看这API设计的还挺简洁，然而问题就出现“简洁”上。简洁的代价是，这里使用了静态调用，如果完全按照作者的思路来当然没有问题，一旦出现订制的需求，这里就嗝屁了！静态方法不能重载！换成其他语言，函数地位高的也许还可以把函数给覆盖掉（例如JavaScript），在Java中，所有的重载都必须要基于对象，这也是为什么需要依赖注入框架和POJO，而不是一个个静态调用，因为要换方法，首先换对象，这是OO语言唯一的真理。&lt;/p&gt;
+&lt;p&gt;其实能正常使用也就算了，但是PageHelper的&lt;strong&gt;页码居然是从1开始的&lt;/strong&gt;！？WTF！？这是哪个入门级程序员写的代码？这是跟全体程序员的直觉对着干啊卧槽。这下好了，静态调用的地方都是写死的，作者没有为页码地址预留配置空间，呵呵。&lt;/p&gt;
+&lt;p&gt;吐槽结束。&lt;/p&gt;
+&lt;h2 id=&quot;Spring-MVC救场-HandlerMethodArgumentResolver&quot;&gt;&lt;a href=&quot;#Spring-MVC救场-HandlerMethodArgumentResolver&quot; class=&quot;headerlink&quot; title=&quot;Spring MVC救场 HandlerMethodArgumentResolver&quot;&gt;&lt;/a&gt;Spring MVC救场 HandlerMethodArgumentResolver&lt;/h2&gt;&lt;p&gt;坑已经遇见了，换方案暂时没空。现在能想到的就是如何AOP一下把这个参数给修正掉。在Controller层换是最直接的，因为客户端总要传page参数嘛，把这个参数+1就好了。&lt;/p&gt;
+&lt;p&gt;使用Spring他们家的框架，用起来的体验都是非常舒心加放心的，因为Spring的代码在任何有可能留钩子的地方都预留了钩子！轻轻松松，我们就可以找到HandlerMethodArgumentResolver，这个接口的定义如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;HandlerMethodArgumentResolver&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 这个参数要不要解析&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;supportsParameter&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(MethodParameter parameter)&lt;/span&gt;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 把这个参数给解析了&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;Object &lt;span class=&quot;title&quot;&gt;resolveArgument&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(MethodParameter parameter, ModelAndViewContainer mavContainer,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			NativeWebRequest webRequest, WebDataBinderFactory binderFactory)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;throws&lt;/span&gt; Exception&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;优 雅 。&lt;/p&gt;
+&lt;p&gt;实现一个Resolver并不难，无非是判断参数名是page，就解析成page+1即可。&lt;/p&gt;
+&lt;h2 id=&quot;拦截参数处理-RequestMappingHandlerAdapter&quot;&gt;&lt;a href=&quot;#拦截参数处理-RequestMappingHandlerAdapter&quot; class=&quot;headerlink&quot; title=&quot;拦截参数处理 RequestMappingHandlerAdapter&quot;&gt;&lt;/a&gt;拦截参数处理 RequestMappingHandlerAdapter&lt;/h2&gt;&lt;p&gt;接下来，就是让这个Resolver起作用。网上有一些XML的配置，可以在&lt;context:annotation-config&gt;里面把这个Resolver给配置进去。但是在这个case里，并不能起作用。原因就在于，这个接口本身是为了给那些Spring解析不了的参数预留的，比如一些自定义的对象，所以优先级最低。像page这种基本类型参数，早就被默认的解析器解析完了。&lt;/context:annotation-config&gt;&lt;/p&gt;
+&lt;p&gt;通过Type Hierachy我们可以清楚的看到都有哪些解析器：&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/56380417/TB2r2C7kpXXXXaxXXXXXXXXXXXX_!!56380417.png&quot; alt=&quot;HandlerMethodArgumentResolver的实现类&quot;&gt;&lt;/p&gt;
+&lt;p&gt;这么多，还有分页相关的，可以生成Spring的Pageable对象。不过这玩意页码肯定是从0开始的。找一个看着顺眼的Resolver进去，打个断点进去，调试一下，通过调用栈和源码，可以找到Spring设置这些Resolver的位置。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RequestMappingHandlerAdapter.java&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		invocableMethod.setHandlerMethodArgumentResolvers(&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.argumentResolvers);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		invocableMethod.setHandlerMethodReturnValueHandlers(&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.returnValueHandlers);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		invocableMethod.setDataBinderFactory(binderFactory);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		invocableMethod.setParameterNameDiscoverer(&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.parameterNameDiscoverer);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;也就是说，最终使用的argumentResolvers，是RequestMappingHandlerAdapter设置进去的，我们只需要替换掉这个对象的argumentResolvers即可。为什么不是其他的呢，可以看到这里ServletInvocableHandlerMethod已经是new出来的了，所以我们没法通过注入的方式找到这个对象。如果RequestMappingHandlerAdapter也是new出来的，那我们就还得向上层的调用者继续找。如果这中间，悲催的框架设计者把这里写死了一个new，让我们无法获得这个对象进行定制，那他估计会收到一个issue。&lt;/p&gt;
+&lt;p&gt;剩下的工作就简单了，在Spring Context加载之后，修改一下这个argumentResolvers就行：&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//某bean，比如说上面的自定义Resolver&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//为了防止这个类被lazy load，可以打上@Lazy(false)注解&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Autowired&lt;/span&gt; RequestMappingHandlerAdapter adapter;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@PostConstruct&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        List&amp;lt;HandlerMethodArgumentResolver&amp;gt; argumentResolvers = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ArrayList&amp;lt;&amp;gt;(adapter.getArgumentResolvers());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        List&amp;lt;HandlerMethodArgumentResolver&amp;gt; customResolvers = adapter.getCustomArgumentResolvers();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (customResolvers != &lt;span class=&quot;keyword&quot;&gt;null&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            argumentResolvers.removeAll(customResolvers);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            argumentResolvers.addAll(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, customResolvers);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        argumentResolvers.add(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        adapter.setArgumentResolvers(argumentResolvers);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;写一个MVC测试，搞定。完整源码见：&lt;a href=&quot;https://gist.github.com/rightgenius/8699bb4525df1185af90&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://gist.github.com/rightgenius/8699bb4525df1185af90&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要介绍如何通过Spring MVC修改HTTP请求中的参数
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
+    
+      <category term="Java web" scheme="http://campusappcn.github.io/tags/Java-web/"/>
+    
+      <category term="Spring MVC" scheme="http://campusappcn.github.io/tags/Spring-MVC/"/>
+    
+      <category term="HTTP" scheme="http://campusappcn.github.io/tags/HTTP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android使用FFmpeg实现推送视频直播流到服务器</title>
+    <link href="http://campusappcn.github.io/2016/01/30/2016-01-30-Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>http://campusappcn.github.io/2016/01/30/2016-01-30-Android使用FFMpeg实现推送视频直播流到服务器/</id>
+    <published>2016-01-29T16:00:00.000Z</published>
+    <updated>2016-02-21T03:03:44.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;在过去的2015年中，视频直播页的新宠无疑是户外直播。随着4G网络的普及和覆盖率的提升，主播可以在户外通过手机进行直播。而观众也愿意为这种可以足不出户而观天下事的服务买单。基于这样的背景，本文主要实现在Android设备上采集视频并推流到服务器。&lt;/p&gt;
+&lt;h1 id=&quot;概览&quot;&gt;&lt;a href=&quot;#概览&quot; class=&quot;headerlink&quot; title=&quot;概览&quot;&gt;&lt;/a&gt;概览&lt;/h1&gt;&lt;p&gt;如下图所示，在安卓上采集并推流主要应用到两个类。首先是安卓Api自带的Camera，实现从摄像头采集图像。然后是Javacv&lt;br&gt;中的FFMpegFrameRecorder类实现对Camera采集到的帧编码并推流。&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i2/754328530/TB2zdpskXXXXXbTXXXXXXXXXXXX_!!754328530.jpg&quot; alt=&quot;安卓视频采集图&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;关键步骤与代码&quot;&gt;&lt;a href=&quot;#关键步骤与代码&quot; class=&quot;headerlink&quot; title=&quot;关键步骤与代码&quot;&gt;&lt;/a&gt;关键步骤与代码&lt;/h1&gt;&lt;p&gt;下面结合上面的流程图给出视频采集的关键步骤。&lt;br&gt;首先是Camera类的初始化。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 初始化Camera设备
+cameraDevice = Camera.open();
+     Log.i(LOG_TAG, &amp;quot;cameara open&amp;quot;);
+     cameraView = new CameraView(this, cameraDevice);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的CameraView类是我们实现的负责预览视频采集和将采集到的帧写入FFMpegFrameRecorder的类。具体代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;class CameraView extends SurfaceView implements SurfaceHolder.Callback, PreviewCallback {
+
+    private SurfaceHolder mHolder;
+    private Camera mCamera;
+
+    public CameraView(Context context, Camera camera) {
+        super(context);
+        Log.w(&amp;quot;camera&amp;quot;, &amp;quot;camera view&amp;quot;);
+        mCamera = camera;
+        mHolder = getHolder();
+        //设置SurfaceView 的SurfaceHolder的回调函数
+        mHolder.addCallback(CameraView.this);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //设置Camera预览的回调函数
+        mCamera.setPreviewCallback(CameraView.this);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        try {
+            stopPreview();
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException exception) {
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        stopPreview();
+
+        Camera.Parameters camParams = mCamera.getParameters();
+        List&amp;lt;Camera.Size&amp;gt; sizes = camParams.getSupportedPreviewSizes();
+        // Sort the list in ascending order
+        Collections.sort(sizes, new Comparator&amp;lt;Camera.Size&amp;gt;() {
+
+            public int compare(final Camera.Size a, final Camera.Size b) {
+                return a.width * a.height - b.width * b.height;
+            }
+        });
+
+        // Pick the first preview size that is equal or bigger, or pick the last (biggest) option if we cannot
+        // reach the initial settings of imageWidth/imageHeight.
+        for (int i = 0; i &amp;lt; sizes.size(); i++) {
+            if ((sizes.get(i).width &amp;gt;= imageWidth &amp;amp;&amp;amp; sizes.get(i).height &amp;gt;= imageHeight) || i == sizes.size() - 1) {
+                imageWidth = sizes.get(i).width;
+                imageHeight = sizes.get(i).height;
+                Log.v(LOG_TAG, &amp;quot;Changed to supported resolution: &amp;quot; + imageWidth + &amp;quot;x&amp;quot; + imageHeight);
+                break;
+            }
+        }
+        camParams.setPreviewSize(imageWidth, imageHeight);
+
+        Log.v(LOG_TAG, &amp;quot;Setting imageWidth: &amp;quot; + imageWidth + &amp;quot; imageHeight: &amp;quot; + imageHeight + &amp;quot; frameRate: &amp;quot; + frameRate);
+
+        camParams.setPreviewFrameRate(frameRate);
+        Log.v(LOG_TAG, &amp;quot;Preview Framerate: &amp;quot; + camParams.getPreviewFrameRate());
+
+        mCamera.setParameters(camParams);
+
+        // Set the holder (which might have changed) again
+        try {
+            mCamera.setPreviewDisplay(holder);
+            mCamera.setPreviewCallback(CameraView.this);
+            startPreview();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, &amp;quot;Could not set preview display in surfaceChanged&amp;quot;);
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        try {
+            mHolder.addCallback(null);
+            mCamera.setPreviewCallback(null);
+        } catch (RuntimeException e) {
+            // The camera has probably just been released, ignore.
+        }
+    }
+
+    public void startPreview() {
+        if (!isPreviewOn &amp;amp;&amp;amp; mCamera != null) {
+            isPreviewOn = true;
+            mCamera.startPreview();
+        }
+    }
+
+    public void stopPreview() {
+        if (isPreviewOn &amp;amp;&amp;amp; mCamera != null) {
+            isPreviewOn = false;
+            mCamera.stopPreview();
+        }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        if (audioRecord == null || audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
+            startTime = System.currentTimeMillis();
+            return;
+        }
+        //如果是录播，则把该帧先存在内存中
+        if (RECORD_LENGTH &amp;gt; 0) {
+            int i = imagesIndex++ % images.length;
+            yuvImage = images[i];
+            timestamps[i] = 1000 * (System.currentTimeMillis() - startTime);
+        }
+        if (yuvImage != null &amp;amp;&amp;amp; recording) {
+            ((ByteBuffer) yuvImage.image[0].position(0)).put(data);
+            //如果是直播则直接写入到FFmpegFrameRecorder中
+            if (RECORD_LENGTH &amp;lt;= 0) try {
+                Log.v(LOG_TAG, &amp;quot;Writing Frame&amp;quot;);
+                long t = 1000 * (System.currentTimeMillis() - startTime);
+                if (t &amp;gt; recorder.getTimestamp()) {
+                    recorder.setTimestamp(t);
+                }
+                recorder.record(yuvImage);
+            } catch (FFmpegFrameRecorder.Exception e) {
+                Log.v(LOG_TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;初始化FFmpegFrameRecorder类   &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;recorder = new FFmpegFrameRecorder(ffmpeg_link, imageWidth, imageHeight, 1);
+//设置视频编码  28 指代h.264
+recorder.setVideoCodec(28);
+recorder.setFormat(&amp;quot;flv&amp;quot;);
+//设置采样频率
+recorder.setSampleRate(sampleAudioRateInHz);
+// 设置帧率，即每秒的图像数
+recorder.setFrameRate(frameRate);
+//音频采集线程
+audioRecordRunnable = new AudioRecordRunnable();
+audioThread = new Thread(audioRecordRunnable);
+runAudioThread = true;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中的AudioRecordRunnable是我们自己实现的音频采集线程，代码如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; class AudioRecordRunnable implements Runnable {
+
+    @Override
+    public void run() {
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+
+        // Audio
+        int bufferSize;
+        ShortBuffer audioData;
+        int bufferReadResult;
+
+        bufferSize = AudioRecord.getMinBufferSize(sampleAudioRateInHz,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleAudioRateInHz,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+        //如果是录播，则需要录播长度的缓存
+        if (RECORD_LENGTH &amp;gt; 0) {
+            samplesIndex = 0;
+            samples = new ShortBuffer[RECORD_LENGTH * sampleAudioRateInHz * 2 / bufferSize + 1];
+            for (int i = 0; i &amp;lt; samples.length; i++) {
+                samples[i] = ShortBuffer.allocate(bufferSize);
+            }
+        } else {
+        //直播只需要相当于一帧的音频的数据缓存
+            audioData = ShortBuffer.allocate(bufferSize);
+        }
+
+        Log.d(LOG_TAG, &amp;quot;audioRecord.startRecording()&amp;quot;);
+        audioRecord.startRecording();
+
+        /* ffmpeg_audio encoding loop */
+        while (runAudioThread) {
+            if (RECORD_LENGTH &amp;gt; 0) {
+                audioData = samples[samplesIndex++ % samples.length];
+                audioData.position(0).limit(0);
+            }
+            //Log.v(LOG_TAG,&amp;quot;recording? &amp;quot; + recording);
+            bufferReadResult = audioRecord.read(audioData.array(), 0, audioData.capacity());
+            audioData.limit(bufferReadResult);
+            if (bufferReadResult &amp;gt; 0) {
+                Log.v(LOG_TAG, &amp;quot;bufferReadResult: &amp;quot; + bufferReadResult);
+                // If &amp;quot;recording&amp;quot; isn&amp;apos;t true when start this thread, it never get&amp;apos;s set according to this if statement...!!!
+                // Why?  Good question...
+                if (recording) {
+                       //如果是直播，则直接调用recordSamples 将音频写入Recorder
+                    if (RECORD_LENGTH &amp;lt;= 0) try {
+                        recorder.recordSamples(audioData);
+                        //Log.v(LOG_TAG,&amp;quot;recording &amp;quot; + 1024*i + &amp;quot; to &amp;quot; + 1024*i+1024);
+                    } catch (FFmpegFrameRecorder.Exception e) {
+                        Log.v(LOG_TAG, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        Log.v(LOG_TAG, &amp;quot;AudioThread Finished, release audioRecord&amp;quot;);
+
+        /* encoding finish, release recorder */
+        if (audioRecord != null) {
+            audioRecord.stop();
+            audioRecord.release();
+            audioRecord = null;
+            Log.v(LOG_TAG, &amp;quot;audioRecord released&amp;quot;);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下来是开始直播和停止直播的方法&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//开始直播
+public void startRecording() {
+
+    initRecorder();
+
+    try {
+        recorder.start();
+        startTime = System.currentTimeMillis();
+        recording = true;
+        audioThread.start();
+
+    } catch (FFmpegFrameRecorder.Exception e) {
+        e.printStackTrace();
+    }
+}
+
+public void stopRecording() {
+    //停止音频线程
+    runAudioThread = false;
+    try {
+        audioThread.join();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    audioRecordRunnable = null;
+    audioThread = null;
+
+    if (recorder != null &amp;amp;&amp;amp; recording) {
+    //如果是录播，则将缓存中的帧加上时间戳后写入
+        if (RECORD_LENGTH &amp;gt; 0) {
+            Log.v(LOG_TAG, &amp;quot;Writing frames&amp;quot;);
+            try {
+                int firstIndex = imagesIndex % samples.length;
+                int lastIndex = (imagesIndex - 1) % images.length;
+                if (imagesIndex &amp;lt;= images.length) {
+                    firstIndex = 0;
+                    lastIndex = imagesIndex - 1;
+                }
+                if ((startTime = timestamps[lastIndex] - RECORD_LENGTH * 1000000L) &amp;lt; 0) {
+                    startTime = 0;
+                }
+                if (lastIndex &amp;lt; firstIndex) {
+                    lastIndex += images.length;
+                }
+                for (int i = firstIndex; i &amp;lt;= lastIndex; i++) {
+                    long t = timestamps[i % timestamps.length] - startTime;
+                    if (t &amp;gt;= 0) {
+                        if (t &amp;gt; recorder.getTimestamp()) {
+                            recorder.setTimestamp(t);
+                        }
+                        recorder.record(images[i % images.length]);
+                    }
+                }
+
+                firstIndex = samplesIndex % samples.length;
+                lastIndex = (samplesIndex - 1) % samples.length;
+                if (samplesIndex &amp;lt;= samples.length) {
+                    firstIndex = 0;
+                    lastIndex = samplesIndex - 1;
+                }
+                if (lastIndex &amp;lt; firstIndex) {
+                    lastIndex += samples.length;
+                }
+                for (int i = firstIndex; i &amp;lt;= lastIndex; i++) {
+                    recorder.recordSamples(samples[i % samples.length]);
+                }
+            } catch (FFmpegFrameRecorder.Exception e) {
+                Log.v(LOG_TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        recording = false;
+        Log.v(LOG_TAG, &amp;quot;Finishing recording, calling stop and release on recorder&amp;quot;);
+        try {
+            recorder.stop();
+            recorder.release();
+        } catch (FFmpegFrameRecorder.Exception e) {
+            e.printStackTrace();
+        }
+        recorder = null;
+
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以上即为关键的步骤和代码，下面给出完整项目地址 &lt;a href=&quot;https://github.com/beautifulSoup/RtmpRecoder/tree/master&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RtmpRecorder&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要介绍视频直播源的采集中，如何实现在Android 设备上推送视频流到服务器
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="rtmp" scheme="http://campusappcn.github.io/tags/rtmp/"/>
+    
+      <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
+    
+      <category term="live-stream" scheme="http://campusappcn.github.io/tags/live-stream/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在各端实现Rtmp和hls视频流的播放</title>
+    <link href="http://campusappcn.github.io/2016/01/30/2016-01-30-%E5%9C%A8%E5%90%84%E7%AB%AF%E5%AE%9E%E7%8E%B0Rtmp%E5%92%8Chls%E6%B5%81%E8%A7%86%E9%A2%91%E7%9A%84%E6%92%AD%E6%94%BE/"/>
+    <id>http://campusappcn.github.io/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/</id>
+    <published>2016-01-29T16:00:00.000Z</published>
+    <updated>2016-02-21T03:03:44.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;我们已经在&lt;a href=&quot;http://sixwolf.net/2016/01/29/%E7%9B%B4%E6%92%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%90%AD%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9B%B4%E6%92%AD%E5%B9%B3%E5%8F%B0/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;视频直播解决方案&lt;/a&gt;讨论了如何实现自己的直播平台以及&lt;a href=&quot;http://sixwolf.net/2016/01/30/Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何实现从安卓设备上推流到服务器&lt;/a&gt;。那么我们还剩下最后一波，就是如何将精彩的视频内容展现出来，在本文中将会介绍如何在网页端和安卓设备上实现直播的播放。&lt;/p&gt;
+&lt;h1 id=&quot;安卓设备上的播放——Vitamio&quot;&gt;&lt;a href=&quot;#安卓设备上的播放——Vitamio&quot; class=&quot;headerlink&quot; title=&quot;安卓设备上的播放——Vitamio&quot;&gt;&lt;/a&gt;安卓设备上的播放——Vitamio&lt;/h1&gt;&lt;p&gt;安卓设备3.0以上原生支持hls，但是不支持rtmp，为了统一以及低版本兼容，我们使用第三方的一个播放器库——&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;vitamio&lt;/a&gt;。&lt;br&gt;下面是实例代码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class PlayerActivity extends AppCompatActivity {
+
+private static final String KEY_PATH = &amp;quot;key_path&amp;quot;;
+
+
+@Bind(R.id.vitamio_videoView)
+VideoView vVideoView;
+
+
+public static Intent makeIntent(String rtmpPath){
+    Intent intent = new Intent(App.getContext(), PlayerActivity.class);
+    intent.putExtra(KEY_PATH, rtmpPath);
+    return intent;
+}
+
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (!LibsChecker.checkVitamioLibs(this))
+        return;
+    setContentView(R.layout.activity_player);
+    ButterKnife.bind(this);
+    String path = getIntent().getStringExtra(KEY_PATH);
+    initVideo(path);
+}
+
+
+private void initVideo(String path){
+    HashMap&amp;lt;String, String&amp;gt; options = new HashMap&amp;lt;&amp;gt;();
+    options.put(&amp;quot;rtmp_live&amp;quot;, &amp;quot;1&amp;quot;);
+    vVideoView.setVideoURI(Uri.parse(path), options);
+    vVideoView.setMediaController(new MediaController(this));
+    vVideoView.requestFocus();
+
+    vVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            mediaPlayer.setPlaybackSpeed(1.0f);
+        }
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;}&lt;/p&gt;
+&lt;p&gt;该Activity能够接收一个rtmp或者hls的流地址播放。完整项目地址 &lt;a href=&quot;https://github.com/beautifulSoup/RtmpHlsPlayer/tree/master&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RtmpHlsPlayer&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;hls播放&quot;&gt;&lt;a href=&quot;#hls播放&quot; class=&quot;headerlink&quot; title=&quot;hls播放&quot;&gt;&lt;/a&gt;hls播放&lt;/h1&gt;&lt;p&gt;如果仅需要在移动设备的WebView上播放，我们可以选择使用html中嵌入hls播放。如下html能够在所有Safari或者安卓3.0以上的WebView上播放。这样就不需要使用第三方的播放器。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+    &amp;lt;head&amp;gt;
+       &amp;lt;meta charset=utf-8/&amp;gt;
+    &amp;lt;/head&amp;gt;
+    &amp;lt;body&amp;gt;
+        &amp;lt;div id=&amp;apos;player&amp;apos;&amp;gt;
+           &amp;lt;video width=&amp;quot;640&amp;quot; height=&amp;quot;320&amp;quot; controls&amp;gt;
+                &amp;lt;source src=&amp;quot;http://10.10.5.119/live/livestream.m3u8&amp;quot; type=&amp;quot;application/x-mpegURL&amp;quot;&amp;gt;
+           &amp;lt;/video&amp;gt;
+        &amp;lt;/div&amp;gt;
+    &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;VideoJS&quot;&gt;&lt;a href=&quot;#VideoJS&quot; class=&quot;headerlink&quot; title=&quot;VideoJS&quot;&gt;&lt;/a&gt;VideoJS&lt;/h1&gt;&lt;p&gt;如果我们要让我们的网页支持在所有浏览器上播放，我们就需要使用第三方的播放器。VideoJs是一个较好的播放器库，完全免费，不像JWPlayer一样需要付费才能使用一些高级功能。下面是一个播放的例子。你可以将source标签下的src换成你自己的直播流地址。需要注意的是rtmp流的type是rtmp/flv（flv 跟推流的时候FFmpegFrameRecorder设置的format有关）, hls 的type是application/x-mpegURL。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+  &amp;lt;head&amp;gt;
+  &amp;lt;link href=&amp;quot;http://vjs.zencdn.net/5.5.3/video-js.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;
+
+  &amp;lt;!-- If you&amp;apos;d like to support IE8 --&amp;gt;
+  &amp;lt;script src=&amp;quot;http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+
+&amp;lt;/head&amp;gt;
+
+
+&amp;lt;body&amp;gt;
+
+  &amp;lt;h1&amp;gt;康康的直播间&amp;lt;/h1&amp;gt;
+ &amp;lt;video id=&amp;quot;my-video&amp;quot; class=&amp;quot;video-js&amp;quot; controls preload=&amp;quot;auto&amp;quot; width=&amp;quot;640&amp;quot; height=&amp;quot;264&amp;quot;
+ poster=&amp;quot;https://img.alicdn.com/imgextra/i2/754328530/TB2FpxhkXXXXXa5XXXXXXXXXXXX_!!754328530.jpg&amp;quot; data-setup=&amp;quot;{}&amp;quot;&amp;gt;
+    &amp;lt;source src=&amp;quot;rtmp://10.10.5.119/live/livestream&amp;quot; type=&amp;quot;rtmp/flv&amp;quot;&amp;gt;
+    &amp;lt;!-- 如果上面的rtmp流无法播放，就播放hls流 --&amp;gt;
+    &amp;lt;source src=&amp;quot;http://10.10.5.119/live/livestream.m3u8&amp;quot; type=&amp;apos;application/x-mpegURL&amp;apos;&amp;gt;
+    &amp;lt;p class=&amp;quot;vjs-no-js&amp;quot;&amp;gt;
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      &amp;lt;a href=&amp;quot;http://videojs.com/html5-video-support/&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;supports HTML5 video&amp;lt;/a&amp;gt;
+    &amp;lt;/p&amp;gt;
+ &amp;lt;/video&amp;gt;
+
+ &amp;lt;script src=&amp;quot;http://vjs.zencdn.net/5.5.3/video.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</content>
+    
+    <summary type="html">
+    
+      本篇博客主要介绍在各端实现hls和rtmp流的播放
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="rtmp" scheme="http://campusappcn.github.io/tags/rtmp/"/>
+    
+      <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
+    
+      <category term="player" scheme="http://campusappcn.github.io/tags/player/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>视频直播解决方案-搭建你自己的直播平台</title>
+    <link href="http://campusappcn.github.io/2016/01/29/2016-01-29-%E7%9B%B4%E6%92%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%90%AD%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9B%B4%E6%92%AD%E5%B9%B3%E5%8F%B0/"/>
+    <id>http://campusappcn.github.io/2016/01/29/2016-01-29-直播解决方案-搭建你自己的直播平台/</id>
+    <published>2016-01-28T16:00:00.000Z</published>
+    <updated>2016-02-21T03:03:44.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;当下，视频直播行业在中国逐渐走红。在刚刚过去的2015年，视频直播成为互联网行业最抢眼的领域之一。从游戏到秀场，从传统的网页端到移动互联网，各大直播平台包括斗鱼、熊猫tv、虎牙战旗还有纯移动端的印客、易直播等，群雄割据。言归正转，毕竟本文是一篇技术博客，接下来让我们从技术的角度分析如何搭建一个自己的直播平台。&lt;/p&gt;
+&lt;h1 id=&quot;流程图&quot;&gt;&lt;a href=&quot;#流程图&quot; class=&quot;headerlink&quot; title=&quot;流程图&quot;&gt;&lt;/a&gt;流程图&lt;/h1&gt;&lt;p&gt;首先让我们看一下直播整体流程。&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i2/754328530/TB2mp.yjVXXXXaqXFXXXXXXXXXX_!!754328530.jpg&quot; alt=&quot;直播流程图&quot;&gt;&lt;br&gt;首先是直播视频采集端，由主播通过摄像头手机等采集设备，采集视音频流，编码后采用RTMP协议[^RTMP]推流到直播流服务器。这里采用H.264[^H.264]编码对视频流进行编码，使用AAC[^AAC]对音频流进行编码，采用这两种编码的原因是hls协议[^hls]要求使用这两种编码。&lt;br&gt;接下来直播服务器会对从采集端推送的流进行一定的处理。比如，hls协议会将视频流切片成一个个的TS视频文件缓存在服务器中，同时生成一个m3u8文件记录了视频流中的包含的TS文件。&lt;br&gt;之后如果有播放器请求某一个直播链接，服务器会使用RTMP或者hls协议将流推送到播放器。那么我们该如果根据情况选择这两种协议呢。首先，我们需要明确一点，这两种协议各有利弊。如下所示：   &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;RTMP&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;hls&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;Company&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;Adobe&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;Apple&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;平台支持&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;FlashPlayer &lt;br&gt;等一些网页端的播放器 &lt;br&gt;移动端 Vitamio&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;Apple产品原生支持，&lt;br&gt;Android3.0以上原生支持 桌面机的浏览器需要使用一些第三方库，如JWPlayer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;延迟&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;三秒左右的延迟，实时性较高&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;根据TS长度不同而不同，一般会有10s以上的延迟&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;综合以上因素，我们认为如果对实时性要求较高，那么使用RTMP会比较好。网页端使用RTMP会比较好，因为Flash Player原生支持，而大多数的浏览器都会安装Flash player。而在移动端如果对实时性要求不高，那么采用hls比较好，因为ios包括3.0以上的安卓都原生支持hls协议。接下来本文将根据以上的三个步骤的具体实现分别展开说明，为了篇幅考虑，我们会将一些内容放到子文章中。&lt;/p&gt;
+&lt;h1 id=&quot;视频采集与编码&quot;&gt;&lt;a href=&quot;#视频采集与编码&quot; class=&quot;headerlink&quot; title=&quot;视频采集与编码&quot;&gt;&lt;/a&gt;视频采集与编码&lt;/h1&gt;&lt;p&gt;视频采集可以有多重途径，比如通过电脑摄像头，通过OBS等录屏软件进行录屏，通过手机摄像头采集。由于目前户外直播和移动互联网很火，所以我们就选择实现在安卓设备上通过摄像头采集视频流（其实是因为我是写安卓的= =）。&lt;br&gt;为了实现这一功能，我们使用了一个开源项目&lt;a href=&quot;https://github.com/bytedeco/javacv&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;javacv&lt;/a&gt; 它包含了一些在计算机视觉领域应用比较多的库，我们主要使用的是它的FFMpeg库。使用FFMpeg的FFMpegFrameRecoder类，我们能够方便地将从android摄像头采集到的帧传输到服务器。具体的通过Camera和FFMpeg推流到服务器的实现请看我们的另一篇文章&lt;a href=&quot;http://sixwolf.net/2016/01/30/Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Android使用FFMpeg实现推送视频直播流到服务器&lt;/a&gt;。另外FFMpeg也支持H.264和AAC编码。&lt;/p&gt;
+&lt;h1 id=&quot;直播流服务器&quot;&gt;&lt;a href=&quot;#直播流服务器&quot; class=&quot;headerlink&quot; title=&quot;直播流服务器&quot;&gt;&lt;/a&gt;直播流服务器&lt;/h1&gt;&lt;p&gt;关于直播服务器，我们选择使用我们中国人开发的一个开源项目——&lt;a href=&quot;https://github.com/ossrs/srs&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;srs&lt;/a&gt;，它支持RTMP/HTTP/RTSP等协议的流输入，支持RTMP/HDS/HLS/HTTP等协议的流输出，同时它也支持集群。给作者点赞。&lt;br&gt;关于srs的安装和使用可以直接看它在github上的wiki，这里不再赘述。需要注意的一点是该项目在centos 6.x 和ubunut12.x上能正常编译通过，但是在比如我使用的ubuntu14.04上会有一些依赖包的缺失。所以为了方便考虑的话，读者可以在centos和ubuntu12.x上进行test。&lt;/p&gt;
+&lt;h1 id=&quot;播放器&quot;&gt;&lt;a href=&quot;#播放器&quot; class=&quot;headerlink&quot; title=&quot;播放器&quot;&gt;&lt;/a&gt;播放器&lt;/h1&gt;&lt;p&gt;我们在试验的过程中，使用多种播放器和库在全平台实现了rtmp和hls的播放。在网页端使用了&lt;a href=&quot;http://videojs.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;videojs&lt;/a&gt;，在安卓端使用&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;vitamio&lt;/a&gt;。具体的实现请看我们的另外一篇&lt;a href=&quot;http://sixwolf.net/2016/01/30/%E5%9C%A8%E5%90%84%E7%AB%AF%E5%AE%9E%E7%8E%B0Rtmp%E5%92%8Chls%E6%B5%81%E8%A7%86%E9%A2%91%E7%9A%84%E6%92%AD%E6%94%BE/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何在网页端和移动端播放rtmp和hls视频流&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h1&gt;&lt;p&gt;当然本文中的解决方案只是最简单的，对于直播服务器集群，直播间的创建和管理，直播间直播密码和权限，内容分发网络CDN都没有进行深入的研究。但是通过本实验性项目，我认为对于我们了解整个直播的业务流程还是很有帮助的。&lt;/p&gt;
+&lt;h1 id=&quot;相关文件推荐&quot;&gt;&lt;a href=&quot;#相关文件推荐&quot; class=&quot;headerlink&quot; title=&quot;相关文件推荐&quot;&gt;&lt;/a&gt;相关文件推荐&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/articles/alibaba-broadcast-platform-technology-challenges&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;鏖战双十一-阿里直播平台面临的技术挑战&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;相关项目&quot;&gt;&lt;a href=&quot;#相关项目&quot; class=&quot;headerlink&quot; title=&quot;相关项目&quot;&gt;&lt;/a&gt;相关项目&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/bytedeco/javacv&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;javacv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/ossrs/srs&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;srs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Vitamio&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;[^RTMP]: Real Time Messaging Protocol (RTMP) was initially a proprietary protocol developed by Macromedia for streaming audio, video and data over the Internet, between a Flash player and a server. Macromedia is now owned by Adobe, which has released an incomplete version of the specification of the protocol for public use. (reference from wikipedia )&lt;br&gt;Flash Player是天生能够播放RTMP流的，所以RTMP流可以在网页上得到很好的支持，另外也有很多其他浏览器能够支持播放RTMP流，如比较知名的JW player，videoJS。另外RTMP流的延迟只有3s，比较适合一些实时性和互动性较高的直播。&lt;br&gt;[^H.264]: H.264，同时也是MPEG-4第十部分，是由ITU-T视频编码专家组（VCEG）和ISO/IEC动态图像专家组（MPEG）联合组成的联合视频组（JVT，Joint Video Team）提出的高度压缩数字视频编解码器标准。这个标准通常被称之为H.264/AVC（或者AVC/H.264或者H.264/MPEG-4 AVC或MPEG-4/H.264 AVC）而明确的说明它两方面的开发者。&lt;br&gt;[^AAC]: AAC（Advanced Audio Coding），中文名：高级音频编码，出现于1997年，基于MPEG-2的音频编码技术。由Fraunhofer IIS、杜比实验室、AT&amp;amp;T、Sony等公司共同开发，目的是取代MP3格式。2000年，MPEG-4标准出现后，AAC重新集成了其特性，加入了SBR技术和PS技术，为了区别于传统的MPEG-2 AAC又称为MPEG-4 AAC。&lt;br&gt;[^hls]: HLS (HTTP Live Streaming)，Apple的动态码率自适应技术。主要用于PC和Apple终端的音视频服务。包括一个m3u(8)的索引文件，TS媒体分片文件和key加密串文件。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要介绍视频直播解决方案
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="rtmp" scheme="http://campusappcn.github.io/tags/rtmp/"/>
+    
+      <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
+    
+      <category term="live-stream" scheme="http://campusappcn.github.io/tags/live-stream/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>与AppStore审核的斗智斗勇</title>
+    <link href="http://campusappcn.github.io/2016/01/25/%E4%B8%8EAppStore%E5%AE%A1%E6%A0%B8%E7%9A%84%E6%96%97%E6%99%BA%E6%96%97%E5%8B%87/"/>
+    <id>http://campusappcn.github.io/2016/01/25/与AppStore审核的斗智斗勇/</id>
+    <published>2016-01-25T01:48:41.000Z</published>
+    <updated>2016-01-25T11:12:12.000Z</updated>
+    
+    <content type="html">&lt;p&gt;我是YYDD，一名弱弱的iOS开发。这篇文章是我的个人心得~~&lt;br&gt;提交了4、5个新的app，以及每个版本更新了十几次版本之后，总算是有那么点心得可以和大家交流交流了。 首先来说下新app的提交吧~ 很多时候会碰到创建新app的时候发现名字已经存在不能使用该名字创建了，那怎么办呢！&lt;br&gt;就我所知的办法有两个：&lt;br&gt;1、 你可以提交审核名字的时候加个描述什么的，比如你要提交的app叫“A”，那么你可以叫“A-这是个好app”，然而你下载下来的app仍旧叫A。这样就完美的解决了上面的烦恼。&lt;br&gt;2、 还有一种办法是把主要的语言设置为非中文（或者说选择一个没有和你重名的app所在的国家）。 &lt;/p&gt;
+&lt;p&gt;那么新的app已经创建好了，最头痛的是提交审核了，因为大家都知道排队审核是最拖时间的。（相对以前来说现在已经是快很多了，记得之前还是基本每次审核都需要2周时间，然而现在基本上只要1周时间就可以了。）那么我来说说我在提交审核中碰到的那些坑吧~可以给准备提交app或者将要提交app的小伙伴们做个借鉴。我觉得有以下几点是必须要提到的：&lt;br&gt;1、不能出现检查更新，或者可以检查更新的按钮（这个大家应该都知道了吧）&lt;br&gt;2、对于言|论|自|由|的内容，需要有用户主动可以举报的按钮或者区域（举例如社区中的匿名内容，必须要有用户可以自主举报的按钮，关于这一点我记得当时人家审核团队直接打电话给我说 我还试图和他”狡辩“说我们有自己的一套筛选内容的机制，以及我们的运营人员24小时不停的在审核内容，然而还是不行，审核人员直接和我说你没有 用户可以自主举报的地方审核是不会过的）&lt;br&gt;3、你不能限制用户进入你的app，但是你可以限制用户只使用你的app的部分功能（想到这一点也真是眼泪掉下来，这句话是人家苹果美国团队的某审核团队负责人直接说的原话，具体是怎么回事呢。我来解释一下吧~之前我们的一个app是指适用于校园范围内的，所以一打开app就直接定位，如果用户所在的地理位置不在学校内或者说他不允许使用gps权限，那么我们就禁止他进入，只给他提示界面。然而就是因为这样的原因，导致app不过，他给的理由就是不能限制用户进入你的app这一点，后来还听同事说如果一进来就要注册的app，而注册时候必须要传照片，不然不让注册的好像也是会被拒绝，原因也是这个）&lt;br&gt;4、出现和iphone桌面一样的ui风格（就是说出现圆角的icon并且按照桌面风格排列）&lt;br&gt;5、有未完成的功能（如放着一颗按钮，然后点击告诉他 敬请期待 什么的 肯定是会被拒绝的）(据小伙伴们反馈 这一点现在可以了)&lt;br&gt;6、依赖其他app的功能（这一点主要出现在分享功能上，app中经常会有分享到微信什么的，如果你没有判断用户的手机是否安装了微信，然而苹果审核人员的机子上肯定是不会有微信的，这样他会觉得你们的app 牵涉到了其他的app 这样也是不允许的）&lt;br&gt;7、如果app中有实物奖励的，那么需要备注 这活动和苹果官方 无关之类的。&lt;br&gt;8、如果有个人profile页面展示的，而且有照片啊之类可以自我编辑的，好像也需要有举报等功能。（这一点，我也不是很确定，前几天我朋友碰到的，就是他的app中有profile页，然后可以上传相片，审核被拒的原因，也是说会自主产生内容之类的。。。）&lt;br&gt;好了，暂时跳入脑海的就那么几条，我感觉这几条也是比较容易忽视的。当然还有一些奇葩的比如说ui太丑啊什么的，这种看个人的审美的，再提交一次原模原样的也是会过的，只能说明你的人品不好。 还想说的是，一般的审核新app的提交会比较严格，所以我一般提交的原则是这样的，能呈现给苹果的流程，尽量不呈现给他们，比如说有注册流程的app，那么我就直接提供他们一个测试账号，这样就可以有效的避免了注册流程。如果一个app对性别不同或者身份不能的逻辑是不一样的，那么也给他们一个最简单，牵涉到逻辑，内容最少的一种测试账号。&lt;/p&gt;
+&lt;p&gt;最后我分享一个如何”优雅“的利用加急审核的一个方法，大家都知道加急的地址是这个（&lt;a href=&quot;https://developer.apple.com/appstore/contact/appreviewteam/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://developer.apple.com/appstore/contact/appreviewteam/index.html&lt;/a&gt; ），里面加急的原因也有很多，但是据我多次加急的经验来看，基本只有“critical bug fix”这一个原因是能奏效的。有时候为了遵循上头的意思，没办法只能加急，那么我来说说我用过的“猥琐的”理由吧，用的的最多的一个就是说我们app因为和地理区域有关，所有在特定的区域内做什么什么操作会出现必定的闪退，然而审核团队他们肯定是不在这个区域里面的，所以他们也没有办法重现，只能听我说~ 当然这种事情还是少做的好。还有一点就是之前蛮多人再说加急的次数是有限制的，然而对于这一点我还是比较疑惑的，到底有几次限制我还是不知道，而且是单个app的限制，还是说是账号的限制我也不知道。 &lt;/p&gt;
+&lt;p&gt;结束了~也许以上内容有些讲的也不是很对，主要是写下来和大家交流下，欢迎拍砖~~~&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我是YYDD，一名弱弱的iOS开发。这篇文章是我的个人心得~~&lt;br&gt;提交了4、5个新的app，以及每个版本更新了十几次版本之后，总算是有那么点心得可以和大家交流交流了。 首先来说下新app的提交吧~ 很多时候会碰到创建新app的时候发现名字已经存在不能使用该名字创建了，那
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://campusappcn.github.io/2016/01/01/hello-world/"/>
+    <id>http://campusappcn.github.io/2016/01/01/hello-world/</id>
+    <published>2016-01-01T01:00:00.000Z</published>
+    <updated>2016-02-29T11:15:52.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Run-server&quot;&gt;&lt;a href=&quot;#Run-server&quot; class=&quot;headerlink&quot; title=&quot;Run server&quot;&gt;&lt;/a&gt;Run server&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/server.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Generate-static-files&quot;&gt;&lt;a href=&quot;#Generate-static-files&quot; class=&quot;headerlink&quot; title=&quot;Generate static files&quot;&gt;&lt;/a&gt;Generate static files&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo generate&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/generating.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Generating&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Deploy-to-remote-sites&quot;&gt;&lt;a href=&quot;#Deploy-to-remote-sites&quot; class=&quot;headerlink&quot; title=&quot;Deploy to remote sites&quot;&gt;&lt;/a&gt;Deploy to remote sites&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo deploy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/deployment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deployment&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>

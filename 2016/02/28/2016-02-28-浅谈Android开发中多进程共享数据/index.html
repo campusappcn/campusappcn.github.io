@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>浅谈Android开发中多进程共享数据 | Spacetime</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/pure-min.css"><link rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">浅谈Android开发中多进程共享数据</h1><a id="logo" href="/.">Spacetime</a><p class="description">Blogs from campusapp.cn's crazy developers</p></div><div id="nav-menu"><a href="/." class="current"><i class="icon-home"> 首页</i></a><a href="/archives/"><i class="icon-archive"> 归档</i></a><a href="/about/"><i class="icon-about"> 关于</i></a><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post post-page"><h1 class="post-title">浅谈Android开发中多进程共享数据</h1><div class="post-meta">2016-02-28 | <span class="categories">分类于<a href="/categories/blog/"> blog</a></span></div><div class="post-content"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近在工作中遇到一个需求，需要在接收到推送的时候将推送获得的数据存起来，以供app启动时使用。我们会认为这不是So easy吗？只要把数据存到SharedPreferences中，然后让app打开同一个SharedPreferences读取数据就可以了。但是在实际的测试中，我们发现推送进程存入的数据，并不能在app进程中获得。所以这是为什么呢，也许聪明的读者从我们上面的陈述中已经发现了原因，因为我们有两个进程，推送进程负责将推送数据存入，而app进程负责读取，但是正是由于是两个进程，如果它们同时存在，它们各自在内存中保持了自己的SP对象和数据，在推送进程中的存入并不能在app进程体现出来，并且可能会被app进程刷掉更改的数据。那么我们怎么做才能让这两边共享数据呢？请看下面陈述。</p>
+<h1 id="多进程支持的SharedPreferences（不推荐）"><a href="#多进程支持的SharedPreferences（不推荐）" class="headerlink" title="多进程支持的SharedPreferences（不推荐）"></a>多进程支持的SharedPreferences（不推荐）</h1><p>我们原来的做法是使用SharedPreferences, 自然而然想到，SharedPreferences 在MODE_PRIVATE MODE_PUBLIC 之外其实还可以设置多进程的Flag ———— MODE_MULTI_PROCESS</p>
+<pre><code>SharedPreferences myPrefs = context.getSharedPreferences(MY_FILE_NAME, Context.MODE_MULTI_PROCESS | Context.MODE_PRIVATE);
+</code></pre><p>一旦我们设置了这个Flag，每次调用Context.getSharedPreferences 的时候系统会重新从SP文件中读入数据，因此我们在使用的时候每次读取和存入都要使用Context.getSharedPreferences 重新获取SP实例。即使是这样，由于SP本质上并不是多进程安全的，所以还是无法保证数据的同步，因此该方法我们并没有使用，我们也不推荐使用。</p>
+<h1 id="Tray"><a href="#Tray" class="headerlink" title="Tray"></a>Tray</h1><p>如果SP不是多进程安全的，那么是否有多进程安全的，又有SP功能的第三方项目呢。答案是有的，Tray——一个多进程安全的SharedPreferences，我们可以在Github上找到它，如果是AndroidStudio,可以直接使用Gradle引入，可谓是十分方便，如下是使用的代码，十分简单，没有apply commit，看起来比SP还要简单。</p>
+<pre><code> // create a preference accessor. This is for global app preferences.
+final AppPreferences appPreferences = new AppPreferences(getContext()); // this Preference comes for free from the library
+// save a key value pair
+appPreferences.put(&quot;key&quot;, &quot;lorem ipsum&quot;);
+
+// read the value for your key. the second parameter is a fallback (optional otherwise throws)
+final String value = appPreferences.getString(&quot;key&quot;, &quot;default&quot;);
+Log.v(TAG, &quot;value: &quot; + value); // value: lorem ipsum
+
+// read a key that isn&apos;t saved. returns the default (or throws without default)
+final String defaultValue = appPreferences.getString(&quot;key2&quot;, &quot;default&quot;);
+Log.v(TAG, &quot;value: &quot; + defaultValue); // value: default
+</code></pre><p>但是最终我们并没有选择使用它，主要的原因是它需要minSdk 为15，而我们是支持sdk14的，所以只能果断放弃了。</p>
+<h1 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h1><p>既然Tray不支持sdk15以下的，那么我们是否可以使用Tray的原理自己实现一个呢？在阅读Tray的源码时我们发现其实它是在ContentProvider的基础上做的，而ContentProvider是Android官方支持的多进程安全的。以下是使用ContentProvider的一个例子。</p>
+<pre><code>public class ArticlesProvider extends ContentProvider {  
+    private static final String LOG_TAG = &quot;shy.luo.providers.articles.ArticlesProvider&quot;;  
+
+    private static final String DB_NAME = &quot;Articles.db&quot;;  
+    private static final String DB_TABLE = &quot;ArticlesTable&quot;;  
+    private static final int DB_VERSION = 1;  
+
+    private static final String DB_CREATE = &quot;create table &quot; + DB_TABLE +  
+                            &quot; (&quot; + Articles.ID + &quot; integer primary key autoincrement, &quot; +  
+                            Articles.TITLE + &quot; text not null, &quot; +  
+                            Articles.ABSTRACT + &quot; text not null, &quot; +  
+                            Articles.URL + &quot; text not null);&quot;;  
+
+    private static final UriMatcher uriMatcher;  
+    static {  
+            uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);  
+            uriMatcher.addURI(Articles.AUTHORITY, &quot;item&quot;, Articles.ITEM);  
+            uriMatcher.addURI(Articles.AUTHORITY, &quot;item/#&quot;, Articles.ITEM_ID);  
+            uriMatcher.addURI(Articles.AUTHORITY, &quot;pos/#&quot;, Articles.ITEM_POS);  
+    }  
+
+    private static final HashMap&lt;String, String&gt; articleProjectionMap;  
+    static {  
+            articleProjectionMap = new HashMap&lt;String, String&gt;();  
+            articleProjectionMap.put(Articles.ID, Articles.ID);  
+            articleProjectionMap.put(Articles.TITLE, Articles.TITLE);  
+            articleProjectionMap.put(Articles.ABSTRACT, Articles.ABSTRACT);  
+            articleProjectionMap.put(Articles.URL, Articles.URL);  
+    }  
+
+    private DBHelper dbHelper = null;  
+    private ContentResolver resolver = null;  
+
+    @Override  
+    public boolean onCreate() {  
+            Context context = getContext();  
+            resolver = context.getContentResolver();  
+            dbHelper = new DBHelper(context, DB_NAME, null, DB_VERSION);  
+
+            Log.i(LOG_TAG, &quot;Articles Provider Create&quot;);  
+
+            return true;  
+    }  
+
+    @Override  
+    public String getType(Uri uri) {  
+            switch (uriMatcher.match(uri)) {  
+            case Articles.ITEM:  
+                    return Articles.CONTENT_TYPE;  
+            case Articles.ITEM_ID:  
+            case Articles.ITEM_POS:  
+                    return Articles.CONTENT_ITEM_TYPE;  
+            default:  
+                    throw new IllegalArgumentException(&quot;Error Uri: &quot; + uri);  
+            }  
+    }  
+
+    @Override  
+    public Uri insert(Uri uri, ContentValues values) {  
+            if(uriMatcher.match(uri) != Articles.ITEM) {  
+                    throw new IllegalArgumentException(&quot;Error Uri: &quot; + uri);  
+            }  
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+
+            long id = db.insert(DB_TABLE, Articles.ID, values);  
+            if(id &lt; 0) {  
+                    throw new SQLiteException(&quot;Unable to insert &quot; + values + &quot; for &quot; + uri);  
+            }  
+
+            Uri newUri = ContentUris.withAppendedId(uri, id);  
+            resolver.notifyChange(newUri, null);  
+
+            return newUri;  
+    }  
+
+    @Override  
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {  
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+            int count = 0;  
+
+            switch(uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    count = db.update(DB_TABLE, values, selection, selectionArgs);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    count = db.update(DB_TABLE, values, Articles.ID + &quot;=&quot; + id  
+                                    + (!TextUtils.isEmpty(selection) ? &quot; and (&quot; + selection + &apos;)&apos; : &quot;&quot;), selectionArgs);  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&quot;Error Uri: &quot; + uri);  
+            }  
+
+            resolver.notifyChange(uri, null);  
+
+            return count;  
+    }  
+
+    @Override  
+    public int delete(Uri uri, String selection, String[] selectionArgs) {  
+            SQLiteDatabase db = dbHelper.getWritableDatabase();  
+            int count = 0;  
+
+            switch(uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    count = db.delete(DB_TABLE, selection, selectionArgs);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    count = db.delete(DB_TABLE, Articles.ID + &quot;=&quot; + id  
+                                    + (!TextUtils.isEmpty(selection) ? &quot; and (&quot; + selection + &apos;)&apos; : &quot;&quot;), selectionArgs);  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&quot;Error Uri: &quot; + uri);  
+            }  
+
+            resolver.notifyChange(uri, null);  
+
+            return count;  
+    }  
+
+    @Override  
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {  
+            Log.i(LOG_TAG, &quot;ArticlesProvider.query: &quot; + uri);  
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();  
+
+            SQLiteQueryBuilder sqlBuilder = new SQLiteQueryBuilder();  
+            String limit = null;  
+
+            switch (uriMatcher.match(uri)) {  
+            case Articles.ITEM: {  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    break;  
+            }  
+            case Articles.ITEM_ID: {  
+                    String id = uri.getPathSegments().get(1);  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    sqlBuilder.appendWhere(Articles.ID + &quot;=&quot; + id);  
+                    break;  
+            }  
+            case Articles.ITEM_POS: {  
+                    String pos = uri.getPathSegments().get(1);  
+                    sqlBuilder.setTables(DB_TABLE);  
+                    sqlBuilder.setProjectionMap(articleProjectionMap);  
+                    limit = pos + &quot;, 1&quot;;  
+                    break;  
+            }  
+            default:  
+                    throw new IllegalArgumentException(&quot;Error Uri: &quot; + uri);  
+            }  
+
+            Cursor cursor = sqlBuilder.query(db, projection, selection, selectionArgs, null, null, TextUtils.isEmpty(sortOrder) ? Articles.DEFAULT_SORT_ORDER : sortOrder, limit);  
+            cursor.setNotificationUri(resolver, uri);  
+
+            return cursor;  
+    }  
+
+    @Override  
+    public Bundle call(String method, String request, Bundle args) {  
+            Log.i(LOG_TAG, &quot;ArticlesProvider.call: &quot; + method);  
+
+            if(method.equals(Articles.METHOD_GET_ITEM_COUNT)) {  
+                    return getItemCount();  
+            }  
+
+            throw new IllegalArgumentException(&quot;Error method call: &quot; + method);  
+    }  
+
+    private Bundle getItemCount() {  
+            Log.i(LOG_TAG, &quot;ArticlesProvider.getItemCount&quot;);  
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();  
+            Cursor cursor = db.rawQuery(&quot;select count(*) from &quot; + DB_TABLE, null);  
+
+            int count = 0;  
+            if (cursor.moveToFirst()) {  
+                    count = cursor.getInt(0);  
+            }  
+
+            Bundle bundle = new Bundle();  
+            bundle.putInt(Articles.KEY_ITEM_COUNT, count);  
+
+            cursor.close();  
+            db.close();  
+
+            return bundle;  
+    }  
+
+    private static class DBHelper extends SQLiteOpenHelper {  
+            public DBHelper(Context context, String name, CursorFactory factory, int version) {  
+                    super(context, name, factory, version);  
+            }  
+
+            @Override  
+            public void onCreate(SQLiteDatabase db) {  
+                    db.execSQL(DB_CREATE);  
+            }  
+
+            @Override  
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {  
+                    db.execSQL(&quot;DROP TABLE IF EXISTS &quot; + DB_TABLE);  
+                    onCreate(db);  
+            }  
+    }  
+}  
+</code></pre><p>我们需要创建一个类继承自ContentProvider，并重载以下方法。</p>
+<ul>
+<li>onCreate()，用来执行一些初始化的工作。</li>
+<li>query(Uri, String[], String, String[], String)，用来返回数据给调用者。</li>
+<li>insert(Uri, ContentValues)，用来插入新的数据。</li>
+<li>update(Uri, ContentValues, String, String[])，用来更新已有的数据。</li>
+<li>delete(Uri, String, String[])，用来删除数据。</li>
+<li>getType(Uri)，用来返回数据的MIME类型。</li>
+</ul>
+<p>具体使用参考  <a href="http://blog.csdn.net/luoshengyang/article/details/6950440" target="_blank" rel="external"> Android应用程序组件Content Provider应用实例</a>这篇博客，这里不再赘述。<br>在以上对ContentProvider的使用过程中，我们发现过程比较繁琐，如果对于比较复杂的需求可能还比较使用，但是我们这里的需求其实很简单，完全不需要搞得那么复杂，所以最后我们也没有使用这个方法（你可以理解为本博主比较Lazy）。</p>
+<p>#Broadcast<br>那么是否有更简单的方法呢？由于想到了ContentProvider，我们不由地想到另一个android组件，BroadcastReceiver。那么我们是否可以使用Broadcast 将我们收到的推送数据发送给app进程呢。bingo，这似乎正是我们寻找的又简单又能解决问题的方法。我们来看下代码。</p>
+<p>首先在推送进程收到推送消息时，我们将推送数据存入SP，如果这时候没有app进程，那么下次app进程启动的时候该存入的数据就会被app进程读取到。而如果这时候app进程存在，那么之后的代码就会生效，它使用LocalBroadcastManager 发送一个广播。LocalBroadcastManager发送的广播不会被app之外接收到，通过它注册的Receiver也不会接收到app之外的广播，因此拥有更高的效率。</p>
+<pre><code>pushPref.add(push);
+
+Intent intent = new Intent(PushHandler.KEY_GET_PUSH);
+intent.putExtra(PushHandler.KEY_PUSH_CONTENT, d);
+LocalBroadcastManager.getInstance(context).sendBroadcastSync(intent);
+</code></pre><p>而我们在app进程则注册了一个BroadReceiver来接收上面发出的广播。在收到广播之后将推送数据存入SP。</p>
+<pre><code>public class PushHandler {
+
+public static String KEY_GET_PUSH = &quot;PUSH_RECEIVED&quot;;
+public static String KEY_PUSH_CONTENT = &quot;PUSH_CONTENT&quot;;
+
+// region 推送处理push
+/**
+ * 当有推送时，发一次请求mPushReceiver
+ */
+private static BroadcastReceiver mPushReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Timber.i(&quot;在NoticeAction中收到广播&quot;);
+        PushPref pushPref = App.DI().pushPref();
+        try {
+            String pushContent = intent.getStringExtra(KEY_PUSH_CONTENT);
+            PushEntity pushEntity = App.DI().gson().fromJson(pushContent, PushEntity.class);
+            pushPref.add(pushEntity);
+        } catch (Exception e){
+            Timber.e(e, &quot;存储推送内容出错&quot;);
+        }
+    }
+};
+
+public static  void startListeningToPush(){
+    try {
+        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mPushReceiver, new IntentFilter(KEY_GET_PUSH));
+    } catch (Exception e) {
+        Timber.e(e, &quot;wtf&quot;);
+    }
+}
+public static void stopListeningToPush(){
+    try {
+        LocalBroadcastManager.getInstance(App.getContext()).unregisterReceiver(mPushReceiver);
+    } catch (Exception e) {
+        Timber.e(e, &quot;wtf&quot;);
+    }
+}
+// endregion
+}
+</code></pre><p>该方法相对于上面的方法使用简单，安全可靠，能够比较好的实现我们的需求。不过，在需求比较复杂的时候还是建议使用ContentProvider，因为毕竟这样的方法不是堂堂正道，有种剑走偏锋的感觉。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实现一个需求可以有很多方法，而我们需要寻找的是又简单有可靠的方法，在写代码之前不如多找找资料，多听听别人的意见。</p>
+</div><div class="tags"><a href="/tags/Development/">Development</a><a href="/tags/Android/">Android</a></div><div class="post-nav"><a href="/2016/02/28/ReactiveCocoa2-5修炼-一/" class="pre"><i class="icon-previous">ReactiveCocoa2.5修炼 (一)</i></a><a href="/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/" class="next">Spring测试替换注入的Bean (Mock)<i class="icon-next"></i></a></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="sitesearch" value="http://campusappcn.github.io"/></form></div><div class="widget"><form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="search" name="word" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="si" value="http://campusappcn.github.io"/><input name="tn" type="hidden" value="bds"/><input name="cl" type="hidden" value="3"/><input name="ct" type="hidden" value="2097152"/><input name="s" type="hidden" value="on"/></form></div><div class="widget"><div class="widget-title">分类</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a></li></ul></div><div class="widget"><div class="widget-title">标签</div><div class="tagcloud"><a href="/tags/xcode/" style="font-size: 15px;">xcode</a> <a href="/tags/Development/" style="font-size: 15px;">Development</a> <a href="/tags/hls/" style="font-size: 15px;">hls</a> <a href="/tags/live-stream/" style="font-size: 15px;">live-stream</a> <a href="/tags/安卓/" style="font-size: 15px;">安卓</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/自定义/" style="font-size: 15px;">自定义</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/状态保存/" style="font-size: 15px;">状态保存</a> <a href="/tags/阿里云/" style="font-size: 15px;">阿里云</a> <a href="/tags/图片/" style="font-size: 15px;">图片</a> <a href="/tags/rtmp/" style="font-size: 15px;">rtmp</a> <a href="/tags/buildSetting/" style="font-size: 15px;">buildSetting</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/ReactiveCocoa/" style="font-size: 15px;">ReactiveCocoa</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/Mock-bean/" style="font-size: 15px;">Mock bean</a> <a href="/tags/Injection/" style="font-size: 15px;">Injection</a> <a href="/tags/tips/" style="font-size: 15px;">tips</a> <a href="/tags/Java-web/" style="font-size: 15px;">Java web</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/player/" style="font-size: 15px;">player</a></div></div><div class="widget"><div class="widget-title">最新文章</div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/ReactiveCocoa2-5修炼-一/">ReactiveCocoa2.5修炼 (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-浅谈Android开发中多进程共享数据/">浅谈Android开发中多进程共享数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/">Spring测试替换注入的Bean (Mock)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/21/2016-02-21-分享一些iOS方面的小东西1/">分享一些iOS方面的小东西1</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/吐槽一下阿里云图片服务/">吐槽一下阿里云图片服务</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/">Spring MVC HTTP请求参数劫持、修改</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-Android使用FFMpeg实现推送视频直播流到服务器/">Android使用FFmpeg实现推送视频直播流到服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/">在各端实现Rtmp和hls视频流的播放</a></li></ul></div><div class="widget"><div class="widget-title">友情链接</div><ul></ul><a href="http://campusapp.cn" title="官网" target="_blank">官网</a></div></div></div></div><div id="footer">© <a href="/." rel="nofollow">Spacetime.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div><a id="rocket" href="#top" class="show"></a><script src="/js/jquery.min.js"></script>
+<script src="/js/totop.js"></script><script src="/js/fancybox.pack.js"></script>
+<script src="/js/jquery.fancybox.js"></script><link rel="stylesheet" href="/css/jquery.fancybox.css"></div></body></html>

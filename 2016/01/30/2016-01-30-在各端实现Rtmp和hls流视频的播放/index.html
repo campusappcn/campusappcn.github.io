@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>在各端实现Rtmp和hls视频流的播放 | Spacetime</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/pure-min.css"><link rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">在各端实现Rtmp和hls视频流的播放</h1><a id="logo" href="/.">Spacetime</a><p class="description">Blogs from campusapp.cn's crazy developers</p></div><div id="nav-menu"><a href="/." class="current"><i class="icon-home"> 首页</i></a><a href="/archives/"><i class="icon-archive"> 归档</i></a><a href="/about/"><i class="icon-about"> 关于</i></a><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post post-page"><h1 class="post-title">在各端实现Rtmp和hls视频流的播放</h1><div class="post-meta">2016-01-30 | <span class="categories">分类于<a href="/categories/blog/"> blog</a></span></div><div class="post-content"><p><br><br><br></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>我们已经在<a href="http://sixwolf.net/2016/01/29/%E7%9B%B4%E6%92%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%90%AD%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9B%B4%E6%92%AD%E5%B9%B3%E5%8F%B0/" target="_blank" rel="external">视频直播解决方案</a>讨论了如何实现自己的直播平台以及<a href="http://sixwolf.net/2016/01/30/Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_blank" rel="external">如何实现从安卓设备上推流到服务器</a>。那么我们还剩下最后一波，就是如何将精彩的视频内容展现出来，在本文中将会介绍如何在网页端和安卓设备上实现直播的播放。</p>
+<h1 id="安卓设备上的播放——Vitamio"><a href="#安卓设备上的播放——Vitamio" class="headerlink" title="安卓设备上的播放——Vitamio"></a>安卓设备上的播放——Vitamio</h1><p>安卓设备3.0以上原生支持hls，但是不支持rtmp，为了统一以及低版本兼容，我们使用第三方的一个播放器库——<a href="https://github.com/yixia/VitamioBundle" target="_blank" rel="external">vitamio</a>。<br>下面是实例代码</p>
+<pre><code>public class PlayerActivity extends AppCompatActivity {
+
+private static final String KEY_PATH = &quot;key_path&quot;;
+
+
+@Bind(R.id.vitamio_videoView)
+VideoView vVideoView;
+
+
+public static Intent makeIntent(String rtmpPath){
+    Intent intent = new Intent(App.getContext(), PlayerActivity.class);
+    intent.putExtra(KEY_PATH, rtmpPath);
+    return intent;
+}
+
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (!LibsChecker.checkVitamioLibs(this))
+        return;
+    setContentView(R.layout.activity_player);
+    ButterKnife.bind(this);
+    String path = getIntent().getStringExtra(KEY_PATH);
+    initVideo(path);
+}
+
+
+private void initVideo(String path){
+    HashMap&lt;String, String&gt; options = new HashMap&lt;&gt;();
+    options.put(&quot;rtmp_live&quot;, &quot;1&quot;);
+    vVideoView.setVideoURI(Uri.parse(path), options);
+    vVideoView.setMediaController(new MediaController(this));
+    vVideoView.requestFocus();
+
+    vVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            mediaPlayer.setPlaybackSpeed(1.0f);
+        }
+    });
+}
+</code></pre><p>}</p>
+<p>该Activity能够接收一个rtmp或者hls的流地址播放。完整项目地址 <a href="https://github.com/beautifulSoup/RtmpHlsPlayer/tree/master" target="_blank" rel="external">RtmpHlsPlayer</a></p>
+<h1 id="hls播放"><a href="#hls播放" class="headerlink" title="hls播放"></a>hls播放</h1><p>如果仅需要在移动设备的WebView上播放，我们可以选择使用html中嵌入hls播放。如下html能够在所有Safari或者安卓3.0以上的WebView上播放。这样就不需要使用第三方的播放器。</p>
+<pre><code>&lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+       &lt;meta charset=utf-8/&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id=&apos;player&apos;&gt;
+           &lt;video width=&quot;640&quot; height=&quot;320&quot; controls&gt;
+                &lt;source src=&quot;http://10.10.5.119/live/livestream.m3u8&quot; type=&quot;application/x-mpegURL&quot;&gt;
+           &lt;/video&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h1 id="VideoJS"><a href="#VideoJS" class="headerlink" title="VideoJS"></a>VideoJS</h1><p>如果我们要让我们的网页支持在所有浏览器上播放，我们就需要使用第三方的播放器。VideoJs是一个较好的播放器库，完全免费，不像JWPlayer一样需要付费才能使用一些高级功能。下面是一个播放的例子。你可以将source标签下的src换成你自己的直播流地址。需要注意的是rtmp流的type是rtmp/flv（flv 跟推流的时候FFmpegFrameRecorder设置的format有关）, hls 的type是application/x-mpegURL。</p>
+<pre><code>&lt;html&gt;
+  &lt;head&gt;
+  &lt;link href=&quot;http://vjs.zencdn.net/5.5.3/video-js.css&quot; rel=&quot;stylesheet&quot;&gt;
+
+  &lt;!-- If you&apos;d like to support IE8 --&gt;
+  &lt;script src=&quot;http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js&quot;&gt;&lt;/script&gt;
+
+
+&lt;/head&gt;
+
+
+&lt;body&gt;
+
+  &lt;h1&gt;康康的直播间&lt;/h1&gt;
+ &lt;video id=&quot;my-video&quot; class=&quot;video-js&quot; controls preload=&quot;auto&quot; width=&quot;640&quot; height=&quot;264&quot;
+ poster=&quot;https://img.alicdn.com/imgextra/i2/754328530/TB2FpxhkXXXXXa5XXXXXXXXXXXX_!!754328530.jpg&quot; data-setup=&quot;{}&quot;&gt;
+    &lt;source src=&quot;rtmp://10.10.5.119/live/livestream&quot; type=&quot;rtmp/flv&quot;&gt;
+    &lt;!-- 如果上面的rtmp流无法播放，就播放hls流 --&gt;
+    &lt;source src=&quot;http://10.10.5.119/live/livestream.m3u8&quot; type=&apos;application/x-mpegURL&apos;&gt;
+    &lt;p class=&quot;vjs-no-js&quot;&gt;
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      &lt;a href=&quot;http://videojs.com/html5-video-support/&quot; target=&quot;_blank&quot;&gt;supports HTML5 video&lt;/a&gt;
+    &lt;/p&gt;
+ &lt;/video&gt;
+
+ &lt;script src=&quot;http://vjs.zencdn.net/5.5.3/video.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div><div class="tags"><a href="/tags/Development/">Development</a><a href="/tags/rtmp/">rtmp</a><a href="/tags/hls/">hls</a><a href="/tags/player/">player</a></div><div class="post-nav"><a href="/2016/01/30/2016-01-30-Android使用FFMpeg实现推送视频直播流到服务器/" class="pre"><i class="icon-previous">Android使用FFmpeg实现推送视频直播流到服务器</i></a><a href="/2016/01/29/2016-01-29-直播解决方案-搭建你自己的直播平台/" class="next">视频直播解决方案-搭建你自己的直播平台<i class="icon-next"></i></a></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="sitesearch" value="http://campusappcn.github.io"/></form></div><div class="widget"><form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="search" name="word" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="si" value="http://campusappcn.github.io"/><input name="tn" type="hidden" value="bds"/><input name="cl" type="hidden" value="3"/><input name="ct" type="hidden" value="2097152"/><input name="s" type="hidden" value="on"/></form></div><div class="widget"><div class="widget-title">分类</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a></li></ul></div><div class="widget"><div class="widget-title">标签</div><div class="tagcloud"><a href="/tags/xcode/" style="font-size: 15px;">xcode</a> <a href="/tags/Development/" style="font-size: 15px;">Development</a> <a href="/tags/hls/" style="font-size: 15px;">hls</a> <a href="/tags/live-stream/" style="font-size: 15px;">live-stream</a> <a href="/tags/安卓/" style="font-size: 15px;">安卓</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/自定义/" style="font-size: 15px;">自定义</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/状态保存/" style="font-size: 15px;">状态保存</a> <a href="/tags/阿里云/" style="font-size: 15px;">阿里云</a> <a href="/tags/图片/" style="font-size: 15px;">图片</a> <a href="/tags/rtmp/" style="font-size: 15px;">rtmp</a> <a href="/tags/buildSetting/" style="font-size: 15px;">buildSetting</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/ReactiveCocoa/" style="font-size: 15px;">ReactiveCocoa</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/Mock-bean/" style="font-size: 15px;">Mock bean</a> <a href="/tags/Injection/" style="font-size: 15px;">Injection</a> <a href="/tags/tips/" style="font-size: 15px;">tips</a> <a href="/tags/Java-web/" style="font-size: 15px;">Java web</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/player/" style="font-size: 15px;">player</a></div></div><div class="widget"><div class="widget-title">最新文章</div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/ReactiveCocoa2-5修炼-一/">ReactiveCocoa2.5修炼 (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-浅谈Android开发中多进程共享数据/">浅谈Android开发中多进程共享数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/">Spring测试替换注入的Bean (Mock)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/21/2016-02-21-分享一些iOS方面的小东西1/">分享一些iOS方面的小东西1</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/吐槽一下阿里云图片服务/">吐槽一下阿里云图片服务</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/">Spring MVC HTTP请求参数劫持、修改</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-Android使用FFMpeg实现推送视频直播流到服务器/">Android使用FFmpeg实现推送视频直播流到服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/">在各端实现Rtmp和hls视频流的播放</a></li></ul></div><div class="widget"><div class="widget-title">友情链接</div><ul></ul><a href="http://campusapp.cn" title="官网" target="_blank">官网</a></div></div></div></div><div id="footer">© <a href="/." rel="nofollow">Spacetime.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div><a id="rocket" href="#top" class="show"></a><script src="/js/jquery.min.js"></script>
+<script src="/js/totop.js"></script><script src="/js/fancybox.pack.js"></script>
+<script src="/js/jquery.fancybox.js"></script><link rel="stylesheet" href="/css/jquery.fancybox.css"></div></body></html>

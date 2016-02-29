@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Android使用FFmpeg实现推送视频直播流到服务器 | Spacetime</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/pure-min.css"><link rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Android使用FFmpeg实现推送视频直播流到服务器</h1><a id="logo" href="/.">Spacetime</a><p class="description">Blogs from campusapp.cn's crazy developers</p></div><div id="nav-menu"><a href="/." class="current"><i class="icon-home"> 首页</i></a><a href="/archives/"><i class="icon-archive"> 归档</i></a><a href="/about/"><i class="icon-about"> 关于</i></a><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post post-page"><h1 class="post-title">Android使用FFmpeg实现推送视频直播流到服务器</h1><div class="post-meta">2016-01-30 | <span class="categories">分类于<a href="/categories/blog/"> blog</a></span></div><div class="post-content"><p><br><br><br></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在过去的2015年中，视频直播页的新宠无疑是户外直播。随着4G网络的普及和覆盖率的提升，主播可以在户外通过手机进行直播。而观众也愿意为这种可以足不出户而观天下事的服务买单。基于这样的背景，本文主要实现在Android设备上采集视频并推流到服务器。</p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>如下图所示，在安卓上采集并推流主要应用到两个类。首先是安卓Api自带的Camera，实现从摄像头采集图像。然后是Javacv<br>中的FFMpegFrameRecorder类实现对Camera采集到的帧编码并推流。<br><img src="https://img.alicdn.com/imgextra/i2/754328530/TB2zdpskXXXXXbTXXXXXXXXXXXX_!!754328530.jpg" alt="安卓视频采集图"></p>
+<h1 id="关键步骤与代码"><a href="#关键步骤与代码" class="headerlink" title="关键步骤与代码"></a>关键步骤与代码</h1><p>下面结合上面的流程图给出视频采集的关键步骤。<br>首先是Camera类的初始化。</p>
+<pre><code>// 初始化Camera设备
+cameraDevice = Camera.open();
+     Log.i(LOG_TAG, &quot;cameara open&quot;);
+     cameraView = new CameraView(this, cameraDevice);
+</code></pre><p>上面的CameraView类是我们实现的负责预览视频采集和将采集到的帧写入FFMpegFrameRecorder的类。具体代码如下：</p>
+<pre><code>class CameraView extends SurfaceView implements SurfaceHolder.Callback, PreviewCallback {
+
+    private SurfaceHolder mHolder;
+    private Camera mCamera;
+
+    public CameraView(Context context, Camera camera) {
+        super(context);
+        Log.w(&quot;camera&quot;, &quot;camera view&quot;);
+        mCamera = camera;
+        mHolder = getHolder();
+        //设置SurfaceView 的SurfaceHolder的回调函数
+        mHolder.addCallback(CameraView.this);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //设置Camera预览的回调函数
+        mCamera.setPreviewCallback(CameraView.this);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        try {
+            stopPreview();
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException exception) {
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        stopPreview();
+
+        Camera.Parameters camParams = mCamera.getParameters();
+        List&lt;Camera.Size&gt; sizes = camParams.getSupportedPreviewSizes();
+        // Sort the list in ascending order
+        Collections.sort(sizes, new Comparator&lt;Camera.Size&gt;() {
+
+            public int compare(final Camera.Size a, final Camera.Size b) {
+                return a.width * a.height - b.width * b.height;
+            }
+        });
+
+        // Pick the first preview size that is equal or bigger, or pick the last (biggest) option if we cannot
+        // reach the initial settings of imageWidth/imageHeight.
+        for (int i = 0; i &lt; sizes.size(); i++) {
+            if ((sizes.get(i).width &gt;= imageWidth &amp;&amp; sizes.get(i).height &gt;= imageHeight) || i == sizes.size() - 1) {
+                imageWidth = sizes.get(i).width;
+                imageHeight = sizes.get(i).height;
+                Log.v(LOG_TAG, &quot;Changed to supported resolution: &quot; + imageWidth + &quot;x&quot; + imageHeight);
+                break;
+            }
+        }
+        camParams.setPreviewSize(imageWidth, imageHeight);
+
+        Log.v(LOG_TAG, &quot;Setting imageWidth: &quot; + imageWidth + &quot; imageHeight: &quot; + imageHeight + &quot; frameRate: &quot; + frameRate);
+
+        camParams.setPreviewFrameRate(frameRate);
+        Log.v(LOG_TAG, &quot;Preview Framerate: &quot; + camParams.getPreviewFrameRate());
+
+        mCamera.setParameters(camParams);
+
+        // Set the holder (which might have changed) again
+        try {
+            mCamera.setPreviewDisplay(holder);
+            mCamera.setPreviewCallback(CameraView.this);
+            startPreview();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, &quot;Could not set preview display in surfaceChanged&quot;);
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        try {
+            mHolder.addCallback(null);
+            mCamera.setPreviewCallback(null);
+        } catch (RuntimeException e) {
+            // The camera has probably just been released, ignore.
+        }
+    }
+
+    public void startPreview() {
+        if (!isPreviewOn &amp;&amp; mCamera != null) {
+            isPreviewOn = true;
+            mCamera.startPreview();
+        }
+    }
+
+    public void stopPreview() {
+        if (isPreviewOn &amp;&amp; mCamera != null) {
+            isPreviewOn = false;
+            mCamera.stopPreview();
+        }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        if (audioRecord == null || audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
+            startTime = System.currentTimeMillis();
+            return;
+        }
+        //如果是录播，则把该帧先存在内存中
+        if (RECORD_LENGTH &gt; 0) {
+            int i = imagesIndex++ % images.length;
+            yuvImage = images[i];
+            timestamps[i] = 1000 * (System.currentTimeMillis() - startTime);
+        }
+        if (yuvImage != null &amp;&amp; recording) {
+            ((ByteBuffer) yuvImage.image[0].position(0)).put(data);
+            //如果是直播则直接写入到FFmpegFrameRecorder中
+            if (RECORD_LENGTH &lt;= 0) try {
+                Log.v(LOG_TAG, &quot;Writing Frame&quot;);
+                long t = 1000 * (System.currentTimeMillis() - startTime);
+                if (t &gt; recorder.getTimestamp()) {
+                    recorder.setTimestamp(t);
+                }
+                recorder.record(yuvImage);
+            } catch (FFmpegFrameRecorder.Exception e) {
+                Log.v(LOG_TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre><p>初始化FFmpegFrameRecorder类   </p>
+<pre><code>recorder = new FFmpegFrameRecorder(ffmpeg_link, imageWidth, imageHeight, 1);
+//设置视频编码  28 指代h.264
+recorder.setVideoCodec(28);
+recorder.setFormat(&quot;flv&quot;);
+//设置采样频率
+recorder.setSampleRate(sampleAudioRateInHz);
+// 设置帧率，即每秒的图像数
+recorder.setFrameRate(frameRate);
+//音频采集线程
+audioRecordRunnable = new AudioRecordRunnable();
+audioThread = new Thread(audioRecordRunnable);
+runAudioThread = true;
+</code></pre><p>其中的AudioRecordRunnable是我们自己实现的音频采集线程，代码如下</p>
+<pre><code> class AudioRecordRunnable implements Runnable {
+
+    @Override
+    public void run() {
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+
+        // Audio
+        int bufferSize;
+        ShortBuffer audioData;
+        int bufferReadResult;
+
+        bufferSize = AudioRecord.getMinBufferSize(sampleAudioRateInHz,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleAudioRateInHz,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+        //如果是录播，则需要录播长度的缓存
+        if (RECORD_LENGTH &gt; 0) {
+            samplesIndex = 0;
+            samples = new ShortBuffer[RECORD_LENGTH * sampleAudioRateInHz * 2 / bufferSize + 1];
+            for (int i = 0; i &lt; samples.length; i++) {
+                samples[i] = ShortBuffer.allocate(bufferSize);
+            }
+        } else {
+        //直播只需要相当于一帧的音频的数据缓存
+            audioData = ShortBuffer.allocate(bufferSize);
+        }
+
+        Log.d(LOG_TAG, &quot;audioRecord.startRecording()&quot;);
+        audioRecord.startRecording();
+
+        /* ffmpeg_audio encoding loop */
+        while (runAudioThread) {
+            if (RECORD_LENGTH &gt; 0) {
+                audioData = samples[samplesIndex++ % samples.length];
+                audioData.position(0).limit(0);
+            }
+            //Log.v(LOG_TAG,&quot;recording? &quot; + recording);
+            bufferReadResult = audioRecord.read(audioData.array(), 0, audioData.capacity());
+            audioData.limit(bufferReadResult);
+            if (bufferReadResult &gt; 0) {
+                Log.v(LOG_TAG, &quot;bufferReadResult: &quot; + bufferReadResult);
+                // If &quot;recording&quot; isn&apos;t true when start this thread, it never get&apos;s set according to this if statement...!!!
+                // Why?  Good question...
+                if (recording) {
+                       //如果是直播，则直接调用recordSamples 将音频写入Recorder
+                    if (RECORD_LENGTH &lt;= 0) try {
+                        recorder.recordSamples(audioData);
+                        //Log.v(LOG_TAG,&quot;recording &quot; + 1024*i + &quot; to &quot; + 1024*i+1024);
+                    } catch (FFmpegFrameRecorder.Exception e) {
+                        Log.v(LOG_TAG, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        Log.v(LOG_TAG, &quot;AudioThread Finished, release audioRecord&quot;);
+
+        /* encoding finish, release recorder */
+        if (audioRecord != null) {
+            audioRecord.stop();
+            audioRecord.release();
+            audioRecord = null;
+            Log.v(LOG_TAG, &quot;audioRecord released&quot;);
+        }
+    }
+}
+</code></pre><p>接下来是开始直播和停止直播的方法</p>
+<pre><code>//开始直播
+public void startRecording() {
+
+    initRecorder();
+
+    try {
+        recorder.start();
+        startTime = System.currentTimeMillis();
+        recording = true;
+        audioThread.start();
+
+    } catch (FFmpegFrameRecorder.Exception e) {
+        e.printStackTrace();
+    }
+}
+
+public void stopRecording() {
+    //停止音频线程
+    runAudioThread = false;
+    try {
+        audioThread.join();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    audioRecordRunnable = null;
+    audioThread = null;
+
+    if (recorder != null &amp;&amp; recording) {
+    //如果是录播，则将缓存中的帧加上时间戳后写入
+        if (RECORD_LENGTH &gt; 0) {
+            Log.v(LOG_TAG, &quot;Writing frames&quot;);
+            try {
+                int firstIndex = imagesIndex % samples.length;
+                int lastIndex = (imagesIndex - 1) % images.length;
+                if (imagesIndex &lt;= images.length) {
+                    firstIndex = 0;
+                    lastIndex = imagesIndex - 1;
+                }
+                if ((startTime = timestamps[lastIndex] - RECORD_LENGTH * 1000000L) &lt; 0) {
+                    startTime = 0;
+                }
+                if (lastIndex &lt; firstIndex) {
+                    lastIndex += images.length;
+                }
+                for (int i = firstIndex; i &lt;= lastIndex; i++) {
+                    long t = timestamps[i % timestamps.length] - startTime;
+                    if (t &gt;= 0) {
+                        if (t &gt; recorder.getTimestamp()) {
+                            recorder.setTimestamp(t);
+                        }
+                        recorder.record(images[i % images.length]);
+                    }
+                }
+
+                firstIndex = samplesIndex % samples.length;
+                lastIndex = (samplesIndex - 1) % samples.length;
+                if (samplesIndex &lt;= samples.length) {
+                    firstIndex = 0;
+                    lastIndex = samplesIndex - 1;
+                }
+                if (lastIndex &lt; firstIndex) {
+                    lastIndex += samples.length;
+                }
+                for (int i = firstIndex; i &lt;= lastIndex; i++) {
+                    recorder.recordSamples(samples[i % samples.length]);
+                }
+            } catch (FFmpegFrameRecorder.Exception e) {
+                Log.v(LOG_TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        recording = false;
+        Log.v(LOG_TAG, &quot;Finishing recording, calling stop and release on recorder&quot;);
+        try {
+            recorder.stop();
+            recorder.release();
+        } catch (FFmpegFrameRecorder.Exception e) {
+            e.printStackTrace();
+        }
+        recorder = null;
+
+    }
+}
+</code></pre><p>以上即为关键的步骤和代码，下面给出完整项目地址 <a href="https://github.com/beautifulSoup/RtmpRecoder/tree/master" target="_blank" rel="external">RtmpRecorder</a></p>
+</div><div class="tags"><a href="/tags/Development/">Development</a><a href="/tags/rtmp/">rtmp</a><a href="/tags/hls/">hls</a><a href="/tags/live-stream/">live-stream</a></div><div class="post-nav"><a href="/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/" class="pre"><i class="icon-previous">Spring MVC HTTP请求参数劫持、修改</i></a><a href="/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/" class="next">在各端实现Rtmp和hls视频流的播放<i class="icon-next"></i></a></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="sitesearch" value="http://campusappcn.github.io"/></form></div><div class="widget"><form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="search" name="word" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="si" value="http://campusappcn.github.io"/><input name="tn" type="hidden" value="bds"/><input name="cl" type="hidden" value="3"/><input name="ct" type="hidden" value="2097152"/><input name="s" type="hidden" value="on"/></form></div><div class="widget"><div class="widget-title">分类</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a></li></ul></div><div class="widget"><div class="widget-title">标签</div><div class="tagcloud"><a href="/tags/xcode/" style="font-size: 15px;">xcode</a> <a href="/tags/Development/" style="font-size: 15px;">Development</a> <a href="/tags/hls/" style="font-size: 15px;">hls</a> <a href="/tags/live-stream/" style="font-size: 15px;">live-stream</a> <a href="/tags/安卓/" style="font-size: 15px;">安卓</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/自定义/" style="font-size: 15px;">自定义</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/状态保存/" style="font-size: 15px;">状态保存</a> <a href="/tags/阿里云/" style="font-size: 15px;">阿里云</a> <a href="/tags/图片/" style="font-size: 15px;">图片</a> <a href="/tags/rtmp/" style="font-size: 15px;">rtmp</a> <a href="/tags/buildSetting/" style="font-size: 15px;">buildSetting</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/ReactiveCocoa/" style="font-size: 15px;">ReactiveCocoa</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/Mock-bean/" style="font-size: 15px;">Mock bean</a> <a href="/tags/Injection/" style="font-size: 15px;">Injection</a> <a href="/tags/tips/" style="font-size: 15px;">tips</a> <a href="/tags/Java-web/" style="font-size: 15px;">Java web</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/player/" style="font-size: 15px;">player</a></div></div><div class="widget"><div class="widget-title">最新文章</div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/ReactiveCocoa2-5修炼-一/">ReactiveCocoa2.5修炼 (一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-浅谈Android开发中多进程共享数据/">浅谈Android开发中多进程共享数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/">Spring测试替换注入的Bean (Mock)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/21/2016-02-21-分享一些iOS方面的小东西1/">分享一些iOS方面的小东西1</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/吐槽一下阿里云图片服务/">吐槽一下阿里云图片服务</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/">Spring MVC HTTP请求参数劫持、修改</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-Android使用FFMpeg实现推送视频直播流到服务器/">Android使用FFmpeg实现推送视频直播流到服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/">在各端实现Rtmp和hls视频流的播放</a></li></ul></div><div class="widget"><div class="widget-title">友情链接</div><ul></ul><a href="http://campusapp.cn" title="官网" target="_blank">官网</a></div></div></div></div><div id="footer">© <a href="/." rel="nofollow">Spacetime.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div><a id="rocket" href="#top" class="show"></a><script src="/js/jquery.min.js"></script>
+<script src="/js/totop.js"></script><script src="/js/fancybox.pack.js"></script>
+<script src="/js/jquery.fancybox.js"></script><link rel="stylesheet" href="/css/jquery.fancybox.css"></div></body></html>
