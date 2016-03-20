@@ -1,0 +1,819 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,MVVM,MVC,MVP,Pan," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Spacetime" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Pan是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。
+臃肿的Activity和Fragment相信写安卓的人都深有体会，Acti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pan的简介和设计思路">
+<meta property="og:url" content="http://campusappcn.github.io/2016/03/18/2016-03-18-Pan的简介和设计思路/index.html">
+<meta property="og:site_name" content="Spacetime">
+<meta property="og:description" content="Pan是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。
+臃肿的Activity和Fragment相信写安卓的人都深有体会，Acti">
+<meta property="og:image" content="https://img.alicdn.com/imgextra/i4/56380417/TB2KrLBlVXXXXcWXXXXXXXXXXXX_!!56380417.png">
+<meta property="og:updated_time" content="2016-03-20T09:06:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pan的简介和设计思路">
+<meta name="twitter:description" content="Pan是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。
+臃肿的Activity和Fragment相信写安卓的人都深有体会，Acti">
+<meta name="twitter:image" content="https://img.alicdn.com/imgextra/i4/56380417/TB2KrLBlVXXXXcWXXXXXXXXXXXX_!!56380417.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Pan的简介和设计思路 | Spacetime </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?085a97e002c742dcfce5c6299167ee8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Spacetime</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Blogs from campusapp.cn's crazy developers</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Pan的简介和设计思路
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <a href='http://nius.me' class="post-author">nius</a>
+          
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-18T00:00:00+08:00" content="2016-03-18">
+              2016-03-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/18/2016-03-18-Pan的简介和设计思路/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/18/2016-03-18-Pan的简介和设计思路/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/campusappcn/Pan" target="_blank" rel="external">Pan</a>是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。</p>
+<h2 id="臃肿的Activity和Fragment"><a href="#臃肿的Activity和Fragment" class="headerlink" title="臃肿的Activity和Fragment"></a>臃肿的Activity和Fragment</h2><p>相信写安卓的人都深有体会，Activity里面一不小心就会有上千行的代码。安卓的MVC设计，Activity本身承担部分Controller的角色；而View的角色由View类型和XML来承担，同时View类型的EventListener由会承担部分的Controller角色；Model交给开发者自由选择。而一旦到真实的实践中，Activity或者Fragment往往会承担大量的代码，主要包含：</p>
+<ol>
+<li>页面的生命周期管理，e.g. onStop</li>
+<li>View的渲染细节控制，e.g. 例如setText</li>
+<li>用户交互事件的绑定，e.g. 例如setOnClickListener</li>
+<li>异步网络请求</li>
+<li>Fragment生命周期管理</li>
+</ol>
+<p>简单的页面或许没什么问题，一旦业务逻辑复杂，Activity到后期基本无法维护，因为要做的事情太多了。</p>
+<a id="more"></a>
+<p>或许你会认为，这是程序员代码能力差导致的。考虑到实际情况，团队中的人也许并不是你能选择的，或者团队成员彼此无法认同对方的编码思路，最终的结果仍然是bad ending。</p>
+<h2 id="MVP-难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖"><a href="#MVP-难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖" class="headerlink" title="MVP: 难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖"></a>MVP: 难以上手的<a href="https://github.com/square/mortar" target="_blank" rel="external">mortar</a>，解耦不彻底的<a href="https://github.com/konmik/nucleus" target="_blank" rel="external">nucleus</a>和<a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwj1xY_7icrLAhUsnoMKHVbaCEIQFggcMAA&amp;url=http%3A%2F%2Fdeveloper.android.com%2Ftools%2Fdata-binding%2Fguide.html&amp;usg=AFQjCNH-v4_t0AHIBOQYWBUL_p85OAupyg&amp;sig2=2xv9qnfsbku8FWvKjct6GQ" target="_blank" rel="external">Data-binding</a>语法糖</h2><p>说起MVP框架，首先可能想到的就是square的mortar。mortar很早就写出来了，搭配自家的依赖注入Dagger和Flow。mortar里面很多设计理念很先进，例如通过view组织界面而不是Activity/Fragment，彻底分离View、Presenter、Screen、Activty/Fragment、model层的请求，成功的将整个程序拆成了多种单元，通过依赖注入粘合在一起。这也同样造成了他流行不起来，因为想要mortar，就得把square家族大礼包全部都加进来，彻底的认同一整套square的思维方式，锁定技术栈。学习成本和定制成本都很高。</p>
+<p>nucleus是一个轻量级的MVP框架，轻量到……Activity里还是有很多代码，nucleus只把Presenter分离出来，但同时Presenter是与Activity绑定的，这让Presenter的可复用性大大下降，例如一个界面上，局部的Presenter完全可以用到别的Activity/Fragment上的，所以必须要将Presenter和Activity解耦。在实际的编码过程中，ListView或者RecyclerView中Item都是一个可以独立看待的部件，且可能会在其他的非ListView环境中使用。这意味着和Activity绑定后很多内容的复用还得自己想办法。而且nucleus并不管事件跳转，还是写在Activity里，所以Activity还是会臃肿。</p>
+<p>官方Data-binding本身只是个setText的语法糖，只把上面提到的View的渲染细节控制解决了一下，而且一定无法彻底解决，逻辑一复杂，还是得用java。</p>
+<h2 id="Pan的设计目标"><a href="#Pan的设计目标" class="headerlink" title="Pan的设计目标"></a><a href="https://github.com/campusappcn/Pan" target="_blank" rel="external">Pan</a>的设计目标</h2><p>Pan的设计初衷，就是要给Activity瘦身，最好保持在100行以下，甚至50行以下。综合考虑，还有下面这些目标：</p>
+<ol>
+<li>兼容性，可以和不使用Pan框架的代码兼容，支持逐步重构</li>
+<li>解耦Activity和View，界面部件可以在Activity、Fragment、View中复用</li>
+<li>View通过ViewModel被动更新，即ViewModel -&gt; View</li>
+<li>分离渲染逻辑和控制逻辑，setText和setOnClickListener不要写在一起</li>
+<li>控制逻辑中，应该能够对当前的Activity、Fragment的生命周期进行监控，从而将UI操作和界面周期控制放在一起</li>
+<li>不追求魔法，低学习成本，KISS</li>
+</ol>
+<p>当然，除了上述目标外，到具体实现层面，还有些务实的目标，例如兼容安卓的ViewHolder重用机制。</p>
+<h2 id="Pan的模型，MV"><a href="#Pan的模型，MV" class="headerlink" title="Pan的模型，MV*"></a>Pan的模型，MV*</h2><p>依据上述的目标，Pan的模型比传统的MVC、MVVM模型更加务实，不追求理论上的完美，而在乎实际使用中的易于上手。我们可以称之为<a href="http://stackoverflow.com/questions/13329485/mvw-what-does-it-stand-for" target="_blank" rel="external">MVW(Whatever)</a></p>
+<p><img src="https://img.alicdn.com/imgextra/i4/56380417/TB2KrLBlVXXXXcWXXXXXXXXXXXX_!!56380417.png" alt="MVC &amp; MVVM &amp; Pan"></p>
+<p>后续的文章会进一步介绍Pan，并逐渐完善Pan的文档。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/MVVM/" rel="tag">#MVVM</a>
+          
+            <a href="/tags/MVC/" rel="tag">#MVC</a>
+          
+            <a href="/tags/MVP/" rel="tag">#MVP</a>
+          
+            <a href="/tags/Pan/" rel="tag">#Pan</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/15/iOS中富文本的AttributeNames/" rel="next" title="iOS中富文本的AttributeNames">
+                <i class="fa fa-chevron-left"></i> iOS中富文本的AttributeNames
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/20/移动应用开发的安全性问题/" rel="prev" title="移动应用开发的安全性问题">
+                移动应用开发的安全性问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/03/18/2016-03-18-Pan的简介和设计思路/"
+     data-title="Pan的简介和设计思路"
+     data-content=""
+     data-url="http://campusappcn.github.io/2016/03/18/2016-03-18-Pan的简介和设计思路/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/18/2016-03-18-Pan的简介和设计思路/"
+           data-title="Pan的简介和设计思路" data-url="http://campusappcn.github.io/2016/03/18/2016-03-18-Pan的简介和设计思路/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://campusapp.cn/imgs/logo-800x800.png"
+               alt="developers from campusapp.cn" />
+          <p class="site-author-name" itemprop="name">developers from campusapp.cn</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/campusappcn" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#臃肿的Activity和Fragment"><span class="nav-number">1.</span> <span class="nav-text">臃肿的Activity和Fragment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP-难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖"><span class="nav-number">2.</span> <span class="nav-text">MVP: 难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pan的设计目标"><span class="nav-number">3.</span> <span class="nav-text">Pan的设计目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pan的模型，MV"><span class="nav-number">4.</span> <span class="nav-text">Pan的模型，MV*</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">developers from campusapp.cn</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.scheme !== 'Pisces' && (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always')) {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"campusappcn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+
+</body>
+</html>

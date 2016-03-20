@@ -1,3 +1,1614 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Spacetime | Blogs from campusapp.cn's crazy developers</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/pure-min.css"><link rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Spacetime</h1><a id="logo" href="/.">Spacetime</a><p class="description">Blogs from campusapp.cn's crazy developers</p></div><div id="nav-menu"><a href="/." class="current"><i class="icon-home"> 首页</i></a><a href="/archives/"><i class="icon-archive"> 归档</i></a><a href="/about/"><i class="icon-about"> 关于</i></a><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h2 class="post-title"><a href="/2016/03/12/类型判断上的小技巧/">类型判断上的小技巧</a></h2><div class="post-meta">2016-03-12<span class="author"> | 作者 YYDD</span></div><div class="post-content">统一的做一个类型判断，告别此类闪退</div><p class="readmore"><a href="/2016/03/12/类型判断上的小技巧/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/08/iOS中如何优雅的应对无限闪退/">iOS中如何优雅的应对无限闪退</a></h2><div class="post-meta">2016-03-08<span class="author"> | 作者 YYDD</span></div><div class="post-content">告别无限闪退带来的烦恼</div><p class="readmore"><a href="/2016/03/08/iOS中如何优雅的应对无限闪退/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/07/如何判断-TextView-内容是否被缩略/">如何判断 TextView 内容是否被缩略</a></h2><div class="post-meta">2016-03-07<span class="author"> | 作者 chen</span></div><div class="post-content">奇技淫巧之如何判断一个 TextView 的内容是否被省略了</div><p class="readmore"><a href="/2016/03/07/如何判断-TextView-内容是否被缩略/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/07/2016-03-07-MVVM的图形界面测试/">MVVM的图形界面单元测试</a></h2><div class="post-meta">2016-03-07<span class="author"> | 作者 nius</span></div><div class="post-content">讨论如何对图形界面进行单元测试</div><p class="readmore"><a href="/2016/03/07/2016-03-07-MVVM的图形界面测试/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/">Android单元测试详解（1）——— AndroidJunitTest</a></h2><div class="post-meta">2016-03-06<span class="author"> | 作者 BeautifulSoup</span></div><div class="post-content">本篇博客主要分析目前主流的Android测试框架AndroidJunitTest</div><p class="readmore"><a href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/03/iOS中一个可以获得参数个数的宏/">iOS中一个可以获得参数个数的宏</a></h2><div class="post-meta">2016-03-03<span class="author"> | 作者 Kael</span></div><div class="post-content"><h2 id="metamacro-argcount-…"><a href="#metamacro-argcount-…" class="headerlink" title="metamacro_argcount(…)"></a><a href="https://github.com/ReactiveCocoa/ReactiveCocoa/blob/e16f47cf9cb568136ebd81430b24af274c3c27c7/ReactiveCocoa/Objective-C/extobjc/metamacros.h#L45" target="_blank" rel="external">metamacro_argcount(…)</a></h2><p>metamacro_argcount一个可以获得传入参数个数的Macro,<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version); 结果为<span class="number">2.</span></span><br><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version, <span class="keyword">super</span>); 结果为<span class="number">3</span></span><br><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version, <span class="literal">nil</span>); 结果为<span class="number">3</span></span><br></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2016/03/03/iOS中一个可以获得参数个数的宏/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/02/ReactiveCocoa2-5修炼-三/">ReactiveCocoa2-5修炼 (三)</a></h2><div class="post-meta">2016-03-02<span class="author"> | 作者 Kael</span></div><div class="post-content"><p>上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,<br>1.concat<br>2.then<br>3.merge<br>4.flatten</p></div><p class="readmore"><a href="/2016/03/02/ReactiveCocoa2-5修炼-三/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/03/01/ReactiveCocoa2-5修炼-二/">ReactiveCocoa2-5修炼 (二)</a></h2><div class="post-meta">2016-03-01<span class="author"> | 作者 Kael</span></div><div class="post-content"><p>上一篇阅读了<code>RACSignal</code>订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering<br>本文主要内容:<br>1.map操作的源码阅读;(其实是flattenMap:的源码)<br>2.filter操作<br>3.空信号RACEmptySignal</p></div><p class="readmore"><a href="/2016/03/01/ReactiveCocoa2-5修炼-二/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></h2><div class="post-meta">2016-02-29<span class="author"> | 作者 YYDD</span></div><div class="post-content">一个关于BuildSetting的点~</div><p class="readmore"><a href="/2016/02/29/xcode的BuildSettings/">阅读更多</a></p></div><div class="post"><h2 class="post-title"><a href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></h2><div class="post-meta">2016-02-28<span class="author"> | 作者 chen</span></div><div class="post-content">在 onSaveInstanceState 和 onRestoreInstanceState 时, 如何保存自定义控件的状态</div><p class="readmore"><a href="/2016/02/28/安卓自定义控件状态保存/">阅读更多</a></p></div><div class="page-navigator"><a href="/page/2/" class="next">下一页</a></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="sitesearch" value="http://campusappcn.github.io"/></form></div><div class="widget"><form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="search" name="word" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="si" value="http://campusappcn.github.io"/><input name="tn" type="hidden" value="bds"/><input name="cl" type="hidden" value="3"/><input name="ct" type="hidden" value="2097152"/><input name="s" type="hidden" value="on"/></form></div><div class="widget"><div class="widget-title">分类</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a></li></ul></div><div class="widget"><div class="widget-title">标签</div><div class="tagcloud"><a href="/tags/单元测试/" style="font-size: 15px;">单元测试</a> <a href="/tags/Development/" style="font-size: 15px;">Development</a> <a href="/tags/hls/" style="font-size: 15px;">hls</a> <a href="/tags/live-stream/" style="font-size: 15px;">live-stream</a> <a href="/tags/player/" style="font-size: 15px;">player</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/Mock-bean/" style="font-size: 15px;">Mock bean</a> <a href="/tags/Injection/" style="font-size: 15px;">Injection</a> <a href="/tags/Java-web/" style="font-size: 15px;">Java web</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/tips/" style="font-size: 15px;">tips</a> <a href="/tags/ReactiveCocoa/" style="font-size: 15px;">ReactiveCocoa</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/GUI/" style="font-size: 15px;">GUI</a> <a href="/tags/测试/" style="font-size: 15px;">测试</a> <a href="/tags/rtmp/" style="font-size: 15px;">rtmp</a> <a href="/tags/图形界面/" style="font-size: 15px;">图形界面</a> <a href="/tags/Macros/" style="font-size: 15px;">Macros</a> <a href="/tags/crash/" style="font-size: 15px;">crash</a> <a href="/tags/防爆/" style="font-size: 15px;">防爆</a> <a href="/tags/闪退/" style="font-size: 15px;">闪退</a> <a href="/tags/xcode/" style="font-size: 15px;">xcode</a> <a href="/tags/buildSetting/" style="font-size: 15px;">buildSetting</a> <a href="/tags/TextView/" style="font-size: 15px;">TextView</a> <a href="/tags/缩略/" style="font-size: 15px;">缩略</a> <a href="/tags/Ellipse/" style="font-size: 15px;">Ellipse</a> <a href="/tags/类型判断/" style="font-size: 15px;">类型判断</a> <a href="/tags/消息传递/" style="font-size: 15px;">消息传递</a> <a href="/tags/阿里云/" style="font-size: 15px;">阿里云</a> <a href="/tags/图片/" style="font-size: 15px;">图片</a> <a href="/tags/安卓/" style="font-size: 15px;">安卓</a> <a href="/tags/自定义/" style="font-size: 15px;">自定义</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/状态保存/" style="font-size: 15px;">状态保存</a></div></div><div class="widget"><div class="widget-title">最新文章</div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/03/12/类型判断上的小技巧/">类型判断上的小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/iOS中如何优雅的应对无限闪退/">iOS中如何优雅的应对无限闪退</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/如何判断-TextView-内容是否被缩略/">如何判断 TextView 内容是否被缩略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/2016-03-07-MVVM的图形界面测试/">MVVM的图形界面单元测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/">Android单元测试详解（1）——— AndroidJunitTest</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/03/iOS中一个可以获得参数个数的宏/">iOS中一个可以获得参数个数的宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/02/ReactiveCocoa2-5修炼-三/">ReactiveCocoa2-5修炼 (三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/01/ReactiveCocoa2-5修炼-二/">ReactiveCocoa2-5修炼 (二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></li></ul></div><div class="widget"><div class="widget-title">友情链接</div><ul></ul><a href="http://campusapp.cn" title="官网" target="_blank">官网</a></div></div></div></div><div id="footer">© <a href="/." rel="nofollow">Spacetime.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div><a id="rocket" href="#top" class="show"></a><script src="/js/jquery.min.js"></script>
-<script src="/js/totop.js"></script><script src="/js/fancybox.pack.js"></script>
-<script src="/js/jquery.fancybox.js"></script><link rel="stylesheet" href="/css/jquery.fancybox.css"></div></body></html>
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Spacetime" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spacetime">
+<meta property="og:url" content="http://campusappcn.github.io/index.html">
+<meta property="og:site_name" content="Spacetime">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spacetime">
+<meta name="twitter:description">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Spacetime </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?085a97e002c742dcfce5c6299167ee8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Spacetime</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Blogs from campusapp.cn's crazy developers</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/20/移动应用开发的安全性问题/" itemprop="url">
+                  移动应用开发的安全性问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">YYDD</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-20T00:00:00+08:00" content="2016-03-20">
+              2016-03-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/20/移动应用开发的安全性问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/20/移动应用开发的安全性问题/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          对于移动应用的安全性问题的一些见解
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/20/移动应用开发的安全性问题/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/18/2016-03-18-Pan的简介和设计思路/" itemprop="url">
+                  Pan的简介和设计思路
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <a href='http://nius.me' class="post-author">nius</a>
+          
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-18T00:00:00+08:00" content="2016-03-18">
+              2016-03-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/18/2016-03-18-Pan的简介和设计思路/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/18/2016-03-18-Pan的简介和设计思路/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><a href="https://github.com/campusappcn/Pan">Pan</a>是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。</p>
+<h2 id="臃肿的Activity和Fragment"><a href="#臃肿的Activity和Fragment" class="headerlink" title="臃肿的Activity和Fragment"></a>臃肿的Activity和Fragment</h2><p>相信写安卓的人都深有体会，Activity里面一不小心就会有上千行的代码。安卓的MVC设计，Activity本身承担部分Controller的角色；而View的角色由View类型和XML来承担，同时View类型的EventListener由会承担部分的Controller角色；Model交给开发者自由选择。而一旦到真实的实践中，Activity或者Fragment往往会承担大量的代码，主要包含：</p>
+<ol>
+<li>页面的生命周期管理，e.g. onStop</li>
+<li>View的渲染细节控制，e.g. 例如setText</li>
+<li>用户交互事件的绑定，e.g. 例如setOnClickListener</li>
+<li>异步网络请求</li>
+<li>Fragment生命周期管理</li>
+</ol>
+<p>简单的页面或许没什么问题，一旦业务逻辑复杂，Activity到后期基本无法维护，因为要做的事情太多了。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/18/2016-03-18-Pan的简介和设计思路/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/15/iOS中富文本的AttributeNames/" itemprop="url">
+                  iOS中富文本的AttributeNames
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">Kael</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-15T11:14:28+08:00" content="2016-03-15">
+              2016-03-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/15/iOS中富文本的AttributeNames/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/15/iOS中富文本的AttributeNames/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="目录"><a href="#目录" class="headerlink" title="目录:"></a>目录:</h2><p><a href="#jump1">1. NSFontAttributeName;</a><br><a href="#jump2">2. NSParagraphStyleAttributeName;</a>(这周作业内容)<br><a href="#jump3">3. NSForegroundColorAttributeName;</a><br><a href="#jump4">4. NSBackgroundColorAttributeName;</a><br><a href="#jump5">5. NSLigatureAttributeName;</a><br><a href="#jump6">6. NSKernAttributeName;</a><br><a href="#jump7">7. NSStrikethroughStyleAttributeName;</a><br><a href="#jump8">8. NSUnderlineStyleAttributeName;</a><br><a href="#jump9">9. NSStrokeColorAttributeName;</a><br><a href="#jump10">10.NSStrokeWidthAttributeName;</a><br><a href="#jump11">11.NSShadowAttributeName;</a><br><a href="#jump12">12.NSTextEffectAttributeName;</a><br><a href="#jump13">13.NSAttachmentAttributeName;</a><br><a href="#jump14">14.NSLinkAttributeName;</a><br><a href="#jump15">15.NSBaselineOffsetAttributeName;</a><br><a href="#jump16">16.NSUnderlineColorAttributeName;</a><br><a href="#jump17">17.NSStrikethroughColorAttributeName;</a><br><a href="#jump18">18.NSObliquenessAttributeName;</a><br><a href="#jump19">19.NSExpansionAttributeName;</a><br><a href="#jump20">20.NSWritingDirectionAttributeName;</a><br><a href="#jump21">21.NSVerticalGlyphFormAttributeName;</a></p>
+<hr>
+<h3 id="1-NSFontAttributeName-字体-UIFont"><a href="#1-NSFontAttributeName-字体-UIFont" class="headerlink" title="1.NSFontAttributeName//字体 UIFont"></a>1.<span id="jump1"><em><code>NSFontAttributeName</code></em><span/>//字体 UIFont</h3><h3 id="3-NSForegroundColorAttributeName-字颜色-UIColor"><a href="#3-NSForegroundColorAttributeName-字颜色-UIColor" class="headerlink" title="3.NSForegroundColorAttributeName //字颜色  UIColor"></a>3.<span id="jump3"><em><code>NSForegroundColorAttributeName</code></em> <span/>//字颜色  UIColor</h3><h3 id="4-NSBackgroundColorAttributeName-背景色-UIColor"><a href="#4-NSBackgroundColorAttributeName-背景色-UIColor" class="headerlink" title="4.NSBackgroundColorAttributeName //背景色  UIColor"></a>4.<span id="jump4"><em><code>NSBackgroundColorAttributeName</code></em> <span/>//背景色  UIColor</h3>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/15/iOS中富文本的AttributeNames/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/12/类型判断上的小技巧/" itemprop="url">
+                  类型判断上的小技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">YYDD</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-12T00:00:00+08:00" content="2016-03-12">
+              2016-03-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/12/类型判断上的小技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/12/类型判断上的小技巧/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          统一的做一个类型判断，告别此类闪退
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/12/类型判断上的小技巧/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/08/iOS中如何优雅的应对无限闪退/" itemprop="url">
+                  iOS中如何优雅的应对无限闪退
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">YYDD</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-08T00:00:00+08:00" content="2016-03-08">
+              2016-03-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/08/iOS中如何优雅的应对无限闪退/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/iOS中如何优雅的应对无限闪退/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          告别无限闪退带来的烦恼
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/08/iOS中如何优雅的应对无限闪退/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/07/如何判断-TextView-内容是否被缩略/" itemprop="url">
+                  如何判断 TextView 内容是否被缩略
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">chen</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-07T10:43:46+08:00" content="2016-03-07">
+              2016-03-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/07/如何判断-TextView-内容是否被缩略/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/如何判断-TextView-内容是否被缩略/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          奇技淫巧之如何判断一个 TextView 的内容是否被省略了
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/07/如何判断-TextView-内容是否被缩略/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/07/2016-03-07-MVVM的图形界面测试/" itemprop="url">
+                  MVVM的图形界面单元测试
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <a href='http://nius.me' class="post-author">nius</a>
+          
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-07T00:00:00+08:00" content="2016-03-07">
+              2016-03-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/07/2016-03-07-MVVM的图形界面测试/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/2016-03-07-MVVM的图形界面测试/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          讨论如何对图形界面进行单元测试
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/07/2016-03-07-MVVM的图形界面测试/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/" itemprop="url">
+                  Android单元测试详解（1）——— AndroidJunitTest
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">BeautifulSoup</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-06T00:00:00+08:00" content="2016-03-06">
+              2016-03-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          本篇博客主要分析目前主流的Android测试框架AndroidJunitTest
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/03/iOS中一个可以获得参数个数的宏/" itemprop="url">
+                  iOS中一个可以获得参数个数的宏
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">Kael</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-03T16:03:23+08:00" content="2016-03-03">
+              2016-03-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/03/iOS中一个可以获得参数个数的宏/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/03/iOS中一个可以获得参数个数的宏/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="metamacro-argcount-…"><a href="#metamacro-argcount-…" class="headerlink" title="metamacro_argcount(…)"></a><a href="https://github.com/ReactiveCocoa/ReactiveCocoa/blob/e16f47cf9cb568136ebd81430b24af274c3c27c7/ReactiveCocoa/Objective-C/extobjc/metamacros.h#L45">metamacro_argcount(…)</a></h2><p>metamacro_argcount一个可以获得传入参数个数的Macro,<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version); 结果为<span class="number">2.</span></span><br><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version, <span class="keyword">super</span>); 结果为<span class="number">3</span></span><br><span class="line">metamacro_argcount(<span class="built_in">NSObject</span>, version, <span class="literal">nil</span>); 结果为<span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>这个宏在编译期(并非运行期)就获得参数个数,是不是很神奇?来看看里面有什么鬼<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//RACmetamacros.h中</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> metamacro_argcount(...) \</span><br><span class="line">        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)</span></span><br></pre></td></tr></table></figure></p>
+<p>需要展开下,以下就<code>metamacro_argcount(NSObject, version)</code>做展开<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">metamacro_argcount(NSObject, version)</span><br><span class="line">--&gt;</span><br><span class="line">metamacro_at(<span class="number">20</span>, NSObject, version, <span class="number">20</span>, <span class="number">19</span>, <span class="number">18</span>, <span class="number">17</span>, <span class="number">16</span>, <span class="number">15</span>, <span class="number">14</span>, <span class="number">13</span>, <span class="number">12</span>, <span class="number">11</span>, <span class="number">10</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/03/iOS中一个可以获得参数个数的宏/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/02/ReactiveCocoa2-5修炼-三/" itemprop="url">
+                  ReactiveCocoa2-5修炼 (三)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">Kael</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-02T10:37:18+08:00" content="2016-03-02">
+              2016-03-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/02/ReactiveCocoa2-5修炼-三/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/02/ReactiveCocoa2-5修炼-三/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten
+concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;    [subscriber sendNext:@"ABC"];    //[subscriber sendCompleted];    return nil;&#125;];RACSignal *signalB = [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;    [subscriber sendNext:@"CBA"];    return nil;&#125;];[[signalA concat:signalB] subscribeNext:^(id x) &#123;    NSLog(@"x--%@",x);&#125;];//输出:2016-03-02 11:15:43.704 RACFunTest[2366:155132] x--ABC
+只输出了ABC
+看看concat的源码123456789101112131415- (RACSignal *)concat:(RACSignal *)signal &#123;return [[RACSignal createSignal:^(id&lt;RACSubscriber&gt; subscriber) &#123;    RACSerialDisposable *serialDisposable = [[RACSerialDisposable alloc] init];    RACDisposable *sourceDisposable = [self subscribeNext:^(id x) &#123;        [subscriber sendNext:x];    &#125; error:^(NSError *error) &#123;        [subs
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/02/ReactiveCocoa2-5修炼-三/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://campusapp.cn/imgs/logo-800x800.png"
+               alt="developers from campusapp.cn" />
+          <p class="site-author-name" itemprop="name">developers from campusapp.cn</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/campusappcn" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+        </div>
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">developers from campusapp.cn</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"campusappcn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+
+</body>
+</html>

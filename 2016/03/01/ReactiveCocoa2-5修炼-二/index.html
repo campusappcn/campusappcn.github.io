@@ -1,4 +1,278 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>ReactiveCocoa2-5修炼 (二) | Spacetime</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/pure-min.css"><link rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">ReactiveCocoa2-5修炼 (二)</h1><a id="logo" href="/.">Spacetime</a><p class="description">Blogs from campusapp.cn's crazy developers</p></div><div id="nav-menu"><a href="/." class="current"><i class="icon-home"> 首页</i></a><a href="/archives/"><i class="icon-archive"> 归档</i></a><a href="/about/"><i class="icon-about"> 关于</i></a><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post post-page"><h1 class="post-title">ReactiveCocoa2-5修炼 (二)</h1><div class="post-meta">2016-03-01 | <span class="author"> | 作者 Kael</span></div><div class="post-content"><p>上一篇阅读了<code>RACSignal</code>订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering<br>本文主要内容:<br>1.map操作的源码阅读;(其实是flattenMap:的源码)<br>2.filter操作<br>3.空信号RACEmptySignal</p>
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,ReactiveCocoa," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Spacetime" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
+RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactiveCocoa2-5修炼 (二)">
+<meta property="og:url" content="http://campusappcn.github.io/2016/03/01/ReactiveCocoa2-5修炼-二/index.html">
+<meta property="og:site_name" content="Spacetime">
+<meta property="og:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
+RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
+<meta property="og:updated_time" content="2016-03-08T07:17:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactiveCocoa2-5修炼 (二)">
+<meta name="twitter:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
+RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> ReactiveCocoa2-5修炼 (二) | Spacetime </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?085a97e002c742dcfce5c6299167ee8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Spacetime</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Blogs from campusapp.cn's crazy developers</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ReactiveCocoa2-5修炼 (二)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+        
+          <span class="post-author">Kael</span>
+        
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-01T10:29:01+08:00" content="2016-03-01">
+              2016-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/01/ReactiveCocoa2-5修炼-二/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/01/ReactiveCocoa2-5修炼-二/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇阅读了<code>RACSignal</code>订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering<br>本文主要内容:<br>1.map操作的源码阅读;(其实是flattenMap:的源码)<br>2.filter操作<br>3.空信号RACEmptySignal</p>
 <h2 id="RACStream"><a href="#RACStream" class="headerlink" title="RACStream"></a>RACStream</h2><p><code>RACStream</code>是<code>RACSignal</code>和<code>RACSequence</code>的父类,所以很多方法定义在<code>RACStream</code>中,<code>RACStream</code>是一个抽象类.<br>来看看<code>RACStream</code>中定义了些什么东西</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RACStream</span> : <span class="title">NSObject</span></span></span><br><span class="line">+ (instancetype)empty;</span><br><span class="line">+ (instancetype)<span class="keyword">return</span>:(<span class="keyword">id</span>)value;</span><br><span class="line">- (instancetype)bind:(RACStreamBindBlock (^)(<span class="keyword">void</span>))block;</span><br><span class="line">- (instancetype)concat:(RACStream *)stream;</span><br><span class="line">- (instancetype)zipWith:(RACStream *)stream;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RACStream</span> (<span class="title">Operations</span>)</span></span><br><span class="line">- (instancetype)flattenMap:(RACStream * (^)(<span class="keyword">id</span> value))block;</span><br><span class="line">- (instancetype)flatten;</span><br><span class="line">- (instancetype)map:(<span class="keyword">id</span> (^)(<span class="keyword">id</span> value))block;</span><br><span class="line">...........</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 <h2 id="Map操作"><a href="#Map操作" class="headerlink" title="Map操作"></a>Map操作</h2><p>如果把<code>RACStream</code>比作是水流的话,Map操作可以是一个个加工工厂,比如一个可乐工厂,水流流进工厂,工厂处理过后,流出了可乐流,在可乐流上接了龙头,打开阀门就可以喝可乐了.</p>
@@ -29,6 +303,493 @@
 <h3 id="空信号量"><a href="#空信号量" class="headerlink" title="空信号量"></a>空信号量</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+ (RACSignal *)empty &#123;</span><br><span class="line">    <span class="keyword">return</span> [RACEmptySignal empty];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在RACEmptySignal.m中,subscribe的实现</span></span><br><span class="line">- (RACDisposable *)subscribe:(<span class="keyword">id</span>&lt;RACSubscriber&gt;)subscriber &#123;</span><br><span class="line">    <span class="keyword">return</span> [RACScheduler.subscriptionScheduler schedule:^&#123;</span><br><span class="line">        [subscriber sendCompleted];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在bind:内部就会调用<code>completeSignal(self, selfDisposable)</code>;<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//completeSignal的block</span></span><br><span class="line"><span class="keyword">void</span> (^completeSignal)(RACSignal *, RACDisposable *) = ^(RACSignal *signal, RACDisposable *finishedDisposable) &#123;</span><br><span class="line"><span class="built_in">BOOL</span> removeDisposable = <span class="literal">NO</span>;</span><br><span class="line"><span class="keyword">@synchronized</span> (signals) &#123;</span><br><span class="line">    [signals removeObject:signal];</span><br><span class="line">    <span class="keyword">if</span> (signals.count == <span class="number">0</span>) &#123;</span><br><span class="line">        [subscriber sendCompleted];</span><br><span class="line">        [compoundDisposable dispose];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        removeDisposable = <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (removeDisposable) [compoundDisposable removeDisposable:finishedDisposable];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>从代码中可以看到[subscriber sendCompleted]就这样,类似发送了一个空信号,subscribeNext的block就不会被调用;</p>
-</div><div class="tags"><a href="/tags/iOS/">iOS</a><a href="/tags/ReactiveCocoa/">ReactiveCocoa</a></div><div class="post-nav"><a href="/2016/03/02/ReactiveCocoa2-5修炼-三/" class="pre"><i class="icon-previous">ReactiveCocoa2-5修炼 (三)</i></a><a href="/2016/02/29/xcode的BuildSettings/" class="next">关于xcode的buildSettings<i class="icon-next"></i></a></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="sitesearch" value="http://campusappcn.github.io"/></form></div><div class="widget"><form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="search" name="word" maxlength="20" placeholder="Search" class="search-form-input"/><input type="hidden" name="si" value="http://campusappcn.github.io"/><input name="tn" type="hidden" value="bds"/><input name="cl" type="hidden" value="3"/><input name="ct" type="hidden" value="2097152"/><input name="s" type="hidden" value="on"/></form></div><div class="widget"><div class="widget-title">分类</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a></li></ul></div><div class="widget"><div class="widget-title">标签</div><div class="tagcloud"><a href="/tags/单元测试/" style="font-size: 15px;">单元测试</a> <a href="/tags/Development/" style="font-size: 15px;">Development</a> <a href="/tags/hls/" style="font-size: 15px;">hls</a> <a href="/tags/live-stream/" style="font-size: 15px;">live-stream</a> <a href="/tags/player/" style="font-size: 15px;">player</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/Mock-bean/" style="font-size: 15px;">Mock bean</a> <a href="/tags/Injection/" style="font-size: 15px;">Injection</a> <a href="/tags/Java-web/" style="font-size: 15px;">Java web</a> <a href="/tags/Spring-MVC/" style="font-size: 15px;">Spring MVC</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/tips/" style="font-size: 15px;">tips</a> <a href="/tags/ReactiveCocoa/" style="font-size: 15px;">ReactiveCocoa</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/GUI/" style="font-size: 15px;">GUI</a> <a href="/tags/测试/" style="font-size: 15px;">测试</a> <a href="/tags/rtmp/" style="font-size: 15px;">rtmp</a> <a href="/tags/图形界面/" style="font-size: 15px;">图形界面</a> <a href="/tags/Macros/" style="font-size: 15px;">Macros</a> <a href="/tags/crash/" style="font-size: 15px;">crash</a> <a href="/tags/防爆/" style="font-size: 15px;">防爆</a> <a href="/tags/闪退/" style="font-size: 15px;">闪退</a> <a href="/tags/xcode/" style="font-size: 15px;">xcode</a> <a href="/tags/buildSetting/" style="font-size: 15px;">buildSetting</a> <a href="/tags/TextView/" style="font-size: 15px;">TextView</a> <a href="/tags/缩略/" style="font-size: 15px;">缩略</a> <a href="/tags/Ellipse/" style="font-size: 15px;">Ellipse</a> <a href="/tags/类型判断/" style="font-size: 15px;">类型判断</a> <a href="/tags/消息传递/" style="font-size: 15px;">消息传递</a> <a href="/tags/阿里云/" style="font-size: 15px;">阿里云</a> <a href="/tags/图片/" style="font-size: 15px;">图片</a> <a href="/tags/安卓/" style="font-size: 15px;">安卓</a> <a href="/tags/自定义/" style="font-size: 15px;">自定义</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/状态保存/" style="font-size: 15px;">状态保存</a></div></div><div class="widget"><div class="widget-title">最新文章</div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/03/12/类型判断上的小技巧/">类型判断上的小技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/iOS中如何优雅的应对无限闪退/">iOS中如何优雅的应对无限闪退</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/如何判断-TextView-内容是否被缩略/">如何判断 TextView 内容是否被缩略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/2016-03-07-MVVM的图形界面测试/">MVVM的图形界面单元测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/06/2016-03-06-Android单元测试详解1(AndroidJunitTest)/">Android单元测试详解（1）——— AndroidJunitTest</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/03/iOS中一个可以获得参数个数的宏/">iOS中一个可以获得参数个数的宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/02/ReactiveCocoa2-5修炼-三/">ReactiveCocoa2-5修炼 (三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/01/ReactiveCocoa2-5修炼-二/">ReactiveCocoa2-5修炼 (二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/29/xcode的BuildSettings/">关于xcode的buildSettings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/28/安卓自定义控件状态保存/">安卓自定义控件状态保存</a></li></ul></div><div class="widget"><div class="widget-title">友情链接</div><ul></ul><a href="http://campusapp.cn" title="官网" target="_blank">官网</a></div></div></div></div><div id="footer">© <a href="/." rel="nofollow">Spacetime.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div><a id="rocket" href="#top" class="show"></a><script src="/js/jquery.min.js"></script>
-<script src="/js/totop.js"></script><script src="/js/fancybox.pack.js"></script>
-<script src="/js/jquery.fancybox.js"></script><link rel="stylesheet" href="/css/jquery.fancybox.css"></div></body></html>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/ReactiveCocoa/" rel="tag">#ReactiveCocoa</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/29/xcode的BuildSettings/" rel="next" title="关于xcode的buildSettings">
+                <i class="fa fa-chevron-left"></i> 关于xcode的buildSettings
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/02/ReactiveCocoa2-5修炼-三/" rel="prev" title="ReactiveCocoa2-5修炼 (三)">
+                ReactiveCocoa2-5修炼 (三) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/03/01/ReactiveCocoa2-5修炼-二/"
+     data-title="ReactiveCocoa2-5修炼 (二)"
+     data-content=""
+     data-url="http://campusappcn.github.io/2016/03/01/ReactiveCocoa2-5修炼-二/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/01/ReactiveCocoa2-5修炼-二/"
+           data-title="ReactiveCocoa2-5修炼 (二)" data-url="http://campusappcn.github.io/2016/03/01/ReactiveCocoa2-5修炼-二/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://campusapp.cn/imgs/logo-800x800.png"
+               alt="developers from campusapp.cn" />
+          <p class="site-author-name" itemprop="name">developers from campusapp.cn</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/campusappcn" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RACStream"><span class="nav-number">1.</span> <span class="nav-text">RACStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map操作"><span class="nav-number">2.</span> <span class="nav-text">Map操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#来看看map的实现"><span class="nav-number">2.1.</span> <span class="nav-text">来看看map的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整理下过程"><span class="nav-number">2.2.</span> <span class="nav-text">整理下过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发中可能遇到的场景-验证密码输入框的字数"><span class="nav-number">2.3.</span> <span class="nav-text">开发中可能遇到的场景:验证密码输入框的字数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flattenMap的一个应用场景"><span class="nav-number">2.4.</span> <span class="nav-text">flattenMap的一个应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Filtering"><span class="nav-number">3.</span> <span class="nav-text">Filtering</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#看看filter-内部"><span class="nav-number">3.1.</span> <span class="nav-text">看看filter:内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空信号量"><span class="nav-number">3.2.</span> <span class="nav-text">空信号量</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">developers from campusapp.cn</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.scheme !== 'Pisces' && (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always')) {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"campusappcn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+
+</body>
+</html>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://campusappcn.github.io/"/>
-  <updated>2016-03-12T15:13:42.000Z</updated>
+  <updated>2016-03-20T09:02:24.000Z</updated>
   <id>http://campusappcn.github.io/</id>
   
   <author>
@@ -14,6 +14,207 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>移动应用开发的安全性问题</title>
+    <link href="http://campusappcn.github.io/2016/03/20/%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7%E9%97%AE%E9%A2%98/"/>
+    <id>http://campusappcn.github.io/2016/03/20/移动应用开发的安全性问题/</id>
+    <published>2016-03-19T16:00:00.000Z</published>
+    <updated>2016-03-20T09:02:24.000Z</updated>
+    
+    <content type="html">&lt;p&gt;昨天去“云栖小镇”听了一场关于《初创期间的App和服务端安全探讨》的分享会。本来是抱着很大的期望去的。因为毕竟我们的app还没达到一定的高度，所以对于安全性的考虑有时候会比较少，这方面相对来说涉及到的就不多，然而真的是应验了“希望越大，失望越大。”这句老古话。在分享会上，听到了各种的广告。虽然广告量很大。但是还有有一些小启发的。&lt;/p&gt;
+&lt;p&gt;记得对我印象最深的一点是，是分享会上的一个嘉宾他自己开发的一个自测工具。具体叫什么，我不知道。然而我们也没法体验。不过他说现在已经在走阿里的开源流程中，相信过段时间我们也能够用上这款iOS上的自测工具。而安卓的他也在计划中。而通过他对于这款工具的介绍，我了解到了我们的app是多么的不安全。对于这款工具，他列举了这么几点：辅助iOS应用审计、辅助iOS逆向分析、安全小白可迅速上手、提高安全审计效率、目前拥有57个功能。&lt;/p&gt;
+&lt;p&gt;期间他给我们介绍了，通过这款工具，能够很便捷的对市场上的大部分app进行逆向分析，直接拿到app中所有的头文件，以及每个头文件中的相应的方法。我相信拿到这些方法后，就能做一些简单的hack了。而且这款工具还提供了重签名打包的功能。虽然说这个工具功能很强大，对于它的开源还是有些小期待的。但是如果他开源了，面向了所有的开发者，那么也就是说我们的app对于更多的人是裸露的。这想起来还是有一点小恐怖的。特别是对于初创公司的应用。一般情况下，初创公司希望做的是更快的完成需求，去验证需求的可行性。也许对于安全性考虑的就没这么周全。&lt;/p&gt;
+&lt;p&gt;不过这里想要安利一款产品，当然也是昨天的分享会上被安利的。这款产品就是“阿里聚安全”。应该是有自动化的检测和人工的检测。也就是说能够通过他们产品帮我们的app做自动化的扫描，找出一般的安全性问题，还有功能是阿里的安全专家会手动的对app做安全检查，当然他们还提供了sdk，方便保存密码等敏感信息。&lt;br&gt;前面说的都是昨天分享会上得到的讯息。&lt;/p&gt;
+&lt;p&gt;那么下面我发表一下自己对于应用应用安全性问题的想法吧。&lt;/p&gt;
+&lt;p&gt;我记得之前的我参与过的一个项目中碰到这样一个问题。比如说app中有关注的需求。而这个实现用的是http请求。当时协议是这样的只告诉服务端，我是谁，以及我要关注的那个用户是谁。就这个需求。当时被攻击了，他拿到一组用户id之后，疯狂的发请求让别人关注自己，然后自己更新信息来做广告。相信这种类似的需求在很多场景下都会存在。当时我们采取的措施是，在每次http请求的时候带上一个动态的验证信息。如果验证信息非法那么就抛弃掉当前的请求。&lt;/p&gt;
+&lt;p&gt;还有如果有app中有长连接需求的，可以把长连接的ip地址通过短连接中的某个请求中返回，这样可以理想化的做到不同的长连接的地址有可能是不同的。防止一些非法的连接。而且同时也能够做到动态的切换。&lt;/p&gt;
+&lt;p&gt;还有一点是通过“验证码”、“图片识别”等需求延伸出来受到的启发。我相信基本上的app中都会有统计的，如果把统计的数据来验证本次请求是否合法，这何尝不是一种解决方法。比如说注册用户的请求，服务端收到注册的请求，那么这时候判断下当前的设备是否有关于注册方面的统计事件，如果有那么ok，这个在这个层面上可以理解为是合法的请求。反之如果没有，那么可以理解为是非法的请求。&lt;/p&gt;
+&lt;p&gt;当然最好的是用https替代http，本身苹果就是鼓励代价请求都用https的。还有就是存在本地的敏感数据全部加密，哪怕是用最简单的md5加密，也胜过明文。如果涉及到消费类的需求的，所有的数据能够通过服务端来判断就通过服务端来判断。&lt;/p&gt;
+&lt;p&gt;总结下：虽然说，防御的手段有很多。但是所有的防御都只是提高了被破解，被攻击的门槛而已。所以app的安全性永远是一个不断提高的点。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      对于移动应用的安全性问题的一些见解
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="安全" scheme="http://campusappcn.github.io/tags/%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="黑客" scheme="http://campusappcn.github.io/tags/%E9%BB%91%E5%AE%A2/"/>
+    
+      <category term="攻击" scheme="http://campusappcn.github.io/tags/%E6%94%BB%E5%87%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Pan的简介和设计思路</title>
+    <link href="http://campusappcn.github.io/2016/03/18/2016-03-18-Pan%E7%9A%84%E7%AE%80%E4%BB%8B%E5%92%8C%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/"/>
+    <id>http://campusappcn.github.io/2016/03/18/2016-03-18-Pan的简介和设计思路/</id>
+    <published>2016-03-17T16:00:00.000Z</published>
+    <updated>2016-03-20T09:06:36.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/campusappcn/Pan&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Pan&lt;/a&gt;是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。&lt;/p&gt;
+&lt;h2 id=&quot;臃肿的Activity和Fragment&quot;&gt;&lt;a href=&quot;#臃肿的Activity和Fragment&quot; class=&quot;headerlink&quot; title=&quot;臃肿的Activity和Fragment&quot;&gt;&lt;/a&gt;臃肿的Activity和Fragment&lt;/h2&gt;&lt;p&gt;相信写安卓的人都深有体会，Activity里面一不小心就会有上千行的代码。安卓的MVC设计，Activity本身承担部分Controller的角色；而View的角色由View类型和XML来承担，同时View类型的EventListener由会承担部分的Controller角色；Model交给开发者自由选择。而一旦到真实的实践中，Activity或者Fragment往往会承担大量的代码，主要包含：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;页面的生命周期管理，e.g. onStop&lt;/li&gt;
+&lt;li&gt;View的渲染细节控制，e.g. 例如setText&lt;/li&gt;
+&lt;li&gt;用户交互事件的绑定，e.g. 例如setOnClickListener&lt;/li&gt;
+&lt;li&gt;异步网络请求&lt;/li&gt;
+&lt;li&gt;Fragment生命周期管理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;简单的页面或许没什么问题，一旦业务逻辑复杂，Activity到后期基本无法维护，因为要做的事情太多了。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;或许你会认为，这是程序员代码能力差导致的。考虑到实际情况，团队中的人也许并不是你能选择的，或者团队成员彼此无法认同对方的编码思路，最终的结果仍然是bad ending。&lt;/p&gt;
+&lt;h2 id=&quot;MVP-难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖&quot;&gt;&lt;a href=&quot;#MVP-难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖&quot; class=&quot;headerlink&quot; title=&quot;MVP: 难以上手的mortar，解耦不彻底的nucleus和Data-binding语法糖&quot;&gt;&lt;/a&gt;MVP: 难以上手的&lt;a href=&quot;https://github.com/square/mortar&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;mortar&lt;/a&gt;，解耦不彻底的&lt;a href=&quot;https://github.com/konmik/nucleus&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;nucleus&lt;/a&gt;和&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0ahUKEwj1xY_7icrLAhUsnoMKHVbaCEIQFggcMAA&amp;amp;url=http%3A%2F%2Fdeveloper.android.com%2Ftools%2Fdata-binding%2Fguide.html&amp;amp;usg=AFQjCNH-v4_t0AHIBOQYWBUL_p85OAupyg&amp;amp;sig2=2xv9qnfsbku8FWvKjct6GQ&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Data-binding&lt;/a&gt;语法糖&lt;/h2&gt;&lt;p&gt;说起MVP框架，首先可能想到的就是square的mortar。mortar很早就写出来了，搭配自家的依赖注入Dagger和Flow。mortar里面很多设计理念很先进，例如通过view组织界面而不是Activity/Fragment，彻底分离View、Presenter、Screen、Activty/Fragment、model层的请求，成功的将整个程序拆成了多种单元，通过依赖注入粘合在一起。这也同样造成了他流行不起来，因为想要mortar，就得把square家族大礼包全部都加进来，彻底的认同一整套square的思维方式，锁定技术栈。学习成本和定制成本都很高。&lt;/p&gt;
+&lt;p&gt;nucleus是一个轻量级的MVP框架，轻量到……Activity里还是有很多代码，nucleus只把Presenter分离出来，但同时Presenter是与Activity绑定的，这让Presenter的可复用性大大下降，例如一个界面上，局部的Presenter完全可以用到别的Activity/Fragment上的，所以必须要将Presenter和Activity解耦。在实际的编码过程中，ListView或者RecyclerView中Item都是一个可以独立看待的部件，且可能会在其他的非ListView环境中使用。这意味着和Activity绑定后很多内容的复用还得自己想办法。而且nucleus并不管事件跳转，还是写在Activity里，所以Activity还是会臃肿。&lt;/p&gt;
+&lt;p&gt;官方Data-binding本身只是个setText的语法糖，只把上面提到的View的渲染细节控制解决了一下，而且一定无法彻底解决，逻辑一复杂，还是得用java。&lt;/p&gt;
+&lt;h2 id=&quot;Pan的设计目标&quot;&gt;&lt;a href=&quot;#Pan的设计目标&quot; class=&quot;headerlink&quot; title=&quot;Pan的设计目标&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://github.com/campusappcn/Pan&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Pan&lt;/a&gt;的设计目标&lt;/h2&gt;&lt;p&gt;Pan的设计初衷，就是要给Activity瘦身，最好保持在100行以下，甚至50行以下。综合考虑，还有下面这些目标：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;兼容性，可以和不使用Pan框架的代码兼容，支持逐步重构&lt;/li&gt;
+&lt;li&gt;解耦Activity和View，界面部件可以在Activity、Fragment、View中复用&lt;/li&gt;
+&lt;li&gt;View通过ViewModel被动更新，即ViewModel -&amp;gt; View&lt;/li&gt;
+&lt;li&gt;分离渲染逻辑和控制逻辑，setText和setOnClickListener不要写在一起&lt;/li&gt;
+&lt;li&gt;控制逻辑中，应该能够对当前的Activity、Fragment的生命周期进行监控，从而将UI操作和界面周期控制放在一起&lt;/li&gt;
+&lt;li&gt;不追求魔法，低学习成本，KISS&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;当然，除了上述目标外，到具体实现层面，还有些务实的目标，例如兼容安卓的ViewHolder重用机制。&lt;/p&gt;
+&lt;h2 id=&quot;Pan的模型，MV&quot;&gt;&lt;a href=&quot;#Pan的模型，MV&quot; class=&quot;headerlink&quot; title=&quot;Pan的模型，MV*&quot;&gt;&lt;/a&gt;Pan的模型，MV*&lt;/h2&gt;&lt;p&gt;依据上述的目标，Pan的模型比传统的MVC、MVVM模型更加务实，不追求理论上的完美，而在乎实际使用中的易于上手。我们可以称之为&lt;a href=&quot;http://stackoverflow.com/questions/13329485/mvw-what-does-it-stand-for&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;MVW(Whatever)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/56380417/TB2KrLBlVXXXXcWXXXXXXXXXXXX_!!56380417.png&quot; alt=&quot;MVC &amp;amp; MVVM &amp;amp; Pan&quot;&gt;&lt;/p&gt;
+&lt;p&gt;后续的文章会进一步介绍Pan，并逐渐完善Pan的文档。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/campusappcn/Pan&quot;&gt;Pan&lt;/a&gt;是一个我在2015年中开始设计并实现的一个安卓端的MV*框架，经过大量的实践和修正，现在的Pan已经十分稳定，成为项目中的核心框架。时至今日，安卓端的MVVM和MVP类型的框架也有一些，但和2015年相比，该有的问题依然存在，而Pan框架的设计思路，也仍然能够超越这些框架，在达到目的的同时，更方便开发者的上手和使用。&lt;/p&gt;
+&lt;h2 id=&quot;臃肿的Activity和Fragment&quot;&gt;&lt;a href=&quot;#臃肿的Activity和Fragment&quot; class=&quot;headerlink&quot; title=&quot;臃肿的Activity和Fragment&quot;&gt;&lt;/a&gt;臃肿的Activity和Fragment&lt;/h2&gt;&lt;p&gt;相信写安卓的人都深有体会，Activity里面一不小心就会有上千行的代码。安卓的MVC设计，Activity本身承担部分Controller的角色；而View的角色由View类型和XML来承担，同时View类型的EventListener由会承担部分的Controller角色；Model交给开发者自由选择。而一旦到真实的实践中，Activity或者Fragment往往会承担大量的代码，主要包含：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;页面的生命周期管理，e.g. onStop&lt;/li&gt;
+&lt;li&gt;View的渲染细节控制，e.g. 例如setText&lt;/li&gt;
+&lt;li&gt;用户交互事件的绑定，e.g. 例如setOnClickListener&lt;/li&gt;
+&lt;li&gt;异步网络请求&lt;/li&gt;
+&lt;li&gt;Fragment生命周期管理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;简单的页面或许没什么问题，一旦业务逻辑复杂，Activity到后期基本无法维护，因为要做的事情太多了。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+      <category term="MVVM" scheme="http://campusappcn.github.io/tags/MVVM/"/>
+    
+      <category term="MVC" scheme="http://campusappcn.github.io/tags/MVC/"/>
+    
+      <category term="MVP" scheme="http://campusappcn.github.io/tags/MVP/"/>
+    
+      <category term="Pan" scheme="http://campusappcn.github.io/tags/Pan/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS中富文本的AttributeNames</title>
+    <link href="http://campusappcn.github.io/2016/03/15/iOS%E4%B8%AD%E5%AF%8C%E6%96%87%E6%9C%AC%E7%9A%84AttributeNames/"/>
+    <id>http://campusappcn.github.io/2016/03/15/iOS中富文本的AttributeNames/</id>
+    <published>2016-03-15T03:14:28.000Z</published>
+    <updated>2016-03-20T09:06:36.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;目录&quot;&gt;&lt;a href=&quot;#目录&quot; class=&quot;headerlink&quot; title=&quot;目录:&quot;&gt;&lt;/a&gt;目录:&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;#jump1&quot;&gt;1. NSFontAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump2&quot;&gt;2. NSParagraphStyleAttributeName;&lt;/a&gt;(这周作业内容)&lt;br&gt;&lt;a href=&quot;#jump3&quot;&gt;3. NSForegroundColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump4&quot;&gt;4. NSBackgroundColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump5&quot;&gt;5. NSLigatureAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump6&quot;&gt;6. NSKernAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump7&quot;&gt;7. NSStrikethroughStyleAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump8&quot;&gt;8. NSUnderlineStyleAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump9&quot;&gt;9. NSStrokeColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump10&quot;&gt;10.NSStrokeWidthAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump11&quot;&gt;11.NSShadowAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump12&quot;&gt;12.NSTextEffectAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump13&quot;&gt;13.NSAttachmentAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump14&quot;&gt;14.NSLinkAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump15&quot;&gt;15.NSBaselineOffsetAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump16&quot;&gt;16.NSUnderlineColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump17&quot;&gt;17.NSStrikethroughColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump18&quot;&gt;18.NSObliquenessAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump19&quot;&gt;19.NSExpansionAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump20&quot;&gt;20.NSWritingDirectionAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump21&quot;&gt;21.NSVerticalGlyphFormAttributeName;&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;1-NSFontAttributeName-字体-UIFont&quot;&gt;&lt;a href=&quot;#1-NSFontAttributeName-字体-UIFont&quot; class=&quot;headerlink&quot; title=&quot;1.NSFontAttributeName//字体 UIFont&quot;&gt;&lt;/a&gt;1.&lt;span id=&quot;jump1&quot;&gt;&lt;em&gt;&lt;code&gt;NSFontAttributeName&lt;/code&gt;&lt;/em&gt;&lt;span&gt;//字体 UIFont&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&lt;h3 id=&quot;3-NSForegroundColorAttributeName-字颜色-UIColor&quot;&gt;&lt;a href=&quot;#3-NSForegroundColorAttributeName-字颜色-UIColor&quot; class=&quot;headerlink&quot; title=&quot;3.NSForegroundColorAttributeName //字颜色  UIColor&quot;&gt;&lt;/a&gt;3.&lt;span id=&quot;jump3&quot;&gt;&lt;em&gt;&lt;code&gt;NSForegroundColorAttributeName&lt;/code&gt;&lt;/em&gt; &lt;span&gt;//字颜色  UIColor&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&lt;h3 id=&quot;4-NSBackgroundColorAttributeName-背景色-UIColor&quot;&gt;&lt;a href=&quot;#4-NSBackgroundColorAttributeName-背景色-UIColor&quot; class=&quot;headerlink&quot; title=&quot;4.NSBackgroundColorAttributeName //背景色  UIColor&quot;&gt;&lt;/a&gt;4.&lt;span id=&quot;jump4&quot;&gt;&lt;em&gt;&lt;code&gt;NSBackgroundColorAttributeName&lt;/code&gt;&lt;/em&gt; &lt;span&gt;//背景色  UIColor&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;5-NSLigatureAttributeName-连写-iOS只支持-0-和-1&quot;&gt;&lt;a href=&quot;#5-NSLigatureAttributeName-连写-iOS只支持-0-和-1&quot; class=&quot;headerlink&quot; title=&quot;5.NSLigatureAttributeName //连写,iOS只支持@(0)和@(1)&quot;&gt;&lt;/a&gt;5.&lt;span id=&quot;jump5&quot;&gt;&lt;em&gt;&lt;code&gt;NSLigatureAttributeName&lt;/code&gt;&lt;/em&gt;&lt;span&gt; //连写,iOS只支持@(0)和@(1)&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2D1MflFXXXXaOXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;272&quot; height=&quot;201&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;6-NSKernAttributeName-字间距&quot;&gt;&lt;a href=&quot;#6-NSKernAttributeName-字间距&quot; class=&quot;headerlink&quot; title=&quot;6.NSKernAttributeName//字间距&quot;&gt;&lt;/a&gt;6.&lt;span id=&quot;jump6&quot;&gt;&lt;em&gt;&lt;code&gt;NSKernAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//字间距&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2CDEqlFXXXXXfXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;373&quot; height=&quot;220&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;7-NSStrikethroughStyleAttributeName-删除线&quot;&gt;&lt;a href=&quot;#7-NSStrikethroughStyleAttributeName-删除线&quot; class=&quot;headerlink&quot; title=&quot;7.NSStrikethroughStyleAttributeName // 删除线&quot;&gt;&lt;/a&gt;7.&lt;span id=&quot;jump7&quot;&gt;&lt;em&gt;&lt;code&gt;NSStrikethroughStyleAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt; // 删除线&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;@(&lt;span class=&quot;built_in&quot;&gt;NSUnderlineStyle&lt;/span&gt;)枚举值&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlineStyleNone&lt;/span&gt;                                    = &lt;span class=&quot;number&quot;&gt;0x00&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlineStyleSingle&lt;/span&gt;                                  = &lt;span class=&quot;number&quot;&gt;0x01&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlineStyleThick&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)      = &lt;span class=&quot;number&quot;&gt;0x02&lt;/span&gt;,  &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;~&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt; 取值越大,线越粗&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlineStyleDouble&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)     = &lt;span class=&quot;number&quot;&gt;0x09&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB2vm28lFXXXXc1XXXXXXXXXXXX_!!373400920.png&quot; width=&quot;369&quot; height=&quot;268&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;剩下的几个枚举需要配合上面的枚举来使用&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlinePatternSolid&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)      = &lt;span class=&quot;number&quot;&gt;0x0000&lt;/span&gt;,&lt;span class=&quot;comment&quot;&gt;//实线&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlinePatternDot&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)        = &lt;span class=&quot;number&quot;&gt;0x0100&lt;/span&gt;,&lt;span class=&quot;comment&quot;&gt;//短 循环&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlinePatternDash&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)       = &lt;span class=&quot;number&quot;&gt;0x0200&lt;/span&gt;,&lt;span class=&quot;comment&quot;&gt;//长 循环&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlinePatternDashDot&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)    = &lt;span class=&quot;number&quot;&gt;0x0300&lt;/span&gt;,&lt;span class=&quot;comment&quot;&gt;//长短 循环&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlinePatternDashDotDot&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0) = &lt;span class=&quot;number&quot;&gt;0x0400&lt;/span&gt;,&lt;span class=&quot;comment&quot;&gt;//长短短 循环&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSUnderlineByWord&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_0, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;_0)            = &lt;span class=&quot;number&quot;&gt;0x8000&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;//按单词分割&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;gt&quot;&gt;&lt;a href=&quot;#gt&quot; class=&quot;headerlink&quot; title=&quot;&amp;gt; &quot;&gt;&lt;/a&gt;&amp;gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i2/373400920/TB2KBvUlFXXXXcqXpXXXXXXXXXX_!!373400920.png&quot; width=&quot;371&quot; height=&quot;411&quot; style=&quot;margin: 0&quot;&gt; &lt;/h2&gt;&lt;h3 id=&quot;8-NSUnderlineStyleAttributeName-下划线-值也是枚举NSUnderlineStyle的数字类型-NSUnderlineStyle-参考NSStrikethroughStyleAttributeName&quot;&gt;&lt;a href=&quot;#8-NSUnderlineStyleAttributeName-下划线-值也是枚举NSUnderlineStyle的数字类型-NSUnderlineStyle-参考NSStrikethroughStyleAttributeName&quot; class=&quot;headerlink&quot; title=&quot;8.NSUnderlineStyleAttributeName// 下划线(值也是枚举NSUnderlineStyle的数字类型-@(NSUnderlineStyle)参考NSStrikethroughStyleAttributeName)&quot;&gt;&lt;/a&gt;8.&lt;span id=&quot;jump8&quot;&gt;&lt;em&gt;&lt;code&gt;NSUnderlineStyleAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;// 下划线(值也是枚举NSUnderlineStyle的数字类型-@(NSUnderlineStyle)参考NSStrikethroughStyleAttributeName)&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB2qJEblFXXXXXhXpXXXXXXXXXX_!!373400920.png&quot; width=&quot;371&quot; height=&quot;372&quot; style=&quot;margin: 0&quot;&gt; &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;9-NSStrokeColorAttributeName-笔画宽度和当前字的pointSize-字体大小-的比例&quot;&gt;&lt;a href=&quot;#9-NSStrokeColorAttributeName-笔画宽度和当前字的pointSize-字体大小-的比例&quot; class=&quot;headerlink&quot; title=&quot;9.NSStrokeColorAttributeName// 笔画宽度和当前字的pointSize(字体大小)的比例,&quot;&gt;&lt;/a&gt;9.&lt;span id=&quot;jump9&quot;&gt;&lt;em&gt;&lt;code&gt;NSStrokeColorAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;// 笔画宽度和当前字的pointSize(字体大小)的比例,&lt;/h3&gt;&lt;p&gt;正数真空效果&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB2d9UylFXXXXX4XXXXXXXXXXXX_!!373400920.png&quot; width=&quot;372&quot; height=&quot;235&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;10-NSStrokeColorAttributeName-NSStrokeColorAttributeName的颜色&quot;&gt;&lt;a href=&quot;#10-NSStrokeColorAttributeName-NSStrokeColorAttributeName的颜色&quot; class=&quot;headerlink&quot; title=&quot;10.NSStrokeColorAttributeName//NSStrokeColorAttributeName的颜色&quot;&gt;&lt;/a&gt;10.&lt;span id=&quot;jump10&quot;&gt;&lt;em&gt;&lt;code&gt;NSStrokeColorAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//NSStrokeColorAttributeName的颜色&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i1/373400920/TB20GkzlFXXXXafXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;373&quot; height=&quot;121&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;11-NSShadowAttributeName-阴影-参考NSShadow&quot;&gt;&lt;a href=&quot;#11-NSShadowAttributeName-阴影-参考NSShadow&quot; class=&quot;headerlink&quot; title=&quot;11.NSShadowAttributeName //阴影,参考NSShadow&quot;&gt;&lt;/a&gt;11.&lt;span id=&quot;jump11&quot;&gt;&lt;em&gt;&lt;code&gt;NSShadowAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt; //阴影,参考NSShadow&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i1/373400920/TB2Wmv1lFXXXXbRXpXXXXXXXXXX_!!373400920.png&quot; width=&quot;371&quot; height=&quot;72&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;12-NSTextEffectAttributeName-凸版印刷体-现在就只有NSTextEffectLetterpressStyle一个值&quot;&gt;&lt;a href=&quot;#12-NSTextEffectAttributeName-凸版印刷体-现在就只有NSTextEffectLetterpressStyle一个值&quot; class=&quot;headerlink&quot; title=&quot;12.NSTextEffectAttributeName//凸版印刷体(现在就只有NSTextEffectLetterpressStyle一个值)&quot;&gt;&lt;/a&gt;12.&lt;span id=&quot;jump12&quot;&gt;&lt;em&gt;&lt;code&gt;NSTextEffectAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//凸版印刷体(现在就只有NSTextEffectLetterpressStyle一个值)&lt;/h3&gt;&lt;p&gt;凸版印刷替效果是给文字加上奇妙阴影和高光，让文字看起有凹凸感，像是被压在屏幕上(这个描述真是有够夸张 = =!)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB29UgalFXXXXaXXpXXXXXXXXXX_!!373400920.png&quot; width=&quot;466&quot; height=&quot;47&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;13-NSAttachmentAttributeName-图文混排相关&quot;&gt;&lt;a href=&quot;#13-NSAttachmentAttributeName-图文混排相关&quot; class=&quot;headerlink&quot; title=&quot;13.NSAttachmentAttributeName//图文混排相关&quot;&gt;&lt;/a&gt;13.&lt;span id=&quot;jump13&quot;&gt;&lt;em&gt;&lt;code&gt;NSAttachmentAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//图文混排相关&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSTextAttachment&lt;/span&gt; *attach=[[&lt;span class=&quot;built_in&quot;&gt;NSTextAttachment&lt;/span&gt; alloc]init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    attach.image=[&lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; imageNamed:&lt;span class=&quot;string&quot;&gt;@&quot;1178298162bf1917&quot;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [base insertAttributedString:[&lt;span class=&quot;built_in&quot;&gt;NSAttributedString&lt;/span&gt; attributedStringWithAttachment:attach] atIndex:&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2v12_lFXXXXa3XpXXXXXXXXXX_!!373400920.png&quot; width=&quot;369&quot; height=&quot;177&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;14-NSLinkAttributeName-链接-但是不负责点击的处理&quot;&gt;&lt;a href=&quot;#14-NSLinkAttributeName-链接-但是不负责点击的处理&quot; class=&quot;headerlink&quot; title=&quot;14.NSLinkAttributeName//链接,但是不负责点击的处理&quot;&gt;&lt;/a&gt;14.&lt;span id=&quot;jump14&quot;&gt;&lt;em&gt;&lt;code&gt;NSLinkAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//链接,但是不负责点击的处理&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSMutableAttributedString&lt;/span&gt; *base=[[&lt;span class=&quot;built_in&quot;&gt;NSMutableAttributedString&lt;/span&gt; alloc]initWithString:string attributes:&lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSRange&lt;/span&gt; rang=&lt;span class=&quot;built_in&quot;&gt;NSMakeRange&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, base.length);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[base addAttribute:&lt;span class=&quot;built_in&quot;&gt;NSLinkAttributeName&lt;/span&gt; value:[&lt;span class=&quot;built_in&quot;&gt;NSURL&lt;/span&gt; URLWithString:&lt;span class=&quot;string&quot;&gt;@&quot;http://www.google.com&quot;&lt;/span&gt;] &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;range:[string rangeOfString:&lt;span class=&quot;string&quot;&gt;@&quot;http://www.google.com&quot;&lt;/span&gt;]];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2ud.vlFXXXXbzXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;365&quot; height=&quot;45&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一般配合UITextView使用&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;- (&lt;span class=&quot;built_in&quot;&gt;BOOL&lt;/span&gt;)textView:(&lt;span class=&quot;built_in&quot;&gt;UITextView&lt;/span&gt; *)textView shouldInteractWithURL:(&lt;span class=&quot;built_in&quot;&gt;NSURL&lt;/span&gt; *)URL inRange:(&lt;span class=&quot;built_in&quot;&gt;NSRange&lt;/span&gt;)characterRange&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;=============%@&quot;&lt;/span&gt;,URL);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;YES&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;15-NSBaselineOffsetAttributeName-离BaseLine的距离&quot;&gt;&lt;a href=&quot;#15-NSBaselineOffsetAttributeName-离BaseLine的距离&quot; class=&quot;headerlink&quot; title=&quot;15.NSBaselineOffsetAttributeName//离BaseLine的距离&quot;&gt;&lt;/a&gt;15.&lt;span id=&quot;jump15&quot;&gt;&lt;em&gt;&lt;code&gt;NSBaselineOffsetAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//离BaseLine的距离&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html#//apple_ref/doc/uid/TP40009459-CH5-SW1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;什么是BaseLine?&lt;/a&gt;&lt;br&gt;&lt;img src=&quot;https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/Art/glyph_metrics_2x.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB29L.tlFXXXXcsXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;367&quot; height=&quot;75&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;16-NSUnderlineColorAttributeName-下划线的颜色&quot;&gt;&lt;a href=&quot;#16-NSUnderlineColorAttributeName-下划线的颜色&quot; class=&quot;headerlink&quot; title=&quot;16.NSUnderlineColorAttributeName//下划线的颜色&quot;&gt;&lt;/a&gt;16.&lt;span id=&quot;jump16&quot;&gt;&lt;em&gt;&lt;code&gt;NSUnderlineColorAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//下划线的颜色&lt;/h3&gt;&lt;p&gt;相关属性(NSUnderlineStyleAttributeName)&lt;/p&gt;
+&lt;h3 id=&quot;17-NSStrikethroughColorAttributeName-中划线的颜色&quot;&gt;&lt;a href=&quot;#17-NSStrikethroughColorAttributeName-中划线的颜色&quot; class=&quot;headerlink&quot; title=&quot;17.NSStrikethroughColorAttributeName//中划线的颜色&quot;&gt;&lt;/a&gt;17.&lt;span id=&quot;jump17&quot;&gt;&lt;em&gt;&lt;code&gt;NSStrikethroughColorAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//中划线的颜色&lt;/h3&gt;&lt;p&gt;相关属性(NSStrikethroughStyleAttributeName)&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;18-NSObliquenessAttributeName-倾斜&quot;&gt;&lt;a href=&quot;#18-NSObliquenessAttributeName-倾斜&quot; class=&quot;headerlink&quot; title=&quot;18.NSObliquenessAttributeName//倾斜&quot;&gt;&lt;/a&gt;18.&lt;span id=&quot;jump18&quot;&gt;&lt;em&gt;&lt;code&gt;NSObliquenessAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//倾斜&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2le.DlFXXXXaDXXXXXXXXXXXX_!!373400920.png&quot; width=&quot;371&quot; height=&quot;383&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;19-NSExpansionAttributeName-“胖”or-“瘦”-拉伸or压缩&quot;&gt;&lt;a href=&quot;#19-NSExpansionAttributeName-“胖”or-“瘦”-拉伸or压缩&quot; class=&quot;headerlink&quot; title=&quot;19.NSExpansionAttributeName//“胖”or “瘦”(拉伸or压缩)&quot;&gt;&lt;/a&gt;19.&lt;span id=&quot;jump19&quot;&gt;&lt;em&gt;&lt;code&gt;NSExpansionAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//“胖”or “瘦”(拉伸or压缩)&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2ru.qlFXXXXc_XXXXXXXXXXXX_!!373400920.png&quot; width=&quot;370&quot; height=&quot;286&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;20-NSWritingDirectionAttributeName-文字的排布顺序-从左到右还是从右到左&quot;&gt;&lt;a href=&quot;#20-NSWritingDirectionAttributeName-文字的排布顺序-从左到右还是从右到左&quot; class=&quot;headerlink&quot; title=&quot;20.NSWritingDirectionAttributeName//文字的排布顺序(从左到右还是从右到左)&quot;&gt;&lt;/a&gt;20.&lt;span id=&quot;jump20&quot;&gt;&lt;em&gt;&lt;code&gt;NSWritingDirectionAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//文字的排布顺序(从左到右还是从右到左)&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2YfgLlFXXXXX8XXXXXXXXXXXX_!!373400920.png&quot; width=&quot;686&quot; height=&quot;273&quot; style=&quot;margin: 0&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//不太明白这个枚举值的两个意思...之后如果有机会明白再解释他们&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM&lt;/span&gt;(&lt;span class=&quot;built_in&quot;&gt;NSInteger&lt;/span&gt;, &lt;span class=&quot;built_in&quot;&gt;NSWritingDirectionFormatType&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSWritingDirectionEmbedding&lt;/span&gt;     = (&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSWritingDirectionOverride&lt;/span&gt;      = (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;built_in&quot;&gt;NS_ENUM_AVAILABLE&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;_11, &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;_0);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;21-NSVerticalGlyphFormAttributeName-0横-1竖&quot;&gt;&lt;a href=&quot;#21-NSVerticalGlyphFormAttributeName-0横-1竖&quot; class=&quot;headerlink&quot; title=&quot;21.NSVerticalGlyphFormAttributeName//0横,1竖&quot;&gt;&lt;/a&gt;21.&lt;span id=&quot;jump21&quot;&gt;&lt;em&gt;&lt;code&gt;NSVerticalGlyphFormAttributeName&lt;/code&gt;&lt;/em&gt;&lt;/span&gt;//0横,1竖&lt;/h3&gt;&lt;p&gt;在iOS上只有横排,不过可以通过CoreText来修改成竖排&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;目录&quot;&gt;&lt;a href=&quot;#目录&quot; class=&quot;headerlink&quot; title=&quot;目录:&quot;&gt;&lt;/a&gt;目录:&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;#jump1&quot;&gt;1. NSFontAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump2&quot;&gt;2. NSParagraphStyleAttributeName;&lt;/a&gt;(这周作业内容)&lt;br&gt;&lt;a href=&quot;#jump3&quot;&gt;3. NSForegroundColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump4&quot;&gt;4. NSBackgroundColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump5&quot;&gt;5. NSLigatureAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump6&quot;&gt;6. NSKernAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump7&quot;&gt;7. NSStrikethroughStyleAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump8&quot;&gt;8. NSUnderlineStyleAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump9&quot;&gt;9. NSStrokeColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump10&quot;&gt;10.NSStrokeWidthAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump11&quot;&gt;11.NSShadowAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump12&quot;&gt;12.NSTextEffectAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump13&quot;&gt;13.NSAttachmentAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump14&quot;&gt;14.NSLinkAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump15&quot;&gt;15.NSBaselineOffsetAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump16&quot;&gt;16.NSUnderlineColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump17&quot;&gt;17.NSStrikethroughColorAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump18&quot;&gt;18.NSObliquenessAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump19&quot;&gt;19.NSExpansionAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump20&quot;&gt;20.NSWritingDirectionAttributeName;&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;#jump21&quot;&gt;21.NSVerticalGlyphFormAttributeName;&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;1-NSFontAttributeName-字体-UIFont&quot;&gt;&lt;a href=&quot;#1-NSFontAttributeName-字体-UIFont&quot; class=&quot;headerlink&quot; title=&quot;1.NSFontAttributeName//字体 UIFont&quot;&gt;&lt;/a&gt;1.&lt;span id=&quot;jump1&quot;&gt;&lt;em&gt;&lt;code&gt;NSFontAttributeName&lt;/code&gt;&lt;/em&gt;&lt;span/&gt;//字体 UIFont&lt;/h3&gt;&lt;h3 id=&quot;3-NSForegroundColorAttributeName-字颜色-UIColor&quot;&gt;&lt;a href=&quot;#3-NSForegroundColorAttributeName-字颜色-UIColor&quot; class=&quot;headerlink&quot; title=&quot;3.NSForegroundColorAttributeName //字颜色  UIColor&quot;&gt;&lt;/a&gt;3.&lt;span id=&quot;jump3&quot;&gt;&lt;em&gt;&lt;code&gt;NSForegroundColorAttributeName&lt;/code&gt;&lt;/em&gt; &lt;span/&gt;//字颜色  UIColor&lt;/h3&gt;&lt;h3 id=&quot;4-NSBackgroundColorAttributeName-背景色-UIColor&quot;&gt;&lt;a href=&quot;#4-NSBackgroundColorAttributeName-背景色-UIColor&quot; class=&quot;headerlink&quot; title=&quot;4.NSBackgroundColorAttributeName //背景色  UIColor&quot;&gt;&lt;/a&gt;4.&lt;span id=&quot;jump4&quot;&gt;&lt;em&gt;&lt;code&gt;NSBackgroundColorAttributeName&lt;/code&gt;&lt;/em&gt; &lt;span/&gt;//背景色  UIColor&lt;/h3&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
+    
+      <category term="CoreText" scheme="http://campusappcn.github.io/tags/CoreText/"/>
+    
+      <category term="NSAttributedString" scheme="http://campusappcn.github.io/tags/NSAttributedString/"/>
+    
+  </entry>
   
   <entry>
     <title>类型判断上的小技巧</title>
@@ -89,11 +290,11 @@
     <link href="http://campusappcn.github.io/2016/03/07/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD-TextView-%E5%86%85%E5%AE%B9%E6%98%AF%E5%90%A6%E8%A2%AB%E7%BC%A9%E7%95%A5/"/>
     <id>http://campusappcn.github.io/2016/03/07/如何判断-TextView-内容是否被缩略/</id>
     <published>2016-03-07T02:43:46.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
+    <updated>2016-03-20T09:06:36.000Z</updated>
     
     <content type="html">&lt;h2 id=&quot;What&quot;&gt;&lt;a href=&quot;#What&quot; class=&quot;headerlink&quot; title=&quot;What&quot;&gt;&lt;/a&gt;What&lt;/h2&gt;&lt;p&gt;TextView 中所谓的缩略其实如下, 实际上是在显示文本时将最后一个字符替换成 … 而已:&lt;br&gt;&lt;img src=&quot;/2016/03/07/如何判断-TextView-内容是否被缩略/ellipse_example.png&quot; alt=&quot;所谓的缩略&quot; title=&quot;所谓的缩略&quot;&gt;&lt;/p&gt;
 &lt;h2 id=&quot;Why&quot;&gt;&lt;a href=&quot;#Why&quot; class=&quot;headerlink&quot; title=&quot;Why&quot;&gt;&lt;/a&gt;Why&lt;/h2&gt;&lt;p&gt;产品需求而已, 不细说了, 都是泪啊&lt;/p&gt;
-&lt;h2 id=&quot;How&quot;&gt;&lt;a href=&quot;#How&quot; class=&quot;headerlink&quot; title=&quot;How&quot;&gt;&lt;/a&gt;How&lt;/h2&gt;&lt;h3 id=&quot;机制&quot;&gt;&lt;a href=&quot;#机制&quot; class=&quot;headerlink&quot; title=&quot;机制&quot;&gt;&lt;/a&gt;机制&lt;/h3&gt;&lt;p&gt;TextView 中的文本到底是如何排版以及显示的呢? 答案是 &lt;a href=&quot;(http://developer.android.com/intl/es/reference/android/text/Layout.html)&quot;&gt;Layout&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;How&quot;&gt;&lt;a href=&quot;#How&quot; class=&quot;headerlink&quot; title=&quot;How&quot;&gt;&lt;/a&gt;How&lt;/h2&gt;&lt;h3 id=&quot;机制&quot;&gt;&lt;a href=&quot;#机制&quot; class=&quot;headerlink&quot; title=&quot;机制&quot;&gt;&lt;/a&gt;机制&lt;/h3&gt;&lt;p&gt;TextView 中的文本到底是如何排版以及显示的呢? 答案是 &lt;a href=&quot;http://developer.android.com/intl/es/reference/android/text/Layout.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Layout&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;在我们调用 &lt;code&gt;textView.setText(&amp;quot;Some very long text&amp;quot;)&lt;/code&gt; 后, 真正展示在界面上的可能是 “Some very l…”, 然而此时我们调用 &lt;code&gt;textView.getText()&lt;/code&gt; 得到的却依旧是 “Some very long text”.&lt;br&gt;&lt;img src=&quot;/2016/03/07/如何判断-TextView-内容是否被缩略/text_get_text.png&quot; alt=&quot;textView.getText() 的结果&quot; title=&quot;textView.getText() 的结果&quot;&gt;&lt;/p&gt;
 &lt;p&gt;因吹丝停!&lt;/p&gt;
 &lt;p&gt;那么这时我们通过 &lt;code&gt;textView.getLayout().getText()&lt;/code&gt; 拿到的是什么呢? 答案是 “Some very l…ng text”.&lt;br&gt;&lt;img src=&quot;/2016/03/07/如何判断-TextView-内容是否被缩略/text_layout_get_text.png&quot; alt=&quot;textView.getLayout.getText()的结果&quot; title=&quot;textView.getLayout.getText()的结果&quot;&gt;&lt;/p&gt;
@@ -127,7 +328,7 @@
     <link href="http://campusappcn.github.io/2016/03/07/2016-03-07-MVVM%E7%9A%84%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%B5%8B%E8%AF%95/"/>
     <id>http://campusappcn.github.io/2016/03/07/2016-03-07-MVVM的图形界面测试/</id>
     <published>2016-03-06T16:00:00.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
+    <updated>2016-03-20T09:06:36.000Z</updated>
     
     <content type="html">&lt;p&gt;图形界面的测试一直都是一个麻烦事，一般来说，都是开发人员开发的时候和设计稿比对，测试的时候过一遍，最终产品经理验收。正常的数据一般来说显示都没有问题的，往往是上线后的用户数据产生了特定的corner case，出现了意料之外的视觉效果。&lt;/p&gt;
 &lt;h2 id=&quot;MVVM&quot;&gt;&lt;a href=&quot;#MVVM&quot; class=&quot;headerlink&quot; title=&quot;MVVM&quot;&gt;&lt;/a&gt;MVVM&lt;/h2&gt;&lt;p&gt;MVVM的核心思路，是将界面展示拆分成了VM和V两个部分，甚至很多MVVM的框架，只专注于VM和V的部分，提供双向绑定，把剩下的更新、缓存、业务逻辑都交给开发者自己决定。&lt;/p&gt;
@@ -218,11 +419,12 @@
     <link href="http://campusappcn.github.io/2016/03/03/iOS%E4%B8%AD%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%BE%97%E5%8F%82%E6%95%B0%E4%B8%AA%E6%95%B0%E7%9A%84%E5%AE%8F/"/>
     <id>http://campusappcn.github.io/2016/03/03/iOS中一个可以获得参数个数的宏/</id>
     <published>2016-03-03T08:03:23.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
+    <updated>2016-03-20T09:06:36.000Z</updated>
     
     <content type="html">&lt;h2 id=&quot;metamacro-argcount-…&quot;&gt;&lt;a href=&quot;#metamacro-argcount-…&quot; class=&quot;headerlink&quot; title=&quot;metamacro_argcount(…)&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa/blob/e16f47cf9cb568136ebd81430b24af274c3c27c7/ReactiveCocoa/Objective-C/extobjc/metamacros.h#L45&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;metamacro_argcount(…)&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;metamacro_argcount一个可以获得传入参数个数的Macro,&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version); 结果为&lt;span class=&quot;number&quot;&gt;2.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version, &lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;); 结果为&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version, &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;); 结果为&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;这个宏在编译期(并非运行期)就获得参数个数,是不是很神奇?来看看里面有什么鬼&lt;br&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACmetamacros.h中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;span class=&quot;meta-keyword&quot;&gt;define&lt;/span&gt; metamacro_argcount(...) \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;需要展开下,以下就&lt;code&gt;metamacro_argcount(NSObject, version)&lt;/code&gt;做展开&lt;br&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(NSObject, version)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;--&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_at(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, NSObject, version, &lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;17&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;14&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;p&gt;&lt;code&gt;metamacro_at(N, ...)&lt;/code&gt;定义:&lt;/p&gt;
 &lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;span class=&quot;meta-keyword&quot;&gt;define&lt;/span&gt; metamacro_at(N, ...) \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        metamacro_concat(metamacro_at, N)(__VA_ARGS__)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;继续展开&lt;br&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;metamacro_at(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, NSObject, version, &lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;17&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;14&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;--&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; metamacro_concat(metamacro_at,&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;)(NSObject, version, &lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;17&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;14&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
@@ -241,7 +443,9 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;metamacro-argcount-…&quot;&gt;&lt;a href=&quot;#metamacro-argcount-…&quot; class=&quot;headerlink&quot; title=&quot;metamacro_argcount(…)&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://github.c
+      &lt;h2 id=&quot;metamacro-argcount-…&quot;&gt;&lt;a href=&quot;#metamacro-argcount-…&quot; class=&quot;headerlink&quot; title=&quot;metamacro_argcount(…)&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa/blob/e16f47cf9cb568136ebd81430b24af274c3c27c7/ReactiveCocoa/Objective-C/extobjc/metamacros.h#L45&quot;&gt;metamacro_argcount(…)&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;metamacro_argcount一个可以获得传入参数个数的Macro,&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version); 结果为&lt;span class=&quot;number&quot;&gt;2.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version, &lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;); 结果为&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(&lt;span class=&quot;built_in&quot;&gt;NSObject&lt;/span&gt;, version, &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;); 结果为&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这个宏在编译期(并非运行期)就获得参数个数,是不是很神奇?来看看里面有什么鬼&lt;br&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACmetamacros.h中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;span class=&quot;meta-keyword&quot;&gt;define&lt;/span&gt; metamacro_argcount(...) \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;需要展开下,以下就&lt;code&gt;metamacro_argcount(NSObject, version)&lt;/code&gt;做展开&lt;br&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;metamacro_argcount(NSObject, version)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;--&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;metamacro_at(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, NSObject, version, &lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;17&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;14&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
     
     </summary>
     
@@ -436,13 +640,14 @@
     <link href="http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5%E4%BF%AE%E7%82%BC-%E4%B8%80/"/>
     <id>http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5修炼-一/</id>
     <published>2016-02-28T07:26:02.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
+    <updated>2016-03-20T09:06:36.000Z</updated>
     
     <content type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.&lt;/p&gt;
 &lt;p&gt;本文主要内容:&lt;br&gt;1.RACSignal类的简单使用&lt;br&gt;2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的&lt;/p&gt;
 &lt;h2 id=&quot;RACSignal&quot;&gt;&lt;a href=&quot;#RACSignal&quot; class=&quot;headerlink&quot; title=&quot;RACSignal&quot;&gt;&lt;/a&gt;RACSignal&lt;/h2&gt;&lt;p&gt;RAC的核心,如果用RAC写项目,这个家伙应该是项目中使用次数最多的类.&lt;/p&gt;
 &lt;p&gt;简单使用:&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//创建一个信号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	[subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//然后订阅&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;可以看到createSignal:的参数就是一个block(一个返回RACDisposable,参数的是实现了RACSubscriber协议的subscriber的block)&lt;br&gt;subscribeNext:参数也是一个block(一个返回void ,参数是随意对象的block)&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;p&gt;为了看的清楚些,可以这样写&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回RACDisposable的block叫didSubscribe,作为createSignal参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回void的block叫nextBlock,作为subscribeNext的参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)=^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:nextBlock];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;h2 id=&quot;看看源码是怎么写的&quot;&gt;&lt;a href=&quot;#看看源码是怎么写的&quot; class=&quot;headerlink&quot; title=&quot;看看源码是怎么写的&quot;&gt;&lt;/a&gt;看看源码是怎么写的&lt;/h2&gt;&lt;h3 id=&quot;1-RACSignal-createSignal-返回Signal&quot;&gt;&lt;a href=&quot;#1-RACSignal-createSignal-返回Signal&quot; class=&quot;headerlink&quot; title=&quot;1.[RACSignal createSignal:]返回Signal&quot;&gt;&lt;/a&gt;1.[RACSignal createSignal:]返回Signal&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [RACDynamicSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACDynamicSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;RACDynamicSignal&lt;/span&gt; ()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;readonly&lt;/span&gt;) RACDisposable * (^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACDynamicSignal *signal = [[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; alloc] init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	signal-&amp;gt;_didSubscribe = [didSubscribe &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [signal setNameWithFormat:&lt;span class=&quot;string&quot;&gt;@&quot;+createSignal:&quot;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;&lt;strong&gt;可以看到RACSignal实际是调用了子类RACDynamicSignal来创建Signal&lt;/strong&gt;&lt;/p&gt;
@@ -472,7 +677,11 @@
     
     <summary type="html">
     
-      &lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的
+      &lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.&lt;/p&gt;
+&lt;p&gt;本文主要内容:&lt;br&gt;1.RACSignal类的简单使用&lt;br&gt;2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的&lt;/p&gt;
+&lt;h2 id=&quot;RACSignal&quot;&gt;&lt;a href=&quot;#RACSignal&quot; class=&quot;headerlink&quot; title=&quot;RACSignal&quot;&gt;&lt;/a&gt;RACSignal&lt;/h2&gt;&lt;p&gt;RAC的核心,如果用RAC写项目,这个家伙应该是项目中使用次数最多的类.&lt;/p&gt;
+&lt;p&gt;简单使用:&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//创建一个信号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	[subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//然后订阅&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;可以看到createSignal:的参数就是一个block(一个返回RACDisposable,参数的是实现了RACSubscriber协议的subscriber的block)&lt;br&gt;subscribeNext:参数也是一个block(一个返回void ,参数是随意对象的block)&lt;/p&gt;
     
     </summary>
     
@@ -480,42 +689,6 @@
       <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
     
       <category term="ReactiveCocoa" scheme="http://campusappcn.github.io/tags/ReactiveCocoa/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Spring测试替换注入的Bean (Mock)</title>
-    <link href="http://campusappcn.github.io/2016/02/28/2016-02-28-Spring%E6%B5%8B%E8%AF%95%E6%9B%BF%E6%8D%A2Bean%20(Mock)/"/>
-    <id>http://campusappcn.github.io/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/</id>
-    <published>2016-02-27T16:00:00.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
-    
-    <content type="html">&lt;p&gt;依赖注入框架在诞生之初的初衷，就是为了方便通过替换Bean，替换对象以是的程序有更好的可扩展性。运行时的Bean是通过Xml配置的，只要符合特定的接口，可以随意配置具体的实现类，让程序可以自由装配、修改、拓展、测试。&lt;/p&gt;
-&lt;p&gt;例如，在测试用例中需要针对一个业务逻辑进行测试，但又不想运行具体的查询，就可以通过替换到对应的查询Bean，某某Repository的实现类，以达到单纯测试业务逻辑的目的。&lt;/p&gt;
-&lt;p&gt;但Xml一致被人诟病，无法通过编译器进行检查、编写复杂，项目大了之后，很难维护。为了测试一个bean，要专门编写一套替换掉这个Bean的Xml，感觉并没有达到预期的方便。时至今日，Spring已经基本摆脱了Xml，通过注解和动态发现，现在项目里的Xml基本上是为了让老代码正常工作。通过注解解决测试中动态替换Bean的问题，也变的没有那么困难。&lt;/p&gt;
-&lt;h2 id=&quot;Configuration，-Bean和-Primary&quot;&gt;&lt;a href=&quot;#Configuration，-Bean和-Primary&quot; class=&quot;headerlink&quot; title=&quot;@Configuration，@Bean和@Primary&quot;&gt;&lt;/a&gt;@Configuration，@Bean和@Primary&lt;/h2&gt;&lt;p&gt;这两个注解是现代Spring进行对象构建的主要工具，以替代Xml。@Configuration标记在类上，告诉Spring这个类是一个配置类；@Bean方法标记在配置类的方法上，这个方法返回的对象，就是需要进入注入框架的Bean。因此，我们可以在测试用例中，动态的编写一个Mock配置类，以及我们想要Mock的Bean。&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;通过上面的代码，我们已经可以让我们Mock对象进入了注入系统，但是同一个接口有两个Bean，Spring在真正注入时无从选择，就会报错。因此我们可以在Mock的Bean上打上@Primary注解，从而告诉Spring选择这个Bean。&lt;/p&gt;
-&lt;p&gt;但此时还没有真正解决问题，因为Spring启动时自动检测到这个配置文件后，&lt;strong&gt;&lt;em&gt;会对所有的Test都产生影响&lt;/em&gt;&lt;/strong&gt;，可是其他的Test我们不希望使用这个Mock的Bean。&lt;/p&gt;
-&lt;h2 id=&quot;Profile和-ActiveProfiles&quot;&gt;&lt;a href=&quot;#Profile和-ActiveProfiles&quot; class=&quot;headerlink&quot; title=&quot;@Profile和@ActiveProfiles&quot;&gt;&lt;/a&gt;@Profile和@ActiveProfiles&lt;/h2&gt;&lt;p&gt;@Profile就可以解决这个问题，@Profile有点类似于定义配置类的使用场景，只有特定的Profile被启用时，才使用这个@Profile注解的配置类里面提供的Bean。而@ActiveProfiles则是告诉Spring要启动哪些Profile。于是我们可以在测试类中定义特定的profile，例如这个测试类的类名。&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Runwith&lt;/span&gt;(SpringJUnit4ClassRunner.class)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@SpringApplicationConfiguration&lt;/span&gt;(...) &lt;span class=&quot;comment&quot;&gt;//或者ContextConfiguration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@ActiveProfiles&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Autowired&lt;/span&gt; UserService mUserServ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Profile&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;这样，在这个测试里，UserService里面所使用的UserRepository就是我们动态替换的Mock Bean，我们甚至可以在这个bean的具体方法里进行assert，帮助我们更好的测试。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      如何在Spring的测试中，动态的替换自动注入的bean，以方便测试
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
-    
-      <category term="Mock bean" scheme="http://campusappcn.github.io/tags/Mock-bean/"/>
-    
-      <category term="Injection" scheme="http://campusappcn.github.io/tags/Injection/"/>
     
   </entry>
   
@@ -836,6 +1009,42 @@ public static void stopListeningToPush(){
   </entry>
   
   <entry>
+    <title>Spring测试替换注入的Bean (Mock)</title>
+    <link href="http://campusappcn.github.io/2016/02/28/2016-02-28-Spring%E6%B5%8B%E8%AF%95%E6%9B%BF%E6%8D%A2Bean%20(Mock)/"/>
+    <id>http://campusappcn.github.io/2016/02/28/2016-02-28-Spring测试替换Bean (Mock)/</id>
+    <published>2016-02-27T16:00:00.000Z</published>
+    <updated>2016-03-20T09:06:36.000Z</updated>
+    
+    <content type="html">&lt;p&gt;依赖注入框架在诞生之初的初衷，就是为了方便通过替换Bean，替换对象以是的程序有更好的可扩展性。运行时的Bean是通过Xml配置的，只要符合特定的接口，可以随意配置具体的实现类，让程序可以自由装配、修改、拓展、测试。&lt;/p&gt;
+&lt;p&gt;例如，在测试用例中需要针对一个业务逻辑进行测试，但又不想运行具体的查询，就可以通过替换到对应的查询Bean，某某Repository的实现类，以达到单纯测试业务逻辑的目的。&lt;/p&gt;
+&lt;p&gt;但Xml一致被人诟病，无法通过编译器进行检查、编写复杂，项目大了之后，很难维护。为了测试一个bean，要专门编写一套替换掉这个Bean的Xml，感觉并没有达到预期的方便。时至今日，Spring已经基本摆脱了Xml，通过注解和动态发现，现在项目里的Xml基本上是为了让老代码正常工作。通过注解解决测试中动态替换Bean的问题，也变的没有那么困难。&lt;/p&gt;
+&lt;h2 id=&quot;Configuration，-Bean和-Primary&quot;&gt;&lt;a href=&quot;#Configuration，-Bean和-Primary&quot; class=&quot;headerlink&quot; title=&quot;@Configuration，@Bean和@Primary&quot;&gt;&lt;/a&gt;@Configuration，@Bean和@Primary&lt;/h2&gt;&lt;p&gt;这两个注解是现代Spring进行对象构建的主要工具，以替代Xml。@Configuration标记在类上，告诉Spring这个类是一个配置类；@Bean方法标记在配置类的方法上，这个方法返回的对象，就是需要进入注入框架的Bean。因此，我们可以在测试用例中，动态的编写一个Mock配置类，以及我们想要Mock的Bean。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过上面的代码，我们已经可以让我们Mock对象进入了注入系统，但是同一个接口有两个Bean，Spring在真正注入时无从选择，就会报错。因此我们可以在Mock的Bean上打上@Primary注解，从而告诉Spring选择这个Bean。&lt;/p&gt;
+&lt;p&gt;但此时还没有真正解决问题，因为Spring启动时自动检测到这个配置文件后，&lt;strong&gt;&lt;em&gt;会对所有的Test都产生影响&lt;/em&gt;&lt;/strong&gt;，可是其他的Test我们不希望使用这个Mock的Bean。&lt;/p&gt;
+&lt;h2 id=&quot;Profile和-ActiveProfiles&quot;&gt;&lt;a href=&quot;#Profile和-ActiveProfiles&quot; class=&quot;headerlink&quot; title=&quot;@Profile和@ActiveProfiles&quot;&gt;&lt;/a&gt;@Profile和@ActiveProfiles&lt;/h2&gt;&lt;p&gt;@Profile就可以解决这个问题，@Profile有点类似于定义配置类的使用场景，只有特定的Profile被启用时，才使用这个@Profile注解的配置类里面提供的Bean。而@ActiveProfiles则是告诉Spring要启动哪些Profile。于是我们可以在测试类中定义特定的profile，例如这个测试类的类名。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Runwith&lt;/span&gt;(SpringJUnit4ClassRunner.class)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@SpringApplicationConfiguration&lt;/span&gt;(...) &lt;span class=&quot;comment&quot;&gt;//或者ContextConfiguration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@ActiveProfiles&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SpringMockTest&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Autowired&lt;/span&gt; UserService mUserServ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Profile&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;SpringMockTest&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Mock&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Primary&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;meta&quot;&gt;@Bean&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; UserRepository &lt;span class=&quot;title&quot;&gt;userRepository&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; UserRepository()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;//mock things&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样，在这个测试里，UserService里面所使用的UserRepository就是我们动态替换的Mock Bean，我们甚至可以在这个bean的具体方法里进行assert，帮助我们更好的测试。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      如何在Spring的测试中，动态的替换自动注入的bean，以方便测试
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
+    
+      <category term="Mock bean" scheme="http://campusappcn.github.io/tags/Mock-bean/"/>
+    
+      <category term="Injection" scheme="http://campusappcn.github.io/tags/Injection/"/>
+    
+  </entry>
+  
+  <entry>
     <title>分享一些iOS方面的小东西1</title>
     <link href="http://campusappcn.github.io/2016/02/21/2016-02-21-%E5%88%86%E4%BA%AB%E4%B8%80%E4%BA%9BiOS%E6%96%B9%E9%9D%A2%E7%9A%84%E5%B0%8F%E4%B8%9C%E8%A5%BF1/"/>
     <id>http://campusappcn.github.io/2016/02/21/2016-02-21-分享一些iOS方面的小东西1/</id>
@@ -943,7 +1152,7 @@ public static void stopListeningToPush(){
     <link href="http://campusappcn.github.io/2016/02/20/2016-02-20-Sping%20MVC%20HTTP%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%8A%AB%E6%8C%81%E3%80%81%E4%BF%AE%E6%94%B9/"/>
     <id>http://campusappcn.github.io/2016/02/20/2016-02-20-Sping MVC HTTP请求参数劫持、修改/</id>
     <published>2016-02-19T16:00:00.000Z</published>
-    <updated>2016-03-08T07:17:13.000Z</updated>
+    <updated>2016-03-20T09:06:36.000Z</updated>
     
     <content type="html">&lt;p&gt;由于历史原因，新项目里使用了一个国人写的PageHelper用做Mybatis的查询分页。PageHelper的使用起来是这样的:&lt;/p&gt;
 &lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;PageHelper.startPage(page, PAGE_SIZE, ORDER_BY)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//后续查询会自动带上skip,limit等&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -974,130 +1183,13 @@ public static void stopListeningToPush(){
       <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
     
     
-      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
-    
       <category term="Java web" scheme="http://campusappcn.github.io/tags/Java-web/"/>
+    
+      <category term="Spring" scheme="http://campusappcn.github.io/tags/Spring/"/>
     
       <category term="Spring MVC" scheme="http://campusappcn.github.io/tags/Spring-MVC/"/>
     
       <category term="HTTP" scheme="http://campusappcn.github.io/tags/HTTP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在各端实现Rtmp和hls视频流的播放</title>
-    <link href="http://campusappcn.github.io/2016/01/30/2016-01-30-%E5%9C%A8%E5%90%84%E7%AB%AF%E5%AE%9E%E7%8E%B0Rtmp%E5%92%8Chls%E6%B5%81%E8%A7%86%E9%A2%91%E7%9A%84%E6%92%AD%E6%94%BE/"/>
-    <id>http://campusappcn.github.io/2016/01/30/2016-01-30-在各端实现Rtmp和hls流视频的播放/</id>
-    <published>2016-01-29T16:00:00.000Z</published>
-    <updated>2016-02-21T03:03:44.000Z</updated>
-    
-    <content type="html">&lt;p&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;
-&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;我们已经在&lt;a href=&quot;http://sixwolf.net/2016/01/29/%E7%9B%B4%E6%92%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%90%AD%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9B%B4%E6%92%AD%E5%B9%B3%E5%8F%B0/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;视频直播解决方案&lt;/a&gt;讨论了如何实现自己的直播平台以及&lt;a href=&quot;http://sixwolf.net/2016/01/30/Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何实现从安卓设备上推流到服务器&lt;/a&gt;。那么我们还剩下最后一波，就是如何将精彩的视频内容展现出来，在本文中将会介绍如何在网页端和安卓设备上实现直播的播放。&lt;/p&gt;
-&lt;h1 id=&quot;安卓设备上的播放——Vitamio&quot;&gt;&lt;a href=&quot;#安卓设备上的播放——Vitamio&quot; class=&quot;headerlink&quot; title=&quot;安卓设备上的播放——Vitamio&quot;&gt;&lt;/a&gt;安卓设备上的播放——Vitamio&lt;/h1&gt;&lt;p&gt;安卓设备3.0以上原生支持hls，但是不支持rtmp，为了统一以及低版本兼容，我们使用第三方的一个播放器库——&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;vitamio&lt;/a&gt;。&lt;br&gt;下面是实例代码&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;public class PlayerActivity extends AppCompatActivity {
-
-private static final String KEY_PATH = &amp;quot;key_path&amp;quot;;
-
-
-@Bind(R.id.vitamio_videoView)
-VideoView vVideoView;
-
-
-public static Intent makeIntent(String rtmpPath){
-    Intent intent = new Intent(App.getContext(), PlayerActivity.class);
-    intent.putExtra(KEY_PATH, rtmpPath);
-    return intent;
-}
-
-
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    if (!LibsChecker.checkVitamioLibs(this))
-        return;
-    setContentView(R.layout.activity_player);
-    ButterKnife.bind(this);
-    String path = getIntent().getStringExtra(KEY_PATH);
-    initVideo(path);
-}
-
-
-private void initVideo(String path){
-    HashMap&amp;lt;String, String&amp;gt; options = new HashMap&amp;lt;&amp;gt;();
-    options.put(&amp;quot;rtmp_live&amp;quot;, &amp;quot;1&amp;quot;);
-    vVideoView.setVideoURI(Uri.parse(path), options);
-    vVideoView.setMediaController(new MediaController(this));
-    vVideoView.requestFocus();
-
-    vVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mediaPlayer) {
-            mediaPlayer.setPlaybackSpeed(1.0f);
-        }
-    });
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;}&lt;/p&gt;
-&lt;p&gt;该Activity能够接收一个rtmp或者hls的流地址播放。完整项目地址 &lt;a href=&quot;https://github.com/beautifulSoup/RtmpHlsPlayer/tree/master&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RtmpHlsPlayer&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;hls播放&quot;&gt;&lt;a href=&quot;#hls播放&quot; class=&quot;headerlink&quot; title=&quot;hls播放&quot;&gt;&lt;/a&gt;hls播放&lt;/h1&gt;&lt;p&gt;如果仅需要在移动设备的WebView上播放，我们可以选择使用html中嵌入hls播放。如下html能够在所有Safari或者安卓3.0以上的WebView上播放。这样就不需要使用第三方的播放器。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-    &amp;lt;head&amp;gt;
-       &amp;lt;meta charset=utf-8/&amp;gt;
-    &amp;lt;/head&amp;gt;
-    &amp;lt;body&amp;gt;
-        &amp;lt;div id=&amp;apos;player&amp;apos;&amp;gt;
-           &amp;lt;video width=&amp;quot;640&amp;quot; height=&amp;quot;320&amp;quot; controls&amp;gt;
-                &amp;lt;source src=&amp;quot;http://10.10.5.119/live/livestream.m3u8&amp;quot; type=&amp;quot;application/x-mpegURL&amp;quot;&amp;gt;
-           &amp;lt;/video&amp;gt;
-        &amp;lt;/div&amp;gt;
-    &amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;VideoJS&quot;&gt;&lt;a href=&quot;#VideoJS&quot; class=&quot;headerlink&quot; title=&quot;VideoJS&quot;&gt;&lt;/a&gt;VideoJS&lt;/h1&gt;&lt;p&gt;如果我们要让我们的网页支持在所有浏览器上播放，我们就需要使用第三方的播放器。VideoJs是一个较好的播放器库，完全免费，不像JWPlayer一样需要付费才能使用一些高级功能。下面是一个播放的例子。你可以将source标签下的src换成你自己的直播流地址。需要注意的是rtmp流的type是rtmp/flv（flv 跟推流的时候FFmpegFrameRecorder设置的format有关）, hls 的type是application/x-mpegURL。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
-  &amp;lt;head&amp;gt;
-  &amp;lt;link href=&amp;quot;http://vjs.zencdn.net/5.5.3/video-js.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;
-
-  &amp;lt;!-- If you&amp;apos;d like to support IE8 --&amp;gt;
-  &amp;lt;script src=&amp;quot;http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-
-
-&amp;lt;/head&amp;gt;
-
-
-&amp;lt;body&amp;gt;
-
-  &amp;lt;h1&amp;gt;康康的直播间&amp;lt;/h1&amp;gt;
- &amp;lt;video id=&amp;quot;my-video&amp;quot; class=&amp;quot;video-js&amp;quot; controls preload=&amp;quot;auto&amp;quot; width=&amp;quot;640&amp;quot; height=&amp;quot;264&amp;quot;
- poster=&amp;quot;https://img.alicdn.com/imgextra/i2/754328530/TB2FpxhkXXXXXa5XXXXXXXXXXXX_!!754328530.jpg&amp;quot; data-setup=&amp;quot;{}&amp;quot;&amp;gt;
-    &amp;lt;source src=&amp;quot;rtmp://10.10.5.119/live/livestream&amp;quot; type=&amp;quot;rtmp/flv&amp;quot;&amp;gt;
-    &amp;lt;!-- 如果上面的rtmp流无法播放，就播放hls流 --&amp;gt;
-    &amp;lt;source src=&amp;quot;http://10.10.5.119/live/livestream.m3u8&amp;quot; type=&amp;apos;application/x-mpegURL&amp;apos;&amp;gt;
-    &amp;lt;p class=&amp;quot;vjs-no-js&amp;quot;&amp;gt;
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      &amp;lt;a href=&amp;quot;http://videojs.com/html5-video-support/&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;supports HTML5 video&amp;lt;/a&amp;gt;
-    &amp;lt;/p&amp;gt;
- &amp;lt;/video&amp;gt;
-
- &amp;lt;script src=&amp;quot;http://vjs.zencdn.net/5.5.3/video.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;</content>
-    
-    <summary type="html">
-    
-      本篇博客主要介绍在各端实现hls和rtmp流的播放
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
-    
-      <category term="rtmp" scheme="http://campusappcn.github.io/tags/rtmp/"/>
-    
-      <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
-    
-      <category term="player" scheme="http://campusappcn.github.io/tags/player/"/>
     
   </entry>
   
@@ -1424,99 +1516,6 @@ public void stopRecording() {
       <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
     
       <category term="live-stream" scheme="http://campusappcn.github.io/tags/live-stream/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>视频直播解决方案-搭建你自己的直播平台</title>
-    <link href="http://campusappcn.github.io/2016/01/29/2016-01-29-%E7%9B%B4%E6%92%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E6%90%AD%E5%BB%BA%E4%BD%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9B%B4%E6%92%AD%E5%B9%B3%E5%8F%B0/"/>
-    <id>http://campusappcn.github.io/2016/01/29/2016-01-29-直播解决方案-搭建你自己的直播平台/</id>
-    <published>2016-01-28T16:00:00.000Z</published>
-    <updated>2016-02-21T03:03:44.000Z</updated>
-    
-    <content type="html">&lt;p&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;
-&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;当下，视频直播行业在中国逐渐走红。在刚刚过去的2015年，视频直播成为互联网行业最抢眼的领域之一。从游戏到秀场，从传统的网页端到移动互联网，各大直播平台包括斗鱼、熊猫tv、虎牙战旗还有纯移动端的印客、易直播等，群雄割据。言归正转，毕竟本文是一篇技术博客，接下来让我们从技术的角度分析如何搭建一个自己的直播平台。&lt;/p&gt;
-&lt;h1 id=&quot;流程图&quot;&gt;&lt;a href=&quot;#流程图&quot; class=&quot;headerlink&quot; title=&quot;流程图&quot;&gt;&lt;/a&gt;流程图&lt;/h1&gt;&lt;p&gt;首先让我们看一下直播整体流程。&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i2/754328530/TB2mp.yjVXXXXaqXFXXXXXXXXXX_!!754328530.jpg&quot; alt=&quot;直播流程图&quot;&gt;&lt;br&gt;首先是直播视频采集端，由主播通过摄像头手机等采集设备，采集视音频流，编码后采用RTMP协议[^RTMP]推流到直播流服务器。这里采用H.264[^H.264]编码对视频流进行编码，使用AAC[^AAC]对音频流进行编码，采用这两种编码的原因是hls协议[^hls]要求使用这两种编码。&lt;br&gt;接下来直播服务器会对从采集端推送的流进行一定的处理。比如，hls协议会将视频流切片成一个个的TS视频文件缓存在服务器中，同时生成一个m3u8文件记录了视频流中的包含的TS文件。&lt;br&gt;之后如果有播放器请求某一个直播链接，服务器会使用RTMP或者hls协议将流推送到播放器。那么我们该如果根据情况选择这两种协议呢。首先，我们需要明确一点，这两种协议各有利弊。如下所示：   &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
-&lt;th style=&quot;text-align:center&quot;&gt;RTMP&lt;/th&gt;
-&lt;th style=&quot;text-align:center&quot;&gt;hls&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;Company&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;Adobe&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;Apple&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;平台支持&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;FlashPlayer &lt;br&gt;等一些网页端的播放器 &lt;br&gt;移动端 Vitamio&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;Apple产品原生支持，&lt;br&gt;Android3.0以上原生支持 桌面机的浏览器需要使用一些第三方库，如JWPlayer&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;延迟&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;三秒左右的延迟，实时性较高&lt;/td&gt;
-&lt;td style=&quot;text-align:center&quot;&gt;根据TS长度不同而不同，一般会有10s以上的延迟&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;综合以上因素，我们认为如果对实时性要求较高，那么使用RTMP会比较好。网页端使用RTMP会比较好，因为Flash Player原生支持，而大多数的浏览器都会安装Flash player。而在移动端如果对实时性要求不高，那么采用hls比较好，因为ios包括3.0以上的安卓都原生支持hls协议。接下来本文将根据以上的三个步骤的具体实现分别展开说明，为了篇幅考虑，我们会将一些内容放到子文章中。&lt;/p&gt;
-&lt;h1 id=&quot;视频采集与编码&quot;&gt;&lt;a href=&quot;#视频采集与编码&quot; class=&quot;headerlink&quot; title=&quot;视频采集与编码&quot;&gt;&lt;/a&gt;视频采集与编码&lt;/h1&gt;&lt;p&gt;视频采集可以有多重途径，比如通过电脑摄像头，通过OBS等录屏软件进行录屏，通过手机摄像头采集。由于目前户外直播和移动互联网很火，所以我们就选择实现在安卓设备上通过摄像头采集视频流（其实是因为我是写安卓的= =）。&lt;br&gt;为了实现这一功能，我们使用了一个开源项目&lt;a href=&quot;https://github.com/bytedeco/javacv&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;javacv&lt;/a&gt; 它包含了一些在计算机视觉领域应用比较多的库，我们主要使用的是它的FFMpeg库。使用FFMpeg的FFMpegFrameRecoder类，我们能够方便地将从android摄像头采集到的帧传输到服务器。具体的通过Camera和FFMpeg推流到服务器的实现请看我们的另一篇文章&lt;a href=&quot;http://sixwolf.net/2016/01/30/Android%E4%BD%BF%E7%94%A8FFMpeg%E5%AE%9E%E7%8E%B0%E6%8E%A8%E9%80%81%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%B5%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Android使用FFMpeg实现推送视频直播流到服务器&lt;/a&gt;。另外FFMpeg也支持H.264和AAC编码。&lt;/p&gt;
-&lt;h1 id=&quot;直播流服务器&quot;&gt;&lt;a href=&quot;#直播流服务器&quot; class=&quot;headerlink&quot; title=&quot;直播流服务器&quot;&gt;&lt;/a&gt;直播流服务器&lt;/h1&gt;&lt;p&gt;关于直播服务器，我们选择使用我们中国人开发的一个开源项目——&lt;a href=&quot;https://github.com/ossrs/srs&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;srs&lt;/a&gt;，它支持RTMP/HTTP/RTSP等协议的流输入，支持RTMP/HDS/HLS/HTTP等协议的流输出，同时它也支持集群。给作者点赞。&lt;br&gt;关于srs的安装和使用可以直接看它在github上的wiki，这里不再赘述。需要注意的一点是该项目在centos 6.x 和ubunut12.x上能正常编译通过，但是在比如我使用的ubuntu14.04上会有一些依赖包的缺失。所以为了方便考虑的话，读者可以在centos和ubuntu12.x上进行test。&lt;/p&gt;
-&lt;h1 id=&quot;播放器&quot;&gt;&lt;a href=&quot;#播放器&quot; class=&quot;headerlink&quot; title=&quot;播放器&quot;&gt;&lt;/a&gt;播放器&lt;/h1&gt;&lt;p&gt;我们在试验的过程中，使用多种播放器和库在全平台实现了rtmp和hls的播放。在网页端使用了&lt;a href=&quot;http://videojs.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;videojs&lt;/a&gt;，在安卓端使用&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;vitamio&lt;/a&gt;。具体的实现请看我们的另外一篇&lt;a href=&quot;http://sixwolf.net/2016/01/30/%E5%9C%A8%E5%90%84%E7%AB%AF%E5%AE%9E%E7%8E%B0Rtmp%E5%92%8Chls%E6%B5%81%E8%A7%86%E9%A2%91%E7%9A%84%E6%92%AD%E6%94%BE/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何在网页端和移动端播放rtmp和hls视频流&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h1&gt;&lt;p&gt;当然本文中的解决方案只是最简单的，对于直播服务器集群，直播间的创建和管理，直播间直播密码和权限，内容分发网络CDN都没有进行深入的研究。但是通过本实验性项目，我认为对于我们了解整个直播的业务流程还是很有帮助的。&lt;/p&gt;
-&lt;h1 id=&quot;相关文件推荐&quot;&gt;&lt;a href=&quot;#相关文件推荐&quot; class=&quot;headerlink&quot; title=&quot;相关文件推荐&quot;&gt;&lt;/a&gt;相关文件推荐&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/articles/alibaba-broadcast-platform-technology-challenges&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;鏖战双十一-阿里直播平台面临的技术挑战&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;相关项目&quot;&gt;&lt;a href=&quot;#相关项目&quot; class=&quot;headerlink&quot; title=&quot;相关项目&quot;&gt;&lt;/a&gt;相关项目&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/bytedeco/javacv&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;javacv&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ossrs/srs&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;srs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/yixia/VitamioBundle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Vitamio&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;[^RTMP]: Real Time Messaging Protocol (RTMP) was initially a proprietary protocol developed by Macromedia for streaming audio, video and data over the Internet, between a Flash player and a server. Macromedia is now owned by Adobe, which has released an incomplete version of the specification of the protocol for public use. (reference from wikipedia )&lt;br&gt;Flash Player是天生能够播放RTMP流的，所以RTMP流可以在网页上得到很好的支持，另外也有很多其他浏览器能够支持播放RTMP流，如比较知名的JW player，videoJS。另外RTMP流的延迟只有3s，比较适合一些实时性和互动性较高的直播。&lt;br&gt;[^H.264]: H.264，同时也是MPEG-4第十部分，是由ITU-T视频编码专家组（VCEG）和ISO/IEC动态图像专家组（MPEG）联合组成的联合视频组（JVT，Joint Video Team）提出的高度压缩数字视频编解码器标准。这个标准通常被称之为H.264/AVC（或者AVC/H.264或者H.264/MPEG-4 AVC或MPEG-4/H.264 AVC）而明确的说明它两方面的开发者。&lt;br&gt;[^AAC]: AAC（Advanced Audio Coding），中文名：高级音频编码，出现于1997年，基于MPEG-2的音频编码技术。由Fraunhofer IIS、杜比实验室、AT&amp;amp;T、Sony等公司共同开发，目的是取代MP3格式。2000年，MPEG-4标准出现后，AAC重新集成了其特性，加入了SBR技术和PS技术，为了区别于传统的MPEG-2 AAC又称为MPEG-4 AAC。&lt;br&gt;[^hls]: HLS (HTTP Live Streaming)，Apple的动态码率自适应技术。主要用于PC和Apple终端的音视频服务。包括一个m3u(8)的索引文件，TS媒体分片文件和key加密串文件。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      本篇博客主要介绍视频直播解决方案
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
-    
-      <category term="rtmp" scheme="http://campusappcn.github.io/tags/rtmp/"/>
-    
-      <category term="hls" scheme="http://campusappcn.github.io/tags/hls/"/>
-    
-      <category term="live-stream" scheme="http://campusappcn.github.io/tags/live-stream/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>与AppStore审核的斗智斗勇</title>
-    <link href="http://campusappcn.github.io/2016/01/25/%E4%B8%8EAppStore%E5%AE%A1%E6%A0%B8%E7%9A%84%E6%96%97%E6%99%BA%E6%96%97%E5%8B%87/"/>
-    <id>http://campusappcn.github.io/2016/01/25/与AppStore审核的斗智斗勇/</id>
-    <published>2016-01-25T01:48:41.000Z</published>
-    <updated>2016-01-25T11:12:12.000Z</updated>
-    
-    <content type="html">&lt;p&gt;我是YYDD，一名弱弱的iOS开发。这篇文章是我的个人心得~~&lt;br&gt;提交了4、5个新的app，以及每个版本更新了十几次版本之后，总算是有那么点心得可以和大家交流交流了。 首先来说下新app的提交吧~ 很多时候会碰到创建新app的时候发现名字已经存在不能使用该名字创建了，那怎么办呢！&lt;br&gt;就我所知的办法有两个：&lt;br&gt;1、 你可以提交审核名字的时候加个描述什么的，比如你要提交的app叫“A”，那么你可以叫“A-这是个好app”，然而你下载下来的app仍旧叫A。这样就完美的解决了上面的烦恼。&lt;br&gt;2、 还有一种办法是把主要的语言设置为非中文（或者说选择一个没有和你重名的app所在的国家）。 &lt;/p&gt;
-&lt;p&gt;那么新的app已经创建好了，最头痛的是提交审核了，因为大家都知道排队审核是最拖时间的。（相对以前来说现在已经是快很多了，记得之前还是基本每次审核都需要2周时间，然而现在基本上只要1周时间就可以了。）那么我来说说我在提交审核中碰到的那些坑吧~可以给准备提交app或者将要提交app的小伙伴们做个借鉴。我觉得有以下几点是必须要提到的：&lt;br&gt;1、不能出现检查更新，或者可以检查更新的按钮（这个大家应该都知道了吧）&lt;br&gt;2、对于言|论|自|由|的内容，需要有用户主动可以举报的按钮或者区域（举例如社区中的匿名内容，必须要有用户可以自主举报的按钮，关于这一点我记得当时人家审核团队直接打电话给我说 我还试图和他”狡辩“说我们有自己的一套筛选内容的机制，以及我们的运营人员24小时不停的在审核内容，然而还是不行，审核人员直接和我说你没有 用户可以自主举报的地方审核是不会过的）&lt;br&gt;3、你不能限制用户进入你的app，但是你可以限制用户只使用你的app的部分功能（想到这一点也真是眼泪掉下来，这句话是人家苹果美国团队的某审核团队负责人直接说的原话，具体是怎么回事呢。我来解释一下吧~之前我们的一个app是指适用于校园范围内的，所以一打开app就直接定位，如果用户所在的地理位置不在学校内或者说他不允许使用gps权限，那么我们就禁止他进入，只给他提示界面。然而就是因为这样的原因，导致app不过，他给的理由就是不能限制用户进入你的app这一点，后来还听同事说如果一进来就要注册的app，而注册时候必须要传照片，不然不让注册的好像也是会被拒绝，原因也是这个）&lt;br&gt;4、出现和iphone桌面一样的ui风格（就是说出现圆角的icon并且按照桌面风格排列）&lt;br&gt;5、有未完成的功能（如放着一颗按钮，然后点击告诉他 敬请期待 什么的 肯定是会被拒绝的）(据小伙伴们反馈 这一点现在可以了)&lt;br&gt;6、依赖其他app的功能（这一点主要出现在分享功能上，app中经常会有分享到微信什么的，如果你没有判断用户的手机是否安装了微信，然而苹果审核人员的机子上肯定是不会有微信的，这样他会觉得你们的app 牵涉到了其他的app 这样也是不允许的）&lt;br&gt;7、如果app中有实物奖励的，那么需要备注 这活动和苹果官方 无关之类的。&lt;br&gt;8、如果有个人profile页面展示的，而且有照片啊之类可以自我编辑的，好像也需要有举报等功能。（这一点，我也不是很确定，前几天我朋友碰到的，就是他的app中有profile页，然后可以上传相片，审核被拒的原因，也是说会自主产生内容之类的。。。）&lt;br&gt;好了，暂时跳入脑海的就那么几条，我感觉这几条也是比较容易忽视的。当然还有一些奇葩的比如说ui太丑啊什么的，这种看个人的审美的，再提交一次原模原样的也是会过的，只能说明你的人品不好。 还想说的是，一般的审核新app的提交会比较严格，所以我一般提交的原则是这样的，能呈现给苹果的流程，尽量不呈现给他们，比如说有注册流程的app，那么我就直接提供他们一个测试账号，这样就可以有效的避免了注册流程。如果一个app对性别不同或者身份不能的逻辑是不一样的，那么也给他们一个最简单，牵涉到逻辑，内容最少的一种测试账号。&lt;/p&gt;
-&lt;p&gt;最后我分享一个如何”优雅“的利用加急审核的一个方法，大家都知道加急的地址是这个（&lt;a href=&quot;https://developer.apple.com/appstore/contact/appreviewteam/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://developer.apple.com/appstore/contact/appreviewteam/index.html&lt;/a&gt; ），里面加急的原因也有很多，但是据我多次加急的经验来看，基本只有“critical bug fix”这一个原因是能奏效的。有时候为了遵循上头的意思，没办法只能加急，那么我来说说我用过的“猥琐的”理由吧，用的的最多的一个就是说我们app因为和地理区域有关，所有在特定的区域内做什么什么操作会出现必定的闪退，然而审核团队他们肯定是不在这个区域里面的，所以他们也没有办法重现，只能听我说~ 当然这种事情还是少做的好。还有一点就是之前蛮多人再说加急的次数是有限制的，然而对于这一点我还是比较疑惑的，到底有几次限制我还是不知道，而且是单个app的限制，还是说是账号的限制我也不知道。 &lt;/p&gt;
-&lt;p&gt;结束了~也许以上内容有些讲的也不是很对，主要是写下来和大家交流下，欢迎拍砖~~~&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我是YYDD，一名弱弱的iOS开发。这篇文章是我的个人心得~~&lt;br&gt;提交了4、5个新的app，以及每个版本更新了十几次版本之后，总算是有那么点心得可以和大家交流交流了。 首先来说下新app的提交吧~ 很多时候会碰到创建新app的时候发现名字已经存在不能使用该名字创建了，那
-    
-    </summary>
-    
     
   </entry>
   
