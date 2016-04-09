@@ -18,7 +18,7 @@
 
 
 
-  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+  <meta name="google-site-verification" content="5PcQAlvZOGM7STtm6XsbpXfqvy0tqjPR7k5iT7z-Nw4" />
 
 
 
@@ -61,19 +61,16 @@
 
 
 
-<meta name="description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
-RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
+<meta name="description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ReactiveCocoa2-5修炼 (二)">
 <meta property="og:url" content="http://campusappcn.github.io/2016/03/01/ReactiveCocoa2-5修炼-二/index.html">
 <meta property="og:site_name" content="Spacetime">
-<meta property="og:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
-RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
-<meta property="og:updated_time" content="2016-03-08T07:17:13.000Z">
+<meta property="og:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal">
+<meta property="og:updated_time" content="2016-04-09T08:59:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ReactiveCocoa2-5修炼 (二)">
-<meta name="twitter:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal
-RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义在RACStream中,RACStream是一个">
+<meta name="twitter:description" content="上一篇阅读了RACSignal订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering本文主要内容:1.map操作的源码阅读;(其实是flattenMap:的源码)2.filter操作3.空信号RACEmptySignal">
 
 
 
@@ -272,7 +269,7 @@ RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义�
       
 
       
-        <p>上一篇阅读了<code>RACSignal</code>订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering<br>本文主要内容:<br>1.map操作的源码阅读;(其实是flattenMap:的源码)<br>2.filter操作<br>3.空信号RACEmptySignal</p>
+        <p>上一篇阅读了<code>RACSignal</code>订阅过程的一些源码,这一篇来看看流的一系列操作Mapping,Filtering<br>本文主要内容:<br>1.map操作的源码阅读;(其实是flattenMap:的源码)<br>2.filter操作<br>3.空信号RACEmptySignal<br><a id="more"></a></p>
 <h2 id="RACStream"><a href="#RACStream" class="headerlink" title="RACStream"></a>RACStream</h2><p><code>RACStream</code>是<code>RACSignal</code>和<code>RACSequence</code>的父类,所以很多方法定义在<code>RACStream</code>中,<code>RACStream</code>是一个抽象类.<br>来看看<code>RACStream</code>中定义了些什么东西</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RACStream</span> : <span class="title">NSObject</span></span></span><br><span class="line">+ (instancetype)empty;</span><br><span class="line">+ (instancetype)<span class="keyword">return</span>:(<span class="keyword">id</span>)value;</span><br><span class="line">- (instancetype)bind:(RACStreamBindBlock (^)(<span class="keyword">void</span>))block;</span><br><span class="line">- (instancetype)concat:(RACStream *)stream;</span><br><span class="line">- (instancetype)zipWith:(RACStream *)stream;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RACStream</span> (<span class="title">Operations</span>)</span></span><br><span class="line">- (instancetype)flattenMap:(RACStream * (^)(<span class="keyword">id</span> value))block;</span><br><span class="line">- (instancetype)flatten;</span><br><span class="line">- (instancetype)map:(<span class="keyword">id</span> (^)(<span class="keyword">id</span> value))block;</span><br><span class="line">...........</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 <h2 id="Map操作"><a href="#Map操作" class="headerlink" title="Map操作"></a>Map操作</h2><p>如果把<code>RACStream</code>比作是水流的话,Map操作可以是一个个加工工厂,比如一个可乐工厂,水流流进工厂,工厂处理过后,流出了可乐流,在可乐流上接了龙头,打开阀门就可以喝可乐了.</p>
@@ -429,7 +426,7 @@ RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -446,7 +443,7 @@ RACStreamRACStream是RACSignal和RACSequence的父类,所以很多方法定义�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

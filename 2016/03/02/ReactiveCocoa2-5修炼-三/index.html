@@ -18,7 +18,7 @@
 
 
 
-  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+  <meta name="google-site-verification" content="5PcQAlvZOGM7STtm6XsbpXfqvy0tqjPR7k5iT7z-Nw4" />
 
 
 
@@ -61,19 +61,16 @@
 
 
 
-<meta name="description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten
-concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id&amp;lt;RACSubscriber&amp;gt; subscriber)">
+<meta name="description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ReactiveCocoa2-5修炼 (三)">
 <meta property="og:url" content="http://campusappcn.github.io/2016/03/02/ReactiveCocoa2-5修炼-三/index.html">
 <meta property="og:site_name" content="Spacetime">
-<meta property="og:description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten
-concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id&amp;lt;RACSubscriber&amp;gt; subscriber)">
-<meta property="og:updated_time" content="2016-03-08T07:17:13.000Z">
+<meta property="og:description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten">
+<meta property="og:updated_time" content="2016-04-09T08:59:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ReactiveCocoa2-5修炼 (三)">
-<meta name="twitter:description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten
-concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id&amp;lt;RACSubscriber&amp;gt; subscriber)">
+<meta name="twitter:description" content="上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,1.concat2.then3.merge4.flatten">
 
 
 
@@ -272,7 +269,7 @@ concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RAC
       
 
       
-        <p>上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,<br>1.concat<br>2.then<br>3.merge<br>4.flatten</p>
+        <p>上一篇做了流转化源码的阅读,再看看流还有哪些用的到的操作,并阅读下源码,<br>1.concat<br>2.then<br>3.merge<br>4.flatten<br><a id="more"></a></p>
 <h2 id="concat"><a href="#concat" class="headerlink" title="concat:"></a>concat:</h2><p>写了简单的例子测试下:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">    [subscriber sendNext:<span class="string">@"ABC"</span>];</span><br><span class="line">    <span class="comment">//[subscriber sendCompleted];</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;];</span><br><span class="line">RACSignal *signalB = [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">    [subscriber sendNext:<span class="string">@"CBA"</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;];</span><br><span class="line">[[signalA concat:signalB] subscribeNext:^(<span class="keyword">id</span> x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"x--%@"</span>,x);</span><br><span class="line">&#125;];</span><br><span class="line"><span class="comment">//输出:2016-03-02 11:15:43.704 RACFunTest[2366:155132] x--ABC</span></span><br></pre></td></tr></table></figure></p>
 <p>只输出了ABC</p>
 <h3 id="看看concat的源码"><a href="#看看concat的源码" class="headerlink" title="看看concat的源码"></a>看看concat的源码</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (RACSignal *)concat:(RACSignal *)signal &#123;</span><br><span class="line"><span class="keyword">return</span> [[RACSignal createSignal:^(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">    RACSerialDisposable *serialDisposable = [[RACSerialDisposable alloc] init];</span><br><span class="line">    RACDisposable *sourceDisposable = [<span class="keyword">self</span> subscribeNext:^(<span class="keyword">id</span> x) &#123;</span><br><span class="line">        [subscriber sendNext:x];</span><br><span class="line">    &#125; error:^(<span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">        [subscriber sendError:error];</span><br><span class="line">    &#125; completed:^&#123;</span><br><span class="line">        RACDisposable *concattedDisposable = [signal subscribe:subscriber];</span><br><span class="line">        serialDisposable.disposable = concattedDisposable;</span><br><span class="line">    &#125;];</span><br><span class="line">    serialDisposable.disposable = sourceDisposable;</span><br><span class="line">    <span class="keyword">return</span> serialDisposable;</span><br><span class="line">&#125;] setNameWithFormat:<span class="string">@"[%@] -concat: %@"</span>, <span class="keyword">self</span>.name, signal];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -422,7 +419,7 @@ concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RAC
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -439,7 +436,7 @@ concat:写了简单的例子测试下:12345678910111213RACSignal *signalA = [RAC
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

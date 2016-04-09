@@ -18,7 +18,7 @@
 
 
 
-  <meta name="google-site-verification" content="7-1IgSEStjwrbZBr14BhKceL81uUncQe4vMzMz4m7kE" />
+  <meta name="google-site-verification" content="5PcQAlvZOGM7STtm6XsbpXfqvy0tqjPR7k5iT7z-Nw4" />
 
 
 
@@ -69,7 +69,7 @@
 <meta property="og:site_name" content="Spacetime">
 <meta property="og:description" content="ReactiveCocoa是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.
 本文主要内容:1.RACS">
-<meta property="og:updated_time" content="2016-03-20T09:06:36.000Z">
+<meta property="og:updated_time" content="2016-04-09T08:59:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ReactiveCocoa2.5修炼 (一)">
 <meta name="twitter:description" content="ReactiveCocoa是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.
@@ -274,10 +274,11 @@
       
         <p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.</p>
 <p>本文主要内容:<br>1.RACSignal类的简单使用<br>2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的</p>
+<a id="more"></a>
 <h2 id="RACSignal"><a href="#RACSignal" class="headerlink" title="RACSignal"></a>RACSignal</h2><p>RAC的核心,如果用RAC写项目,这个家伙应该是项目中使用次数最多的类.</p>
 <p>简单使用:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="comment">//创建一个信号</span></span><br><span class="line">RACSignal *signal=[RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">	[subscriber sendNext:@(<span class="number">1</span>)];</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;];</span><br><span class="line"><span class="comment">//然后订阅</span></span><br><span class="line">[signal subscribeNext:^(<span class="keyword">id</span> x) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@"x--%@"</span>,x);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
 <p>可以看到createSignal:的参数就是一个block(一个返回RACDisposable,参数的是实现了RACSubscriber协议的subscriber的block)<br>subscribeNext:参数也是一个block(一个返回void ,参数是随意对象的block)</p>
-<a id="more"></a>
+<!-- more -->
 <p>为了看的清楚些,可以这样写<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个返回RACDisposable的block叫didSubscribe,作为createSignal参数</span></span><br><span class="line">RACDisposable*(^didSubscribe)(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber)=^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber)</span><br><span class="line">&#123;</span><br><span class="line">    [subscriber sendNext:@(<span class="number">1</span>)];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;;</span><br><span class="line">RACSignal *signal=[RACSignal createSignal:didSubscribe];</span><br><span class="line"><span class="comment">//定义一个返回void的block叫nextBlock,作为subscribeNext的参数</span></span><br><span class="line"><span class="keyword">void</span> (^nextBlock)(<span class="keyword">id</span> x)=^(<span class="keyword">id</span> x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"x--%@"</span>,x);</span><br><span class="line">&#125;;</span><br><span class="line">[signal subscribeNext:nextBlock];</span><br></pre></td></tr></table></figure></p>
 <h2 id="看看源码是怎么写的"><a href="#看看源码是怎么写的" class="headerlink" title="看看源码是怎么写的"></a>看看源码是怎么写的</h2><h3 id="1-RACSignal-createSignal-返回Signal"><a href="#1-RACSignal-createSignal-返回Signal" class="headerlink" title="1.[RACSignal createSignal:]返回Signal"></a>1.[RACSignal createSignal:]返回Signal</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//RACSignal.m</span></span><br><span class="line">+ (RACSignal *)createSignal:(RACDisposable * (^)(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber))didSubscribe &#123;</span><br><span class="line">	<span class="keyword">return</span> [RACDynamicSignal createSignal:didSubscribe];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//RACDynamicSignal.m</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RACDynamicSignal</span> ()</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>, <span class="keyword">readonly</span>) RACDisposable * (^didSubscribe)(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber);</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line">+ (RACSignal *)createSignal:(RACDisposable * (^)(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber))didSubscribe &#123;</span><br><span class="line">	RACDynamicSignal *signal = [[<span class="keyword">self</span> alloc] init];</span><br><span class="line">	signal-&gt;_didSubscribe = [didSubscribe <span class="keyword">copy</span>];</span><br><span class="line">	<span class="keyword">return</span> [signal setNameWithFormat:<span class="string">@"+createSignal:"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>可以看到RACSignal实际是调用了子类RACDynamicSignal来创建Signal</strong></p>
@@ -429,7 +430,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -446,7 +447,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
