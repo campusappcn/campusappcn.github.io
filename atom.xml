@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://campusappcn.github.io/"/>
-  <updated>2016-04-09T08:58:54.000Z</updated>
+  <updated>2016-04-20T08:48:30.000Z</updated>
   <id>http://campusappcn.github.io/</id>
   
   <author>
@@ -14,6 +14,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iOS的urlRoute</title>
+    <link href="http://campusappcn.github.io/2016/04/20/iOS%E7%9A%84urlRoute/"/>
+    <id>http://campusappcn.github.io/2016/04/20/iOS的urlRoute/</id>
+    <published>2016-04-20T07:23:33.000Z</published>
+    <updated>2016-04-20T08:48:30.000Z</updated>
+    
+    <content type="html">&lt;p&gt;route，路由。这个词在前端中很常见。不过我今天要说的是移动端的route。&lt;br&gt;而是app中的路由，也就是可以成为urlRoute。这个urlRoute主要用于app内页面间的跳转。每个页面的跳转都通过一个特定的url的形式来跳转。&lt;br&gt;其实说了这么多主要是为了介绍一个框架。好吧，先把地址放出来吧（ &lt;a href=&quot;https://github.com/campusappcn/iOSUrlRoute&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/campusappcn/iOSUrlRoute&lt;/a&gt; ），以下的urlRoute的内容基本上是围绕着这个框架在讲的。如果满意请大家小手都下star下哈。&lt;br&gt;那么在app内运用urlRoute的形式来跳转有什么好处呢？&lt;br&gt;我觉得最大的好处就是页面间的解耦合。原先我们从A页面跳转到B页面，可以是pushVC或者presentVC，甚至是addSubView。但是不管怎么做你都需要在A页面相关的地方（有个能是在A的VC中，也有可能是在A的ViewModel中）导入B，初始化B之类的一系列操作。我相信这一些列的步骤，大家肯定很熟悉。也许有人可能会差异，难道不是这样做么？或者说这样做有什么不好么？……那么我先来说几种情况吧。1）如果B页面还没有完成，2）B页面有可能会被替换成其他页面。这里就列举这两种情况（好吧，其实一时半会儿我也想不到更多的=，=）如果这两种情况的时候，用上述的步骤是不是会觉得很头痛，因为B页面压根儿就还没完成，也许是分工给了你的同事，也许是你自己还没完成。那么在A页面中跳转的部分，就不得不缓缓，等到B页面完成或者说创建好了之后才能在来完成A页面跳转的部分内容。对于B有可能会被替换，那么久更头痛了。如果你是分开在各个页面中写的跳转代码的话，那么你就要全局搜索，来改动了（这可是一项不小的体力活）。&lt;br&gt;那么如果这时候用urlRoute呢，因为urlRoute是通过一个特殊的url来判断跳转，也就是说其实页面A并不是知道实质上跳转到的是哪个页面，他只是告诉了控制urlRoute的中心，我要跳转到B页面，那么具体怎么如何跳转，甚至跳转到哪个页面都是有urlRoute的中心在执行的。所以说A页面和B页面完全没有了关联。&lt;br&gt;第二个优点可以很动态的控制跳转的路径。其实这个也是我最初接触到app内路由的原因。当时我接触的场景是这样的。app内，由于某个页面出现了问题，急需要用其他页面来代替（网页）,或者说某个特定的页面因为需要做活动，急需替换成一个其他的活动网页。这时候提交更新肯定是来不及了。那么在不更新代码的情况下要如何做呢。当然热更新可以做，直接重写跳转代码所在的那个方法。虽然可以做，但是不优雅（=，=）,不优雅的原因在于:用热更新本身的执行效率会有影响，再者有点杀鸡用牛刀的感觉。当然这时候urlRoute就华丽的出场了，只要把跳转到那么特定页面的路由所配置的跳转路径动态替换下就可以了。当然这只是一个特定的场景，其实在很多时候动态的配置路由来控制跳转路径还是很有用的。再举一个例子，比如说做ABTest,关于打开app的时候先呈现什么内容给用户，这种场景用路由动态得控制也是非常赞的。&lt;br&gt;听了上面的介绍，是不是突然间觉得用urlRoute来控制页面间的跳转是件多么美好的事情。&lt;br&gt;那么下面将继续给你呈现更加美好的东东。&lt;br&gt;有不少同学可能会说，路由跳转固然是好，但是我如何传值到下个页面呢，或者说我从页面pop返回的时候，我在特定情况下需要刷新当前页面，这些光靠这个urlRoute的框架好像完成不了吧。不不不~这些在urlRoute这个框架中都考虑到。对于传参的情况是通过key&amp;amp;value的形式传递过去，那么也就是说如果从A到B页面，需要传参，就必须知道B页面所需要的参数的名称和类型。通过key&amp;amp;value的形式交给urlRoute中心去处理，在B页面通过key来获得value。而对于需要回调刷新之类的问题，是通过注册block来解决的。&lt;br&gt;当然这个框架除了以上这些外，还可以处理在app外打开app传值进入跳转到特定页面的场景。&lt;br&gt;urlRoute的宗旨是，把app内所有有关于页面间的跳转全部控制起来。这是一个伟大的事业~&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      route，路由。这个词在前端中很常见。不过我今天要说的是移动端的route。
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="ios" scheme="http://campusappcn.github.io/tags/ios/"/>
+    
+      <category term="urlRoute" scheme="http://campusappcn.github.io/tags/urlRoute/"/>
+    
+      <category term="页面跳转" scheme="http://campusappcn.github.io/tags/%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vImage高斯模糊(Blur)</title>
+    <link href="http://campusappcn.github.io/2016/04/12/vImage%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A-Blur/"/>
+    <id>http://campusappcn.github.io/2016/04/12/vImage高斯模糊-Blur/</id>
+    <published>2016-04-12T08:57:09.000Z</published>
+    <updated>2016-04-20T08:49:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本文主要内容:&lt;br&gt;1.用vImage来做&lt;code&gt;实时&lt;/code&gt;高斯模糊&lt;br&gt;2.遇到的坑&lt;br&gt;3.爬坑&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;  在iOS7以后,半透明模糊效果在系统中大量使用,不仅在iPhone上,Mac上也随处可见这种效果.在iOS上实现这种效果的方法很多,不同的框架(CoreImage,GPUImage…)和各种扩展(UIVisualEffectView)提供了不同的方式方法.&lt;br&gt;  具体可以查看stackoverflow上这个问题:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;用vImage来做实时高斯模糊&quot;&gt;&lt;a href=&quot;#用vImage来做实时高斯模糊&quot; class=&quot;headerlink&quot; title=&quot;用vImage来做实时高斯模糊&quot;&gt;&lt;/a&gt;用vImage来做&lt;code&gt;实时&lt;/code&gt;高斯模糊&lt;/h2&gt;&lt;p&gt;这是&lt;a href=&quot;http://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view&lt;/a&gt;问题的回答中代码的一点修改&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;52&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//#import &amp;lt;Accelerate/Accelerate.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-(&lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; *)boxblurImageWithBlur:(&lt;span class=&quot;built_in&quot;&gt;CGFloat&lt;/span&gt;)blur oImg:(&lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; *)oImg&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (blur &amp;lt; &lt;span class=&quot;number&quot;&gt;0.&lt;/span&gt;f || blur &amp;gt; &lt;span class=&quot;number&quot;&gt;1.&lt;/span&gt;f) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        blur = &lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;f;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; boxSize = (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;)(blur * &lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    boxSize = boxSize - (boxSize % &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;) + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGImageRef&lt;/span&gt; img = oImg.CGImage;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    vImage_Buffer inBuffer, outBuffer;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    vImage_Error error;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; *pixelBuffer;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGDataProviderRef&lt;/span&gt; inProvider = &lt;span class=&quot;built_in&quot;&gt;CGImageGetDataProvider&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CFDataRef&lt;/span&gt; inBitmapData = &lt;span class=&quot;built_in&quot;&gt;CGDataProviderCopyData&lt;/span&gt;(inProvider);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    inBuffer.width = &lt;span class=&quot;built_in&quot;&gt;CGImageGetWidth&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    inBuffer.height = &lt;span class=&quot;built_in&quot;&gt;CGImageGetHeight&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    inBuffer.rowBytes = &lt;span class=&quot;built_in&quot;&gt;CGImageGetBytesPerRow&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    inBuffer.data = (&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;*)&lt;span class=&quot;built_in&quot;&gt;CFDataGetBytePtr&lt;/span&gt;(inBitmapData);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    pixelBuffer = malloc(&lt;span class=&quot;built_in&quot;&gt;CGImageGetBytesPerRow&lt;/span&gt;(img) * &lt;span class=&quot;built_in&quot;&gt;CGImageGetHeight&lt;/span&gt;(img));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(pixelBuffer == &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;No pixelbuffer&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    outBuffer.data = pixelBuffer;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    outBuffer.width = &lt;span class=&quot;built_in&quot;&gt;CGImageGetWidth&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    outBuffer.height = &lt;span class=&quot;built_in&quot;&gt;CGImageGetHeight&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    outBuffer.rowBytes = &lt;span class=&quot;built_in&quot;&gt;CGImageGetBytesPerRow&lt;/span&gt;(img);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    error = vImageBoxConvolve_ARGB8888(&amp;amp;inBuffer, &amp;amp;outBuffer, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, boxSize, boxSize, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, kvImageEdgeExtend);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (error) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;JFDepthView: error from convolution %ld&quot;&lt;/span&gt;, error);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGColorSpaceRef&lt;/span&gt; colorSpace = &lt;span class=&quot;built_in&quot;&gt;CGColorSpaceCreateDeviceRGB&lt;/span&gt;();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGContextRef&lt;/span&gt; ctx = &lt;span class=&quot;built_in&quot;&gt;CGBitmapContextCreate&lt;/span&gt;(outBuffer.data,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             outBuffer.width,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             outBuffer.height,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             outBuffer.rowBytes,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             colorSpace,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                             k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaNoneSkipLast&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGImageRef&lt;/span&gt; imageRef = &lt;span class=&quot;built_in&quot;&gt;CGBitmapContextCreateImage&lt;/span&gt; (ctx);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; *returnImage = [&lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; imageWith&lt;span class=&quot;built_in&quot;&gt;CGImage&lt;/span&gt;:imageRef];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;//clean up&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGContextRelease&lt;/span&gt;(ctx);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGColorSpaceRelease&lt;/span&gt;(colorSpace);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    free(pixelBuffer);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CFRelease&lt;/span&gt;(inBitmapData);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;CGImageRelease&lt;/span&gt;(imageRef);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; returnImage;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;赶紧搞个本地图片,写个小Demo测试下&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/TestDemoViewController.m#L30&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo1&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;UIImageView&lt;/span&gt; *view1=[[&lt;span class=&quot;built_in&quot;&gt;UIImageView&lt;/span&gt; alloc]initWithImage:_image1];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;_view1.image=[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; boxblurImageWithBlur:slider.value oImg:_image1];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;效果图:&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB2h8UmmVXXXXcJXXXXXXXXXXXX_!!373400920.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;恩,效果相当不错&lt;/p&gt;
+&lt;h2 id=&quot;然后坑来了&quot;&gt;&lt;a href=&quot;#然后坑来了&quot; class=&quot;headerlink&quot; title=&quot;然后坑来了,&quot;&gt;&lt;/a&gt;然后坑来了,&lt;/h2&gt;&lt;p&gt;把本地图上传到图床,然后用SDWebImage下载之后再进行模糊&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/TestDemoViewController.m#L52&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo2&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[view2 sd_setImageWithURL:[&lt;span class=&quot;built_in&quot;&gt;NSURL&lt;/span&gt; URLWithString:&lt;span class=&quot;string&quot;&gt;@&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2KIkfmVXXXXbYXXXXXXXXXXXX_!!373400920.png&quot;&lt;/span&gt;] completed:^(&lt;span class=&quot;built_in&quot;&gt;UIImage&lt;/span&gt; *image, &lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; *error, SDImageCacheType cacheType, &lt;span class=&quot;built_in&quot;&gt;NSURL&lt;/span&gt; *imageURL) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        _image2=image;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;_view2.image=[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; boxblurImageWithBlur:slider.value oImg:_image2];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;效果图:&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i2/373400920/TB2BuD6mVXXXXcwXpXXXXXXXXXX_!!373400920.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;第一张是本地图,第二张是从网上下载的图&lt;br&gt;简直,不忍直视….&lt;/p&gt;
+&lt;h2 id=&quot;脱坑&quot;&gt;&lt;a href=&quot;#脱坑&quot; class=&quot;headerlink&quot; title=&quot;脱坑&quot;&gt;&lt;/a&gt;脱坑&lt;/h2&gt;&lt;p&gt;哪有问题?&lt;/p&gt;
+&lt;p&gt;猜想:是不是下载的文件格式变了,PNG变JPG这种.&lt;br&gt;用下面的代码来测试&lt;br&gt;&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/TestDemoViewController.m#L93&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;-(NSString &lt;em&gt;)typeForImageData:(NSData &lt;/em&gt;)data&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;image1-%@&quot;&lt;/span&gt;,[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; typeForImageData:&lt;span class=&quot;built_in&quot;&gt;UIImagePNGRepresentation&lt;/span&gt;(_image1)]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;image2-%@&quot;&lt;/span&gt;,[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; typeForImageData:&lt;span class=&quot;built_in&quot;&gt;UIImagePNGRepresentation&lt;/span&gt;(_image2)]);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;输出:image1-image/png&lt;br&gt;    image2-image/png&lt;/p&gt;
+&lt;p&gt;然而格式并没有变&lt;/p&gt;
+&lt;p&gt;猜想:跟图片的Alpha有关系么.&lt;br&gt;所以来看看图片中的exif有什么不同吧&lt;br&gt;用下面的代码&lt;br&gt;&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/TestDemoViewController.m#L82&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;-(void)readExif:(UIImage *)image&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; readExif:_image1];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; readExif:_image2];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;从输出的结果中发现&lt;br&gt;_image2的信息用多了一个字段HasAlpha&lt;br&gt;貌似图床把图片的Alpha通道打开了&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i4/373400920/TB28hj7mVXXXXcOXpXXXXXXXXXX_!!373400920.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在高斯模糊的方法中&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/TestDemoViewController.m#L138&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CGBitmapContextCreate&lt;/a&gt;函数的最后一个参数uint32_t bitmapInfo跟Alpha有点关系,从命名中就可以知道&lt;/p&gt;
+&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;CF_ENUM&lt;/span&gt;(uint32_t, &lt;span class=&quot;built_in&quot;&gt;CGImageAlphaInfo&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaNone&lt;/span&gt;,               &lt;span class=&quot;comment&quot;&gt;/* For example, RGB. */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaPremultipliedLast&lt;/span&gt;,  &lt;span class=&quot;comment&quot;&gt;/* For example, premultiplied RGBA */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaPremultipliedFirst&lt;/span&gt;, &lt;span class=&quot;comment&quot;&gt;/* For example, premultiplied ARGB */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaLast&lt;/span&gt;,               &lt;span class=&quot;comment&quot;&gt;/* For example, non-premultiplied RGBA */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaFirst&lt;/span&gt;,              &lt;span class=&quot;comment&quot;&gt;/* For example, non-premultiplied ARGB */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaNoneSkipLast&lt;/span&gt;,       &lt;span class=&quot;comment&quot;&gt;/* For example, RBGX. */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaNoneSkipFirst&lt;/span&gt;,      &lt;span class=&quot;comment&quot;&gt;/* For example, XRGB. */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  k&lt;span class=&quot;built_in&quot;&gt;CGImageAlphaOnly&lt;/span&gt;                &lt;span class=&quot;comment&quot;&gt;/* No color data, alpha data only */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;逐对之后一个参数一个个替换测试,当测试到kCGImageAlphaNoneSkipFirst时,&lt;br&gt;效果是这样的:&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2VevYmVXXXXasXFXXXXXXXXXX_!!373400920.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;有Alpha通道的变成正常的了,本地图片又坑爹了,&lt;br&gt;反复测试之后:&lt;/p&gt;
+&lt;h2 id=&quot;总结出了这样的结果&quot;&gt;&lt;a href=&quot;#总结出了这样的结果&quot; class=&quot;headerlink&quot; title=&quot;总结出了这样的结果:&quot;&gt;&lt;/a&gt;总结出了这样的结果:&lt;/h2&gt;&lt;p&gt;1.如果图片没有Alpha通道,高斯模糊在创建图片的时候(CGBitmapContextCreate()方法),应该设置成kCGImageAlphaNoneSkipLast&lt;br&gt;2.如果图片有Alpha通道,高斯模糊在创建图片的时候(CGBitmapContextCreate()方法),应该设置成kCGImageAlphaNoneSkipFirst&lt;/p&gt;
+&lt;p&gt;那么我在blur时候指定bitmapInfo就好了.&lt;br&gt;(还有一个思路就是直接改UIImage的exif信息,我并没有尝试)&lt;/p&gt;
+&lt;p&gt;然后写了个UIImage的扩展类&lt;br&gt;&lt;a href=&quot;https://github.com/Sdoy/vImageBlur/blob/master/vImageBlur/Blur/UIImage%2BBlur.m&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UIImage+Blur&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最后效果:&lt;br&gt;本地图片和远程图片都正常了&lt;br&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/373400920/TB2Bb.bmVXXXXcfXpXXXXXXXXXX_!!373400920.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;项目地址:&lt;a href=&quot;https://github.com/Sdoy/vImageBlur&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SampleCode&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文主要内容:&lt;br&gt;1.用vImage来做&lt;code&gt;实时&lt;/code&gt;高斯模糊&lt;br&gt;2.遇到的坑&lt;br&gt;3.爬坑&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
+    
+      <category term="UIImage" scheme="http://campusappcn.github.io/tags/UIImage/"/>
+    
+      <category term="Blur" scheme="http://campusappcn.github.io/tags/Blur/"/>
+    
+  </entry>
   
   <entry>
     <title>ios的mock</title>
@@ -43,6 +123,86 @@
       <category term="mock" scheme="http://campusappcn.github.io/tags/mock/"/>
     
       <category term="运行时" scheme="http://campusappcn.github.io/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android随机对象生成器的设计与实现</title>
+    <link href="http://campusappcn.github.io/2016/04/08/2016-4-9-Android%E9%9A%8F%E6%9C%BA%E5%AF%B9%E8%B1%A1%E7%94%9F%E6%88%90%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://campusappcn.github.io/2016/04/08/2016-4-9-Android随机对象生成器的设计与实现/</id>
+    <published>2016-04-07T16:00:00.000Z</published>
+    <updated>2016-04-20T08:49:38.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;目标&quot;&gt;&lt;a href=&quot;#目标&quot; class=&quot;headerlink&quot; title=&quot;目标&quot;&gt;&lt;/a&gt;目标&lt;/h2&gt;&lt;p&gt;当完成一个新的Feature的时候，需要对其进行测试。但是由于服务器还没有部署该功能，或者单元测试的限制，往往需要程序员自己去伪造一些数据。但是手工伪造数据往往效率不高并且没有代表性。因此希望能够实现一个对象生成器，生成对象并往里面填充随机值。&lt;/p&gt;
+&lt;h2 id=&quot;项目地址&quot;&gt;&lt;a href=&quot;#项目地址&quot; class=&quot;headerlink&quot; title=&quot;项目地址&quot;&gt;&lt;/a&gt;项目地址&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/campusappcn/rog&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;rog&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;设计要点&quot;&gt;&lt;a href=&quot;#设计要点&quot; class=&quot;headerlink&quot; title=&quot;设计要点&quot;&gt;&lt;/a&gt;设计要点&lt;/h2&gt;&lt;p&gt;对象生成器的总体思路是清晰的，获取到类，使用反射获取到其所有的域，采用dfs(深度优先搜索)遍历类的域树，在遍历过程中设置随机值。&lt;/p&gt;
+&lt;h3 id=&quot;类型分类&quot;&gt;&lt;a href=&quot;#类型分类&quot; class=&quot;headerlink&quot; title=&quot;类型分类&quot;&gt;&lt;/a&gt;类型分类&lt;/h3&gt;&lt;p&gt;针对Java类的特点，可以将其简单分为几种类型。&lt;/p&gt;
+&lt;h4 id=&quot;基础类型&quot;&gt;&lt;a href=&quot;#基础类型&quot; class=&quot;headerlink&quot; title=&quot;基础类型&quot;&gt;&lt;/a&gt;基础类型&lt;/h4&gt;&lt;p&gt;基础类型包括int、float、double、short、long、byte、char、boolean、String，需要针对这些基础类型提供默认的随机产生器。&lt;/p&gt;
+&lt;h4 id=&quot;Array&quot;&gt;&lt;a href=&quot;#Array&quot; class=&quot;headerlink&quot; title=&quot;Array&quot;&gt;&lt;/a&gt;Array&lt;/h4&gt;&lt;p&gt;数组类型，默认随机产生器能够产生一个指定类的对象数组，并能够对数组成员赋随机对象。&lt;/p&gt;
+&lt;h4 id=&quot;Enum&quot;&gt;&lt;a href=&quot;#Enum&quot; class=&quot;headerlink&quot; title=&quot;Enum&quot;&gt;&lt;/a&gt;Enum&lt;/h4&gt;&lt;p&gt;枚举类型。默认构造器能够随机产生一个枚举值。&lt;/p&gt;
+&lt;h3 id=&quot;Interface-Or-Abstract&quot;&gt;&lt;a href=&quot;#Interface-Or-Abstract&quot; class=&quot;headerlink&quot; title=&quot;Interface Or Abstract&quot;&gt;&lt;/a&gt;Interface Or Abstract&lt;/h3&gt;&lt;p&gt;对于接口和抽象类，我们需要首先知道它们的子类，否则无法产生其实例。在这里，有两种方案，方案一是扫描类路径下的所有类，找到该接口或抽象类的所有非抽象的子类，或者在编译期就生成继承树并记录下来。但是考虑到这样实现会比较复杂，所以在第一个版本，并没有按照这样的方案实现。如果读者对该方案有兴趣的，可以参考&lt;a href=&quot;https://github.com/ronmamo/reflections&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;reflections&lt;/a&gt;。它是一个Java的开源项目，但是由于使用了Java7的一些特性，所以无法直接使用到Android项目中。接下来，我们说方案二，其实很简单，就是由使用者通过接口告诉rog某接口或者抽象类的非抽象子类有哪些，Rog会从中随机选择一个并产生它的实例返回。&lt;/p&gt;
+&lt;h3 id=&quot;其它类&quot;&gt;&lt;a href=&quot;#其它类&quot; class=&quot;headerlink&quot; title=&quot;其它类&quot;&gt;&lt;/a&gt;其它类&lt;/h3&gt;&lt;p&gt;除开上面提到的一些特殊的类，剩下的就是普通的一些类了，其它类的构造器ClassGenerator需要依赖于以上提到的构造器，将对应的一些的类对象的产生作业代理给以上产生器。&lt;/p&gt;
+&lt;h3 id=&quot;UML图&quot;&gt;&lt;a href=&quot;#UML图&quot; class=&quot;headerlink&quot; title=&quot;UML图&quot;&gt;&lt;/a&gt;UML图&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://img.alicdn.com/imgextra/i1/754328530/TB2113WmFXXXXb7XXXXXXXXXXXX_!!754328530.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;上图是rog的整体UML图，从图中我们可以看到所有的Generator都继承自IGenerator接口，接口包含两个方法，generate()方法用来产生随机对象，getClassToGenerate()获取该Genreator所产生的对象类型。    &lt;/p&gt;
+&lt;p&gt;针对所有基本类型都实现了相对应的Generator，并提供了一些方法用于限制随机值的产生，比如设置最大值，设置不产生负数等。这些基本类型对象产生器通过BasicTypeGeneratorFactory进行管理。这是一个全局的单例。&lt;/p&gt;
+&lt;p&gt;上面的BasicTypeGeneratorFactory实现了ITypeGeneratorFactory接口。同样实现了该接口的还有TypeGeneratorFactory，该类用来缓存对象生成器，之前的Generator都会缓存到该Factory中，提升性能。该类依赖了BasicTypeGeneratorFactory，对于基本类型的产生器的获取会代理给BasicTypeGeneratorFactory。&lt;/p&gt;
+&lt;p&gt;在整个rog中，最重要的类就是ClassGenerator，该类可以产生所有类型的对象，不管是基本类型，还是抽象类。它依赖了以上提到的所有默认提供的Generator，将对应的一些的类对象的产生作业代理给以上产生器。&lt;/p&gt;
+&lt;h2 id=&quot;注意事项&quot;&gt;&lt;a href=&quot;#注意事项&quot; class=&quot;headerlink&quot; title=&quot;注意事项&quot;&gt;&lt;/a&gt;注意事项&lt;/h2&gt;&lt;h3 id=&quot;final的处理&quot;&gt;&lt;a href=&quot;#final的处理&quot; class=&quot;headerlink&quot; title=&quot;final的处理&quot;&gt;&lt;/a&gt;final的处理&lt;/h3&gt;&lt;p&gt;对于有final修饰的域不再进行赋值。&lt;/p&gt;
+&lt;h3 id=&quot;产生层级限制&quot;&gt;&lt;a href=&quot;#产生层级限制&quot; class=&quot;headerlink&quot; title=&quot;产生层级限制&quot;&gt;&lt;/a&gt;产生层级限制&lt;/h3&gt;&lt;p&gt;层级定义类引用的层数，比如Class1 为0层，且它有一个Class2的域，则该域的值对象的层级为1。如果不进行限制，则可能因为递归次数太多，而导致StackOverFlow或者无限循环无法结束程序。比如Class1有一个Class1类型的域。默认的最大层级为5，我们建议最大层级不要超过10。&lt;/p&gt;
+&lt;h3 id=&quot;域的缓存&quot;&gt;&lt;a href=&quot;#域的缓存&quot; class=&quot;headerlink&quot; title=&quot;域的缓存&quot;&gt;&lt;/a&gt;域的缓存&lt;/h3&gt;&lt;p&gt;由于反射效率低下，所以通过反射获取到某个类的域列表时，应该将其缓存起来。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本篇博客主要阐述如何实现一个随机对象生成器，并附上Github项目地址。
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>浅析ReactiveX的多播——实现安卓双击检测遇到的坑</title>
+    <link href="http://campusappcn.github.io/2016/03/31/2016-03-31-%E6%B5%85%E6%9E%90ReactiveX%E7%9A%84%E5%A4%9A%E6%92%AD/"/>
+    <id>http://campusappcn.github.io/2016/03/31/2016-03-31-浅析ReactiveX的多播/</id>
+    <published>2016-03-30T16:00:00.000Z</published>
+    <updated>2016-04-20T08:49:38.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;今天需要实现一个双击检测功能，以前的实现方式是自己记录上次点击时间与本次比对，如果小于门槛值，则发出双击事件。不过自从入了Rx的坑之后，凡事都喜欢用Rx的思想思考问题。于是上Github找找代码，还真找到一段，虽然是Kotlin的&lt;a href=&quot;https://gist.github.com/imton/ee74249fabff5ac95b16&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;一段错误的代码&lt;/a&gt;，翻译成Java如下：（注：这段代码是有问题的，请不要看到这里就复制黏贴）&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;doubleClickDetect&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(View view)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       Observable&amp;lt;Void&amp;gt; observable = RxView.clicks(view);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       observable.buffer(observable.debounce(&lt;span class=&quot;number&quot;&gt;200&lt;/span&gt;, TimeUnit.MILLISECONDS))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               .observeOn(AndroidSchedulers.mainThread())&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               .subscribe(&lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Action1&amp;lt;List&amp;lt;Void&amp;gt;&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(List&amp;lt;Void&amp;gt; voids)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                       &lt;span class=&quot;comment&quot;&gt;//double click detected&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               &amp;#125;, &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Action1&amp;lt;Throwable&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Throwable throwable)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                       Timber.e(throwable, &lt;span class=&quot;string&quot;&gt;&quot;error&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;我们先不讲这段代码的问题在哪，先来说说其中涉及到的几个操作符。&lt;br&gt;其中buffer()会将observable 发射的item缓存起来，直到它的参数Observable发射一个item时，它会将之前缓存的都作为一个list发射出去，这个还是比较好理解的，如果还是不懂，请参考 &lt;a href=&quot;http://reactivex.io/documentation/operators/buffer.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;buffer操作符文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;而debounce操作符会将在那些在参数时间间隔内跟着另一个item的items过滤掉。&lt;img src=&quot;https://img.alicdn.com/imgextra/i3/754328530/TB2aHeWmXXXXXaCXXXXXXXXXXXX-754328530.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;如图，1，5和6之后在一段时间内没有跟随其它item，所以被发射出来，而其它的都被过滤了。详见&lt;a href=&quot;http://reactivex.io/documentation/operators/debounce.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;debounce操作符文档&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;所以上面代码的意思就是当有点击事件item产生的时候先缓存起来，当一段事件内没有新的事件产生的时候把之前缓存的事件作为一个列表发射出去，当发现有大于等于2的事件时，认为用户在一定时间内连续点了两次。所以这段代码在逻辑上是ok的。但是实际运行起来发现没反应，buffer后面没有item被发射。但是在buffer之前是有的，所以将问题定位到debounce没有item产生。所以问题在哪呢？我们需要明确一点，普通的Observable是不支持多播的，即使被多个Subscriber所订阅，也只会有一个Subscriber收到items。在buffer中，其实订阅了参数Observable，但是这个Observable在buffer之后又被订阅了一次，所以debounce就收不到item了。&lt;/p&gt;
+&lt;h2 id=&quot;修改&quot;&gt;&lt;a href=&quot;#修改&quot; class=&quot;headerlink&quot; title=&quot;修改&quot;&gt;&lt;/a&gt;修改&lt;/h2&gt;&lt;p&gt;那么该如何修改以上代码，让它达到我们需要的效果呢。下面先来介绍几个相关的操作符。&lt;/p&gt;
+&lt;h3 id=&quot;Publish&quot;&gt;&lt;a href=&quot;#Publish&quot; class=&quot;headerlink&quot; title=&quot;Publish&quot;&gt;&lt;/a&gt;Publish&lt;/h3&gt;&lt;p&gt;通过Publish操作符可以将一个普通的Observable转换为一个Connectable Observable。Connectable Observable 可以被多次订阅，被多个Subscriber共享Stream。但是和普通的Observable不同，它在被subscribe之后并不开始产生item，而需要在调用connect()之后才会产生item。&lt;/p&gt;
+&lt;h3 id=&quot;Connect&quot;&gt;&lt;a href=&quot;#Connect&quot; class=&quot;headerlink&quot; title=&quot;Connect&quot;&gt;&lt;/a&gt;Connect&lt;/h3&gt;&lt;p&gt;在Publish中已经提到，用来让Connectable Observable开始产生item。&lt;/p&gt;
+&lt;h3 id=&quot;Refcount&quot;&gt;&lt;a href=&quot;#Refcount&quot; class=&quot;headerlink&quot; title=&quot;Refcount&quot;&gt;&lt;/a&gt;Refcount&lt;/h3&gt;&lt;p&gt;除了Connect，我们有另一种方式来让Connectable Observable 产生item，那就是Refcount，refCount会在第一个subscriber订阅之后自动connect，在最后一个subscriber unsubscribe之后自动disconnect。&lt;/p&gt;
+&lt;h3 id=&quot;Share&quot;&gt;&lt;a href=&quot;#Share&quot; class=&quot;headerlink&quot; title=&quot;Share&quot;&gt;&lt;/a&gt;Share&lt;/h3&gt;&lt;p&gt;Share 其实就是publish().refCount();&lt;/p&gt;
+&lt;p&gt;基于以上操作符，我们可以修正我们上面的代码了，稍微改一下就能达到我们预期的效果了，代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;doubleClickDetect&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(View view)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       Observable&amp;lt;Void&amp;gt; observable = RxView.clicks(view).share();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       observable.buffer(observable.debounce(&lt;span class=&quot;number&quot;&gt;200&lt;/span&gt;, TimeUnit.MILLISECONDS))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               .observeOn(AndroidSchedulers.mainThread())&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               .subscribe(&lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Action1&amp;lt;List&amp;lt;Void&amp;gt;&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(List&amp;lt;Void&amp;gt; voids)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                       &lt;span class=&quot;comment&quot;&gt;//double click detected&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               &amp;#125;, &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Action1&amp;lt;Throwable&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Throwable throwable)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                       Timber.e(throwable, &lt;span class=&quot;string&quot;&gt;&quot;error&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;上面的修改在原有代码基础上使用share操作符将原本的Observable变成了可共享流的Connectable Observable。&lt;/p&gt;
+&lt;h2 id=&quot;注意事项&quot;&gt;&lt;a href=&quot;#注意事项&quot; class=&quot;headerlink&quot; title=&quot;注意事项&quot;&gt;&lt;/a&gt;注意事项&lt;/h2&gt;&lt;p&gt;在使用refCount或者share的时候需要注意一点，那就是在第一个subscriber订阅之后Connectable Observable就被connect产生item了。所以后面subscribe 的订阅者可能就收不到之前的一些item了。如果需要所有的subscriber都收到一样的item。还是先subscribe，最后再connect吧。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      本文主要介绍如何在一个Observable订阅多个Subscriber。
+    
+    </summary>
+    
+      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
+    
+    
+      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
+    
+      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
+    
+      <category term="RxJava" scheme="http://campusappcn.github.io/tags/RxJava/"/>
     
   </entry>
   
@@ -250,11 +410,11 @@
       <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
     
     
+      <category term="MVVM" scheme="http://campusappcn.github.io/tags/MVVM/"/>
+    
       <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
     
       <category term="MVC" scheme="http://campusappcn.github.io/tags/MVC/"/>
-    
-      <category term="MVVM" scheme="http://campusappcn.github.io/tags/MVVM/"/>
     
       <category term="MVP" scheme="http://campusappcn.github.io/tags/MVP/"/>
     
@@ -353,11 +513,11 @@
       <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
     
     
+      <category term="MVVM" scheme="http://campusappcn.github.io/tags/MVVM/"/>
+    
       <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
     
       <category term="MVC" scheme="http://campusappcn.github.io/tags/MVC/"/>
-    
-      <category term="MVVM" scheme="http://campusappcn.github.io/tags/MVVM/"/>
     
       <category term="MVP" scheme="http://campusappcn.github.io/tags/MVP/"/>
     
@@ -770,454 +930,6 @@
       <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
     
       <category term="ReactiveCocoa" scheme="http://campusappcn.github.io/tags/ReactiveCocoa/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>关于xcode的buildSettings</title>
-    <link href="http://campusappcn.github.io/2016/02/29/xcode%E7%9A%84BuildSettings/"/>
-    <id>http://campusappcn.github.io/2016/02/29/xcode的BuildSettings/</id>
-    <published>2016-02-28T16:00:00.000Z</published>
-    <updated>2016-02-29T14:50:56.000Z</updated>
-    
-    <content type="html">&lt;p&gt;之前在新项目的自动化打包中碰到的问题，发现在A电脑上可以使用，而在B电脑上总是报“error: Specified application doesn’t exist or isn’t a bundle directory : ‘build/Products/Release-iphoneos/xxx.app”这样的error。很明显这个原因是因为在项目目录下的build文件下找不到相应的.app文件。&lt;br&gt;但是当时还是有点摸不着头脑的。因为两边的代码一样,打包脚本都是一样的，而且因为用的是cocoapod做的第三方托管，所以相对来说工程文件的差异我当时觉得也是没有的。但是不得不承认问题是出在工程文件上。之后用&lt;br&gt;&lt;code&gt;xcodebuild -showBuildSettings&lt;/code&gt;分别查看了下当前项目下的build setting的配置。发现&lt;code&gt;BUILD_DIR&lt;/code&gt;和 &lt;code&gt;BUILD_ROOT&lt;/code&gt;这两项在两台电脑是不一样的，一个是在项目下而另一个是在  &lt;code&gt;/Users/xxx/Library/Developer/Xcode/DerivedData&lt;/code&gt;下。&lt;br&gt;当时就郁闷了，不知道什么时候设置了这个路径。&lt;br&gt;看了关于BuildSetting的设置之后发现，在xcode-&amp;gt;preference-&amp;gt;locations里面有个advanced的设置build location 里面的说明也很明了，选择自定义custom 里面的 “relative to workspace”就可以了。其中下面还可以自定义文件路径。&lt;br&gt;具体如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog1.png?imageView2/2/w/800/q/75&quot; alt=&quot;locations截图&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog2.png?imageView2/2/w/800/q/75&quot; alt=&quot;advanced截图&quot;&gt;&lt;/p&gt;
-&lt;p&gt;而其中的custom中有三类分别是:Relative to Derived Data、Relative to Workspace和Absolute。&lt;br&gt;其实光从字面意思上也不难理解，最后一个absolute的本身意思就是“不受任何限制[约束]的; 无条件的”。那个就是说是完全可以自定义的。而前两者Derived Data和Workspace我截了下面两张图来做说明，主要的区别在于红色框内，由于本身我就是在这两处地方的路径不能出现了打包的错误。所以这里会具体说明下。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog3.png?imageView2/2/w/800/q/75&quot; alt=&quot;Relative to Derived Data截图&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xrcp9.com1.z0.glb.clouddn.com/blog4.png?imageView2/2/w/800/q/75&quot; alt=&quot;Relative to Workspace截图&quot;&gt;&lt;br&gt;看了图片之后其实已经是一目了然了。当选择Relative to Derived Data的时候，打包的build文件会在xcode应用的derivedData下，而选择Relative to Workspace的时候build的文件是在项目目录下的build下。&lt;br&gt;而之前我所使用的打包脚本，所取的文件地址就是项目目录下的。看完之后才恍然大悟，但是我现在还是没有想起来当时是什么时候修改的这个参数。这个东西平常的时候也不会去关注。&lt;br&gt;那么既然说到了这个打包时候的build文件，就顺带介绍一下build文件夹下到底有哪些东西。&lt;br&gt;一般情况下build下面主要的是下面两个文件夹&lt;br&gt;Intermediates ————主要是编译中产生的一些文件&lt;br&gt;Products ————编译最终产品的文件（如果是debug下的编译 那么是Debug-xxx，相对的如果是release下的是Release-xxx）。&lt;/p&gt;
-&lt;p&gt;关于xcode的buildSetting的东西还有很多。&lt;br&gt;大家可以进到项目文件下 用 &lt;code&gt;xcodebuild -showBuildSettings&lt;/code&gt; 自己去看看 &lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      一个关于BuildSetting的点~
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="xcode" scheme="http://campusappcn.github.io/tags/xcode/"/>
-    
-      <category term="buildSetting" scheme="http://campusappcn.github.io/tags/buildSetting/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>安卓自定义控件状态保存</title>
-    <link href="http://campusappcn.github.io/2016/02/28/%E5%AE%89%E5%8D%93%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A7%E4%BB%B6%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98/"/>
-    <id>http://campusappcn.github.io/2016/02/28/安卓自定义控件状态保存/</id>
-    <published>2016-02-28T11:39:25.000Z</published>
-    <updated>2016-02-29T11:15:52.000Z</updated>
-    
-    <content type="html">&lt;p&gt;因为业务原因, 我在安卓端实现了一个简单的富文本编辑器. 在初步实现后, 我将这个自定义的 RichEditor 放到了我们 App 的发帖界面中, 而发帖界面的复杂逻辑也引发了后续的问题.&lt;/p&gt;
-&lt;h2 id=&quot;界面回收与状态保持&quot;&gt;&lt;a href=&quot;#界面回收与状态保持&quot; class=&quot;headerlink&quot; title=&quot;界面回收与状态保持&quot;&gt;&lt;/a&gt;界面回收与状态保持&lt;/h2&gt;&lt;p&gt;我们的发帖界面可能唤起选图界面, 而图片处理往往需要消耗可观的内存. 在部分内存紧缺的机型上, 安卓系统为了保证选图界面的内存, 会将发帖界面回收并保存其状态, 在返回到发帖界面时又会将界面重建并恢复其控件状态.&lt;/p&gt;
-&lt;p&gt;安卓官方控件, 如 TextView, EditText 等控件在界面重建后, 其中的文本内容和光标位置都会被还原到重建前的状态, 而我的 RichEditor 却一片空白, 为啥?&lt;/p&gt;
-&lt;h2 id=&quot;关键方法&quot;&gt;&lt;a href=&quot;#关键方法&quot; class=&quot;headerlink&quot; title=&quot;关键方法&quot;&gt;&lt;/a&gt;关键方法&lt;/h2&gt;&lt;p&gt;Activity/Fragment 的销毁和重建涉及到了两个重要的方法: &lt;code&gt;onSaveInstanceState(Bundle)&lt;/code&gt;和&lt;code&gt;onRestoreInstanceState(Bundle)&lt;/code&gt;, 在这两个方法中, 开发者可以自行存入当前界面的关键信息以便恢复界面状态(当然, Fragment + ViewPager 配套使用时会有一些问题, 相关资料大家可以上网查查).&lt;/p&gt;
-&lt;p&gt;View 的状态保存与重建与 Activity 类似, 但是实现过程稍有不同:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Activity 通过 Bundle 对象保存关键值, 其存取采用 key-value 一一对应方式&lt;/li&gt;
-&lt;li&gt;View 通过自定义的 SavedState 类型保存关键值, 其存取基于 Parcelable 实现&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;了解了两者的差别后, 我们来看看具体实践:&lt;/p&gt;
-&lt;h2 id=&quot;实践&quot;&gt;&lt;a href=&quot;#实践&quot; class=&quot;headerlink&quot; title=&quot;实践&quot;&gt;&lt;/a&gt;实践&lt;/h2&gt;&lt;p&gt;一个简单的例子&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;52&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;53&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;54&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;55&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;56&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;57&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;58&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;59&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;60&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;61&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;62&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;63&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;64&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;65&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;66&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;67&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;68&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;69&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;70&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;71&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;72&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;73&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;74&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;75&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;76&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;StateSavedView&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;View&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/* 省略若干无关代码 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; mClickCount; &lt;span class=&quot;comment&quot;&gt;// 这个 View 被点击的次数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; mHasClicked; &lt;span class=&quot;comment&quot;&gt;// 是否被点击过&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 存储当前状态&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;protected&lt;/span&gt; Parcelable &lt;span class=&quot;title&quot;&gt;onSaveInstanceState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;comment&quot;&gt;// 一定要将父类状态保存起来&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		Parcelable superState = &lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onSaveInstanceState();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		SavedState state = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState(superState);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		state.clickCount = mClickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		state.hasClicked = mHasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; state;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 恢复当前状态&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;onRestoreInstanceState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcelable state)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;comment&quot;&gt;// 检查一下传入的对象是不是自定义的状态类型, 不是的话就要交由父类处理&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (!(state &lt;span class=&quot;keyword&quot;&gt;instanceof&lt;/span&gt; SavedState)) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onRestoreInstanceState(state);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		SavedState ss = (SavedState) state;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.onRestoreInstanceState(state);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		mClickCount = ss.clickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		mHasClicked = ss.hasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 * 自定义状态存储, 需要遵守 Parcelable 规约&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;BaseSavedState&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;final&lt;/span&gt; Parcelable.Creator&amp;lt;SavedState&amp;gt; CREATOR = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Parcelable.Creator&amp;lt;SavedState&amp;gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; SavedState &lt;span class=&quot;title&quot;&gt;createFromParcel&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel in)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;				&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState(in);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; SavedState[] newArray(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; size) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;				&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; SavedState[size];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; clickCount;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; hasClicked;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcelable superState)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;(superState);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SavedState&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel source)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;(source);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			clickCount = source.reandInt();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			hasClicked = source.readByte() != &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;writeToParcel&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(Parcel out, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; flags)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;super&lt;/span&gt;.writeToParcel(out, flags);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			out.writeInt(clickCount);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			out.writeByte(hasClicked ? (&lt;span class=&quot;keyword&quot;&gt;byte&lt;/span&gt;)&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : (&lt;span class=&quot;keyword&quot;&gt;byte&lt;/span&gt;) &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;meta&quot;&gt;@Override&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;describeContents&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;有以下几点需要注意:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;状态的存取由 Parcelable 实现, 因此字段的存取顺序一定要保持一一对应&lt;/li&gt;
-&lt;li&gt;不要忘记调用父类方法, 否则会出错&lt;/li&gt;
-&lt;li&gt;这里保存的都是 UI 层的状态, 业务逻辑相关的状态千万不要放在这里, 否则很有可能引发一些隐蔽的 bug&lt;/li&gt;
-&lt;/ol&gt;
-</content>
-    
-    <summary type="html">
-    
-      在 onSaveInstanceState 和 onRestoreInstanceState 时, 如何保存自定义控件的状态
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
-    
-      <category term="安卓" scheme="http://campusappcn.github.io/tags/%E5%AE%89%E5%8D%93/"/>
-    
-      <category term="自定义" scheme="http://campusappcn.github.io/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/"/>
-    
-      <category term="View" scheme="http://campusappcn.github.io/tags/View/"/>
-    
-      <category term="状态保存" scheme="http://campusappcn.github.io/tags/%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ReactiveCocoa2.5修炼 (一)</title>
-    <link href="http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5%E4%BF%AE%E7%82%BC-%E4%B8%80/"/>
-    <id>http://campusappcn.github.io/2016/02/28/ReactiveCocoa2-5修炼-一/</id>
-    <published>2016-02-28T07:26:02.000Z</published>
-    <updated>2016-04-09T08:59:46.000Z</updated>
-    
-    <content type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.&lt;/p&gt;
-&lt;p&gt;本文主要内容:&lt;br&gt;1.RACSignal类的简单使用&lt;br&gt;2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的&lt;/p&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h2 id=&quot;RACSignal&quot;&gt;&lt;a href=&quot;#RACSignal&quot; class=&quot;headerlink&quot; title=&quot;RACSignal&quot;&gt;&lt;/a&gt;RACSignal&lt;/h2&gt;&lt;p&gt;RAC的核心,如果用RAC写项目,这个家伙应该是项目中使用次数最多的类.&lt;/p&gt;
-&lt;p&gt;简单使用:&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//创建一个信号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	[subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//然后订阅&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;可以看到createSignal:的参数就是一个block(一个返回RACDisposable,参数的是实现了RACSubscriber协议的subscriber的block)&lt;br&gt;subscribeNext:参数也是一个block(一个返回void ,参数是随意对象的block)&lt;/p&gt;
-&lt;!-- more --&gt;
-&lt;p&gt;为了看的清楚些,可以这样写&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回RACDisposable的block叫didSubscribe,作为createSignal参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//定义一个返回void的block叫nextBlock,作为subscribeNext的参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)=^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:nextBlock];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;看看源码是怎么写的&quot;&gt;&lt;a href=&quot;#看看源码是怎么写的&quot; class=&quot;headerlink&quot; title=&quot;看看源码是怎么写的&quot;&gt;&lt;/a&gt;看看源码是怎么写的&lt;/h2&gt;&lt;h3 id=&quot;1-RACSignal-createSignal-返回Signal&quot;&gt;&lt;a href=&quot;#1-RACSignal-createSignal-返回Signal&quot; class=&quot;headerlink&quot; title=&quot;1.[RACSignal createSignal:]返回Signal&quot;&gt;&lt;/a&gt;1.[RACSignal createSignal:]返回Signal&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [RACDynamicSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACDynamicSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;RACDynamicSignal&lt;/span&gt; ()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;readonly&lt;/span&gt;) RACDisposable * (^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (RACSignal *)createSignal:(RACDisposable * (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber))didSubscribe &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACDynamicSignal *signal = [[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; alloc] init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	signal-&amp;gt;_didSubscribe = [didSubscribe &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [signal setNameWithFormat:&lt;span class=&quot;string&quot;&gt;@&quot;+createSignal:&quot;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;&lt;strong&gt;可以看到RACSignal实际是调用了子类RACDynamicSignal来创建Signal&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;子类RACDynamicSignal中有一个didSubscribe的block属性,RACDynamicSignal保存了didSubscribe(这段代码并没有起效)&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;所以返回的Signal内部携带了didSubscribe&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id=&quot;2-signal-subscribeNext-做了什么&quot;&gt;&lt;a href=&quot;#2-signal-subscribeNext-做了什么&quot; class=&quot;headerlink&quot; title=&quot;2.[signal subscribeNext:]做了什么&quot;&gt;&lt;/a&gt;2.[signal subscribeNext:]做了什么&lt;/h3&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribeNext:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x))nextBlock &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCParameterAssert&lt;/span&gt;(nextBlock != &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACSubscriber *o = [RACSubscriber subscriberWithNext:nextBlock error:&lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt; completed:&lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; subscribe:o];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSubscriber.m中,(RACSubscriber.h就是id&amp;lt;RACSubscriber&amp;gt; subscriber中RACSubscriber协议的定义者)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;RACSubscriber&lt;/span&gt; ()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^next)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; value);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^error)(&lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; *error);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^completed)(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@property&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;nonatomic&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;strong&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;readonly&lt;/span&gt;) RACCompoundDisposable *disposable;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ (instancetype)subscriberWithNext:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x))next error:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; *error))error completed:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^)(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;))completed &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACSubscriber *subscriber = [[&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; alloc] init];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_next = [next &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_error = [error &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber-&amp;gt;_completed = [completed &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; subscriber;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//[self subscribe:o]在RACSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribe:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt;)subscriber &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCAssert&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;NO&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;@&quot;This method must be overridden by subclasses&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//所以在RACDynamicSignal.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (RACDisposable *)subscribe:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt;)subscriber &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;NSCParameterAssert&lt;/span&gt;(subscriber != &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	RACCompoundDisposable *disposable = [RACCompoundDisposable compoundDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	subscriber = [[RACPassthroughSubscriber alloc] initWithSubscriber:subscriber signal:&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt; disposable:disposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.didSubscribe != &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		RACDisposable *schedulingDisposable = [RACScheduler.subscriptionScheduler schedule:^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			RACDisposable *innerDisposable = &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.didSubscribe(subscriber);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;			[disposable addDisposable:innerDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		[disposable addDisposable:schedulingDisposable];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; disposable;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;&lt;strong&gt;可以看到subscribeNext方法内部,产生了一个新的对象RACSubscriber &lt;em&gt;o,&lt;/em&gt;o的创建方法中,又将nextBlock调用subscriber-&amp;gt;_next,保存在o的next属性中&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;目前为止createSignal在做准备工作,subscribeNext内部的第一步创建了RACSubscriber的实例也是准备工作&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;接来下就是[self subscribe:o]&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;RACSignal的[self subscribe:o]由子类RACDynamicSignal实现,在RACDynamicSignal.m中[self subscribe:o]方法可以看到这一行代码RACDisposable  *innerDisposable = self.didSubscribe(subscriber)–开始执行block了&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id=&quot;3-self-didSubscribe-subscriber&quot;&gt;&lt;a href=&quot;#3-self-didSubscribe-subscriber&quot; class=&quot;headerlink&quot; title=&quot;3.self.didSubscribe(subscriber)&quot;&gt;&lt;/a&gt;3.self.didSubscribe(subscriber)&lt;/h3&gt;&lt;p&gt;这个didSubscribe被调用了,并且传入了一个subscriber,(这个subscriber内部有一个nextBlock)&lt;br&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//didSubscribe被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//上文的中didSubscribe定义:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//RACSubscriber.m&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- (&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;)sendNext:(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;)value &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;@synchronized&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;) = [&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.next &lt;span class=&quot;keyword&quot;&gt;copy&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (nextBlock == &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		nextBlock(value);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//nextBlock被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;//上文中的nextBlock被调用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; (^nextBlock)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)=^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;didSubscribe被调用,会执行到[subscriber sendNext:]方法&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;在RACSubscriber.m的sendNext:方法将保存在自己身上的nextBlock取出(void (^nextBlock)(id) = [self.next copy]),然后执行nextBlock(value);&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;就是这样Signal可以被订阅产生数据&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;senderr和sendcomplete的执行过程和sendNext类似&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&quot;整理下过程&quot;&gt;&lt;a href=&quot;#整理下过程&quot; class=&quot;headerlink&quot; title=&quot;整理下过程&quot;&gt;&lt;/a&gt;整理下过程&lt;/h2&gt;&lt;p&gt;1.[RACSignal createSignal:didSubscribe]创建信号,signal内保存didSubscribe&lt;/p&gt;
-&lt;p&gt;2.[signal subscribeNext:nextBlock]信号被订阅,此方法内部产生一个RACSubscriber的实例subscriber,将nextBlock保存在subscriber中.(每次subscribeNext就会产生一个RACSubscriber的实例)&lt;/p&gt;
-&lt;p&gt;3.[signal subscribeNext:nextBlock]方法内接着调用[self subscribe:subscriber]方法,将保存了nextBlock的subscriber传递,&lt;/p&gt;
-&lt;p&gt;4.[self subscribe:subscriber]方法内部取出保存在signal中的self.didSubscribe,执行,&lt;/p&gt;
-&lt;p&gt;5.进入didSubscribe的block回调,即[subscriber sendNext:@(1)];return nil;&lt;/p&gt;
-&lt;p&gt;6.[subscriber sendNext]将subscriber中保存的nextBlock取出,执行,&lt;/p&gt;
-&lt;p&gt;7,进入nextBlock的block回调,即NSLog(@”x–%@”,x);&lt;/p&gt;
-&lt;h2 id=&quot;从阅读源码过程中-我们可以知道的&quot;&gt;&lt;a href=&quot;#从阅读源码过程中-我们可以知道的&quot; class=&quot;headerlink&quot; title=&quot;从阅读源码过程中,我们可以知道的&quot;&gt;&lt;/a&gt;从阅读源码过程中,我们可以知道的&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;1.如果没有被订阅,那么didSubscribe是不会执行的,&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2.didSubscribe如果不调用send的一系列方法,那么订阅也是没有用的&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&quot;做一些测试&quot;&gt;&lt;a href=&quot;#做一些测试&quot; class=&quot;headerlink&quot; title=&quot;做一些测试&quot;&gt;&lt;/a&gt;做一些测试&lt;/h2&gt;&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;__block &lt;span class=&quot;keyword&quot;&gt;unsigned&lt;/span&gt; subscriptions=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACDisposable*(^didSubscribe)(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)=^RACDisposable *(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;&amp;lt;RACSubscriber&amp;gt; subscriber)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    subscriptions++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [subscriber sendNext:@(subscriptions)];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RACSignal *signal=[RACSignal createSignal:didSubscribe];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[signal subscribeNext:^(&lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt; x) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;NSLog&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;@&quot;x--%@&quot;&lt;/span&gt;,x);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;输出:&lt;br&gt;2016-02-29 15:53:59.239 RACFunTest[11936:604366] x–1&lt;br&gt;2016-02-29 15:53:59.240 RACFunTest[11936:604366] x–2&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;下次作文内容:信号map,merge,concat,then操作的源码阅读&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot;&gt;ReactiveCocoa&lt;/a&gt;是一个FRP的思想(函数式编程思想)在Objective-C中的实现框架,因此,在使用过程中,我们会发现RAC的参数都是一个block.到目前为此,我觉得RAC在做项目过程带来最大的便利是对状态能有很好的控制,自然block作为方法参数使代码变得高聚合,方便了阅读.本文主要对RACSignal类源码进行阅读,来弄明白开发过程中想要弄明白的东西.&lt;/p&gt;
-&lt;p&gt;本文主要内容:&lt;br&gt;1.RACSignal类的简单使用&lt;br&gt;2.subscribeNext就能处理数据,看看RAC源码是怎么做的,这个订阅过程是怎么样的&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="iOS" scheme="http://campusappcn.github.io/tags/iOS/"/>
-    
-      <category term="ReactiveCocoa" scheme="http://campusappcn.github.io/tags/ReactiveCocoa/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>浅谈Android开发中多进程共享数据</title>
-    <link href="http://campusappcn.github.io/2016/02/28/2016-02-28-%E6%B5%85%E8%B0%88Android%E5%BC%80%E5%8F%91%E4%B8%AD%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/"/>
-    <id>http://campusappcn.github.io/2016/02/28/2016-02-28-浅谈Android开发中多进程共享数据/</id>
-    <published>2016-02-27T16:00:00.000Z</published>
-    <updated>2016-02-29T11:15:52.000Z</updated>
-    
-    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;最近在工作中遇到一个需求，需要在接收到推送的时候将推送获得的数据存起来，以供app启动时使用。我们会认为这不是So easy吗？只要把数据存到SharedPreferences中，然后让app打开同一个SharedPreferences读取数据就可以了。但是在实际的测试中，我们发现推送进程存入的数据，并不能在app进程中获得。所以这是为什么呢，也许聪明的读者从我们上面的陈述中已经发现了原因，因为我们有两个进程，推送进程负责将推送数据存入，而app进程负责读取，但是正是由于是两个进程，如果它们同时存在，它们各自在内存中保持了自己的SP对象和数据，在推送进程中的存入并不能在app进程体现出来，并且可能会被app进程刷掉更改的数据。那么我们怎么做才能让这两边共享数据呢？请看下面陈述。&lt;/p&gt;
-&lt;h1 id=&quot;多进程支持的SharedPreferences（不推荐）&quot;&gt;&lt;a href=&quot;#多进程支持的SharedPreferences（不推荐）&quot; class=&quot;headerlink&quot; title=&quot;多进程支持的SharedPreferences（不推荐）&quot;&gt;&lt;/a&gt;多进程支持的SharedPreferences（不推荐）&lt;/h1&gt;&lt;p&gt;我们原来的做法是使用SharedPreferences, 自然而然想到，SharedPreferences 在MODE_PRIVATE MODE_PUBLIC 之外其实还可以设置多进程的Flag ———— MODE_MULTI_PROCESS&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;SharedPreferences myPrefs = context.getSharedPreferences(MY_FILE_NAME, Context.MODE_MULTI_PROCESS | Context.MODE_PRIVATE);
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一旦我们设置了这个Flag，每次调用Context.getSharedPreferences 的时候系统会重新从SP文件中读入数据，因此我们在使用的时候每次读取和存入都要使用Context.getSharedPreferences 重新获取SP实例。即使是这样，由于SP本质上并不是多进程安全的，所以还是无法保证数据的同步，因此该方法我们并没有使用，我们也不推荐使用。&lt;/p&gt;
-&lt;h1 id=&quot;Tray&quot;&gt;&lt;a href=&quot;#Tray&quot; class=&quot;headerlink&quot; title=&quot;Tray&quot;&gt;&lt;/a&gt;Tray&lt;/h1&gt;&lt;p&gt;如果SP不是多进程安全的，那么是否有多进程安全的，又有SP功能的第三方项目呢。答案是有的，Tray——一个多进程安全的SharedPreferences，我们可以在Github上找到它，如果是AndroidStudio,可以直接使用Gradle引入，可谓是十分方便，如下是使用的代码，十分简单，没有apply commit，看起来比SP还要简单。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt; // create a preference accessor. This is for global app preferences.
-final AppPreferences appPreferences = new AppPreferences(getContext()); // this Preference comes for free from the library
-// save a key value pair
-appPreferences.put(&amp;quot;key&amp;quot;, &amp;quot;lorem ipsum&amp;quot;);
-
-// read the value for your key. the second parameter is a fallback (optional otherwise throws)
-final String value = appPreferences.getString(&amp;quot;key&amp;quot;, &amp;quot;default&amp;quot;);
-Log.v(TAG, &amp;quot;value: &amp;quot; + value); // value: lorem ipsum
-
-// read a key that isn&amp;apos;t saved. returns the default (or throws without default)
-final String defaultValue = appPreferences.getString(&amp;quot;key2&amp;quot;, &amp;quot;default&amp;quot;);
-Log.v(TAG, &amp;quot;value: &amp;quot; + defaultValue); // value: default
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是最终我们并没有选择使用它，主要的原因是它需要minSdk 为15，而我们是支持sdk14的，所以只能果断放弃了。&lt;/p&gt;
-&lt;h1 id=&quot;ContentProvider&quot;&gt;&lt;a href=&quot;#ContentProvider&quot; class=&quot;headerlink&quot; title=&quot;ContentProvider&quot;&gt;&lt;/a&gt;ContentProvider&lt;/h1&gt;&lt;p&gt;既然Tray不支持sdk15以下的，那么我们是否可以使用Tray的原理自己实现一个呢？在阅读Tray的源码时我们发现其实它是在ContentProvider的基础上做的，而ContentProvider是Android官方支持的多进程安全的。以下是使用ContentProvider的一个例子。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;public class ArticlesProvider extends ContentProvider {  
-    private static final String LOG_TAG = &amp;quot;shy.luo.providers.articles.ArticlesProvider&amp;quot;;  
-
-    private static final String DB_NAME = &amp;quot;Articles.db&amp;quot;;  
-    private static final String DB_TABLE = &amp;quot;ArticlesTable&amp;quot;;  
-    private static final int DB_VERSION = 1;  
-
-    private static final String DB_CREATE = &amp;quot;create table &amp;quot; + DB_TABLE +  
-                            &amp;quot; (&amp;quot; + Articles.ID + &amp;quot; integer primary key autoincrement, &amp;quot; +  
-                            Articles.TITLE + &amp;quot; text not null, &amp;quot; +  
-                            Articles.ABSTRACT + &amp;quot; text not null, &amp;quot; +  
-                            Articles.URL + &amp;quot; text not null);&amp;quot;;  
-
-    private static final UriMatcher uriMatcher;  
-    static {  
-            uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);  
-            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;item&amp;quot;, Articles.ITEM);  
-            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;item/#&amp;quot;, Articles.ITEM_ID);  
-            uriMatcher.addURI(Articles.AUTHORITY, &amp;quot;pos/#&amp;quot;, Articles.ITEM_POS);  
-    }  
-
-    private static final HashMap&amp;lt;String, String&amp;gt; articleProjectionMap;  
-    static {  
-            articleProjectionMap = new HashMap&amp;lt;String, String&amp;gt;();  
-            articleProjectionMap.put(Articles.ID, Articles.ID);  
-            articleProjectionMap.put(Articles.TITLE, Articles.TITLE);  
-            articleProjectionMap.put(Articles.ABSTRACT, Articles.ABSTRACT);  
-            articleProjectionMap.put(Articles.URL, Articles.URL);  
-    }  
-
-    private DBHelper dbHelper = null;  
-    private ContentResolver resolver = null;  
-
-    @Override  
-    public boolean onCreate() {  
-            Context context = getContext();  
-            resolver = context.getContentResolver();  
-            dbHelper = new DBHelper(context, DB_NAME, null, DB_VERSION);  
-
-            Log.i(LOG_TAG, &amp;quot;Articles Provider Create&amp;quot;);  
-
-            return true;  
-    }  
-
-    @Override  
-    public String getType(Uri uri) {  
-            switch (uriMatcher.match(uri)) {  
-            case Articles.ITEM:  
-                    return Articles.CONTENT_TYPE;  
-            case Articles.ITEM_ID:  
-            case Articles.ITEM_POS:  
-                    return Articles.CONTENT_ITEM_TYPE;  
-            default:  
-                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
-            }  
-    }  
-
-    @Override  
-    public Uri insert(Uri uri, ContentValues values) {  
-            if(uriMatcher.match(uri) != Articles.ITEM) {  
-                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
-            }  
-
-            SQLiteDatabase db = dbHelper.getWritableDatabase();  
-
-            long id = db.insert(DB_TABLE, Articles.ID, values);  
-            if(id &amp;lt; 0) {  
-                    throw new SQLiteException(&amp;quot;Unable to insert &amp;quot; + values + &amp;quot; for &amp;quot; + uri);  
-            }  
-
-            Uri newUri = ContentUris.withAppendedId(uri, id);  
-            resolver.notifyChange(newUri, null);  
-
-            return newUri;  
-    }  
-
-    @Override  
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {  
-            SQLiteDatabase db = dbHelper.getWritableDatabase();  
-            int count = 0;  
-
-            switch(uriMatcher.match(uri)) {  
-            case Articles.ITEM: {  
-                    count = db.update(DB_TABLE, values, selection, selectionArgs);  
-                    break;  
-            }  
-            case Articles.ITEM_ID: {  
-                    String id = uri.getPathSegments().get(1);  
-                    count = db.update(DB_TABLE, values, Articles.ID + &amp;quot;=&amp;quot; + id  
-                                    + (!TextUtils.isEmpty(selection) ? &amp;quot; and (&amp;quot; + selection + &amp;apos;)&amp;apos; : &amp;quot;&amp;quot;), selectionArgs);  
-                    break;  
-            }  
-            default:  
-                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
-            }  
-
-            resolver.notifyChange(uri, null);  
-
-            return count;  
-    }  
-
-    @Override  
-    public int delete(Uri uri, String selection, String[] selectionArgs) {  
-            SQLiteDatabase db = dbHelper.getWritableDatabase();  
-            int count = 0;  
-
-            switch(uriMatcher.match(uri)) {  
-            case Articles.ITEM: {  
-                    count = db.delete(DB_TABLE, selection, selectionArgs);  
-                    break;  
-            }  
-            case Articles.ITEM_ID: {  
-                    String id = uri.getPathSegments().get(1);  
-                    count = db.delete(DB_TABLE, Articles.ID + &amp;quot;=&amp;quot; + id  
-                                    + (!TextUtils.isEmpty(selection) ? &amp;quot; and (&amp;quot; + selection + &amp;apos;)&amp;apos; : &amp;quot;&amp;quot;), selectionArgs);  
-                    break;  
-            }  
-            default:  
-                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
-            }  
-
-            resolver.notifyChange(uri, null);  
-
-            return count;  
-    }  
-
-    @Override  
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {  
-            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.query: &amp;quot; + uri);  
-
-            SQLiteDatabase db = dbHelper.getReadableDatabase();  
-
-            SQLiteQueryBuilder sqlBuilder = new SQLiteQueryBuilder();  
-            String limit = null;  
-
-            switch (uriMatcher.match(uri)) {  
-            case Articles.ITEM: {  
-                    sqlBuilder.setTables(DB_TABLE);  
-                    sqlBuilder.setProjectionMap(articleProjectionMap);  
-                    break;  
-            }  
-            case Articles.ITEM_ID: {  
-                    String id = uri.getPathSegments().get(1);  
-                    sqlBuilder.setTables(DB_TABLE);  
-                    sqlBuilder.setProjectionMap(articleProjectionMap);  
-                    sqlBuilder.appendWhere(Articles.ID + &amp;quot;=&amp;quot; + id);  
-                    break;  
-            }  
-            case Articles.ITEM_POS: {  
-                    String pos = uri.getPathSegments().get(1);  
-                    sqlBuilder.setTables(DB_TABLE);  
-                    sqlBuilder.setProjectionMap(articleProjectionMap);  
-                    limit = pos + &amp;quot;, 1&amp;quot;;  
-                    break;  
-            }  
-            default:  
-                    throw new IllegalArgumentException(&amp;quot;Error Uri: &amp;quot; + uri);  
-            }  
-
-            Cursor cursor = sqlBuilder.query(db, projection, selection, selectionArgs, null, null, TextUtils.isEmpty(sortOrder) ? Articles.DEFAULT_SORT_ORDER : sortOrder, limit);  
-            cursor.setNotificationUri(resolver, uri);  
-
-            return cursor;  
-    }  
-
-    @Override  
-    public Bundle call(String method, String request, Bundle args) {  
-            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.call: &amp;quot; + method);  
-
-            if(method.equals(Articles.METHOD_GET_ITEM_COUNT)) {  
-                    return getItemCount();  
-            }  
-
-            throw new IllegalArgumentException(&amp;quot;Error method call: &amp;quot; + method);  
-    }  
-
-    private Bundle getItemCount() {  
-            Log.i(LOG_TAG, &amp;quot;ArticlesProvider.getItemCount&amp;quot;);  
-
-            SQLiteDatabase db = dbHelper.getReadableDatabase();  
-            Cursor cursor = db.rawQuery(&amp;quot;select count(*) from &amp;quot; + DB_TABLE, null);  
-
-            int count = 0;  
-            if (cursor.moveToFirst()) {  
-                    count = cursor.getInt(0);  
-            }  
-
-            Bundle bundle = new Bundle();  
-            bundle.putInt(Articles.KEY_ITEM_COUNT, count);  
-
-            cursor.close();  
-            db.close();  
-
-            return bundle;  
-    }  
-
-    private static class DBHelper extends SQLiteOpenHelper {  
-            public DBHelper(Context context, String name, CursorFactory factory, int version) {  
-                    super(context, name, factory, version);  
-            }  
-
-            @Override  
-            public void onCreate(SQLiteDatabase db) {  
-                    db.execSQL(DB_CREATE);  
-            }  
-
-            @Override  
-            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {  
-                    db.execSQL(&amp;quot;DROP TABLE IF EXISTS &amp;quot; + DB_TABLE);  
-                    onCreate(db);  
-            }  
-    }  
-}  
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;我们需要创建一个类继承自ContentProvider，并重载以下方法。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;onCreate()，用来执行一些初始化的工作。&lt;/li&gt;
-&lt;li&gt;query(Uri, String[], String, String[], String)，用来返回数据给调用者。&lt;/li&gt;
-&lt;li&gt;insert(Uri, ContentValues)，用来插入新的数据。&lt;/li&gt;
-&lt;li&gt;update(Uri, ContentValues, String, String[])，用来更新已有的数据。&lt;/li&gt;
-&lt;li&gt;delete(Uri, String, String[])，用来删除数据。&lt;/li&gt;
-&lt;li&gt;getType(Uri)，用来返回数据的MIME类型。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;具体使用参考  &lt;a href=&quot;http://blog.csdn.net/luoshengyang/article/details/6950440&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; Android应用程序组件Content Provider应用实例&lt;/a&gt;这篇博客，这里不再赘述。&lt;br&gt;在以上对ContentProvider的使用过程中，我们发现过程比较繁琐，如果对于比较复杂的需求可能还比较使用，但是我们这里的需求其实很简单，完全不需要搞得那么复杂，所以最后我们也没有使用这个方法（你可以理解为本博主比较Lazy）。&lt;/p&gt;
-&lt;p&gt;#Broadcast&lt;br&gt;那么是否有更简单的方法呢？由于想到了ContentProvider，我们不由地想到另一个android组件，BroadcastReceiver。那么我们是否可以使用Broadcast 将我们收到的推送数据发送给app进程呢。bingo，这似乎正是我们寻找的又简单又能解决问题的方法。我们来看下代码。&lt;/p&gt;
-&lt;p&gt;首先在推送进程收到推送消息时，我们将推送数据存入SP，如果这时候没有app进程，那么下次app进程启动的时候该存入的数据就会被app进程读取到。而如果这时候app进程存在，那么之后的代码就会生效，它使用LocalBroadcastManager 发送一个广播。LocalBroadcastManager发送的广播不会被app之外接收到，通过它注册的Receiver也不会接收到app之外的广播，因此拥有更高的效率。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;pushPref.add(push);
-
-Intent intent = new Intent(PushHandler.KEY_GET_PUSH);
-intent.putExtra(PushHandler.KEY_PUSH_CONTENT, d);
-LocalBroadcastManager.getInstance(context).sendBroadcastSync(intent);
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而我们在app进程则注册了一个BroadReceiver来接收上面发出的广播。在收到广播之后将推送数据存入SP。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;public class PushHandler {
-
-public static String KEY_GET_PUSH = &amp;quot;PUSH_RECEIVED&amp;quot;;
-public static String KEY_PUSH_CONTENT = &amp;quot;PUSH_CONTENT&amp;quot;;
-
-// region 推送处理push
-/**
- * 当有推送时，发一次请求mPushReceiver
- */
-private static BroadcastReceiver mPushReceiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Timber.i(&amp;quot;在NoticeAction中收到广播&amp;quot;);
-        PushPref pushPref = App.DI().pushPref();
-        try {
-            String pushContent = intent.getStringExtra(KEY_PUSH_CONTENT);
-            PushEntity pushEntity = App.DI().gson().fromJson(pushContent, PushEntity.class);
-            pushPref.add(pushEntity);
-        } catch (Exception e){
-            Timber.e(e, &amp;quot;存储推送内容出错&amp;quot;);
-        }
-    }
-};
-
-public static  void startListeningToPush(){
-    try {
-        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mPushReceiver, new IntentFilter(KEY_GET_PUSH));
-    } catch (Exception e) {
-        Timber.e(e, &amp;quot;wtf&amp;quot;);
-    }
-}
-public static void stopListeningToPush(){
-    try {
-        LocalBroadcastManager.getInstance(App.getContext()).unregisterReceiver(mPushReceiver);
-    } catch (Exception e) {
-        Timber.e(e, &amp;quot;wtf&amp;quot;);
-    }
-}
-// endregion
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;该方法相对于上面的方法使用简单，安全可靠，能够比较好的实现我们的需求。不过，在需求比较复杂的时候还是建议使用ContentProvider，因为毕竟这样的方法不是堂堂正道，有种剑走偏锋的感觉。&lt;/p&gt;
-&lt;h1 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h1&gt;&lt;p&gt;实现一个需求可以有很多方法，而我们需要寻找的是又简单有可靠的方法，在写代码之前不如多找找资料，多听听别人的意见。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      本篇博客主要介绍如何在多进程之间同步数据
-    
-    </summary>
-    
-      <category term="blog" scheme="http://campusappcn.github.io/categories/blog/"/>
-    
-    
-      <category term="Development" scheme="http://campusappcn.github.io/tags/Development/"/>
-    
-      <category term="Android" scheme="http://campusappcn.github.io/tags/Android/"/>
     
   </entry>
   
